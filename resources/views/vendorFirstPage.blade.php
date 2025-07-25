@@ -63,64 +63,69 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="row fw-bold">
-                            Delivery Schedule
-                        </div>
-                        <div class="row fw-bold">
-                            <div class="col-4">Breakfast</div>
-                            <div class="col-4">Lunch</div>
-                            <div class="col-4">Dinner</div>
-                        </div>
-                        <div class="row">
-                            <div class="col-2">
-                                <label for="fromBreakfast" class="form-label">From</label>
-                                <input type="time" value="{{ old('startBreakfast') }}" id="fromBreakfast" min="00:00"
-                                    max="23:59" step="60" placeholder="00.00" class="form-control"
-                                    name="startBreakfast">
-                                @error('startBreakfast')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-2">
-                                <label for="untilBreakfast" class="form-label">Until</label>
-                                <input type="time" value="{{ old('closeBreakfast') }}" min="00:00" max="23:59"
-                                    step="60" id="untilBreakfast" class="form-control" name="closeBreakfast">
-                                @error('closeBreakfast')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-2">
-                                <label for="fromLunch" class="form-label">From</label>
-                                <input type="time" value="{{ old('startLunch') }}" id="fromLunch" placeholder="00.00"
-                                    class="form-control" name="startLunch">
-                                @error('startLunch')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-2">
-                                <label for="untilLunch" class="form-label">Until</label>
-                                <input type="time" value="{{ old('closeLunch') }}" min="00:00" max="23:59"
-                                    step="60" id="untilLunch" class="form-control" name="closeLunch">
-                                @error('closeLunch')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-2">
-                                <label for="fromDinner" class="form-label">From</label>
-                                <input type="time" value="{{ old('startDinner') }}" id="fromDinner"
-                                    placeholder="00.00" class="form-control" name="startDinner">
-                                @error('startDinner')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="col-2">
-                                <label for="untilDinner" class="form-label">Until</label>
-                                <input type="time" value="{{ old('closeDinner') }}" min="00:00" max="23:59"
-                                    step="60" id="untilDinner" class="form-control" name="closeDinner">
-                                @error('closeDinner')
-                                    <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
-                            </div>
+                        <div class="row fw-bold mb-2">
+    <div class="col-12">Delivery Schedule</div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12 fw-bold">Breakfast</div>
+    <div class="col-md-6">
+        <label for="fromBreakfast" class="form-label">From</label>
+        <input type="time" value="{{ old('startBreakfast') }}" id="fromBreakfast" min="00:00" max="23:59" step="60"
+            class="form-control" name="startBreakfast">
+        @error('startBreakfast')
+            <div class="text-danger mt-1">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="col-md-6">
+        <label for="untilBreakfast" class="form-label">Until</label>
+        <input type="time" value="{{ old('closeBreakfast') }}" id="untilBreakfast" min="00:00" max="23:59" step="60"
+            class="form-control" name="closeBreakfast">
+        @error('closeBreakfast')
+            <div class="text-danger mt-1">{{ $message }}</div>
+        @enderror
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12 fw-bold">Lunch</div>
+    <div class="col-md-6">
+        <label for="fromLunch" class="form-label">From</label>
+        <input type="time" value="{{ old('startLunch') }}" id="fromLunch" min="00:00" max="23:59" step="60"
+            class="form-control" name="startLunch">
+        @error('startLunch')
+            <div class="text-danger mt-1">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="col-md-6">
+        <label for="untilLunch" class="form-label">Until</label>
+        <input type="time" value="{{ old('closeLunch') }}" id="untilLunch" min="00:00" max="23:59" step="60"
+            class="form-control" name="closeLunch">
+        @error('closeLunch')
+            <div class="text-danger mt-1">{{ $message }}</div>
+        @enderror
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12 fw-bold">Dinner</div>
+    <div class="col-md-6">
+        <label for="fromDinner" class="form-label">From</label>
+        <input type="time" value="{{ old('startDinner') }}" id="fromDinner" min="00:00" max="23:59" step="60"
+            class="form-control" name="startDinner">
+        @error('startDinner')
+            <div class="text-danger mt-1">{{ $message }}</div>
+        @enderror
+    </div>
+    <div class="col-md-6">
+        <label for="untilDinner" class="form-label">Until</label>
+        <input type="time" value="{{ old('closeDinner') }}" id="untilDinner" min="00:00" max="23:59" step="60"
+            class="form-control" name="closeDinner">
+        @error('closeDinner')
+            <div class="text-danger mt-1">{{ $message }}</div>
+        @enderror
+    </div>
+</div>
                         </div>
                         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 gy-3 py-2">
                             <div class="col">

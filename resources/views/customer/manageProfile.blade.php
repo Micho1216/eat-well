@@ -19,42 +19,39 @@
                     <p class="profile-status lexend font-bold">{{ $user->role }}
                     <p>
                     <p class="joined-date text-white lexend font-regular">
-                        Joined Since: <span class="date">{{ $user->created_at->format('d-m-Y') }}</span>
+                        {{ __('customer/manage-profile.joined_since') }}: <span class="date">{{ $user->created_at->format('d-m-Y') }}</span>
                     </p>
                 </div>
             </div>
             <div class="menu ">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="menu-link active inter font-regular" id="profileTab" href="#management-profile">Manage
-                            Profile</a>
+                        <a class="menu-link active inter font-regular" id="profileTab" href="#management-profile">{{ __('customer/manage-profile.manage_profile') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="menu-link inter font-regular" id="securityTab" href="#management-security">Manage
-                            Security</a>
+                        <a class="menu-link inter font-regular" id="securityTab" href="#management-security">{{ __('customer/manage-profile.manage_security') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="menu-link inter font-regular" href="/manage-address">Manage Address</a>
+                        <a class="menu-link inter font-regular" href="/manage-address">{{ __('customer/manage-profile.manage_address') }}</a>
                     </li>
                 </ul>
             </div>
             <ul class="nav flex-column sidebar-menu mobile-tabs">
                 <li class="nav-item">
-                    <a class="menu-link active inter font-regular" id="profileTab" href="#management-profile">Manage
-                        Profile</a>
+                    <a class="menu-link active inter font-regular" id="profileTab" href="#management-profile">{{ __('customer/manage-profile.manage_profile') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="menu-link inter font-regular" id="securityTab" href="#management-security">Manage Security</a>
+                    <a class="menu-link inter font-regular" id="securityTab" href="#management-security">{{ __('customer/manage-profile.manage_security') }}</a>
                 </li>
                 <li class="nav-item">
-                    <a class="menu-link inter font-regular" href="/manage-address">Manage Address</a>
+                    <a class="menu-link inter font-regular" href="/manage-address">{{ __('customer/manage-profile.manage_address') }}</a>
                 </li>
             </ul>
             <div class="logout d-none d-md-flex">
                 <form method="POST" action="{{ route('logout') }}" class="logout-form">
                     @csrf
                     <button type="submit" class="logout-btn inter font-regular">
-                        Log out
+                        {{ __('customer/manage-profile.log_out') }}
                     </button>
                 </form>
             </div>
@@ -65,9 +62,8 @@
             <div class="lexend font-medium outer-box scrollable-box">
                 <div id="management-profile" class="management-section">
                     <div class="profile-manage">
-                        <p class="lexend font-medium text-black title">Personal Profile</p>
-                        <p class="inter font-regular text-black description">This is your profile page. Looking healthy as
-                            ever! Manage your account profile here.</p>
+                        <p class="lexend font-medium text-black title">{{ __('customer/manage-profile.personal_profile') }}</p>
+                        <p class="inter font-regular text-black description">{{ __('customer/manage-profile.profile_desc') }}</p>
                     </div>
                     <hr
                         style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
@@ -77,7 +73,7 @@
                             @method('PATCH')
                             <div class="datafoto">
                                 <div class="data">
-                                    <label class="inter font-bold text-black data-title">Name</label>
+                                    <label class="inter font-bold text-black data-title">{{ __('customer/manage-profile.name') }}</label>
                                     <input type="text" class="lexend font-regular text-black name-input" id="nameInput"
                                         name="nameInput" value="{{ $user->name }}">
 
@@ -85,8 +81,7 @@
                                         <div class="" style="color: rgb(194, 12, 12)">{{ $message }}</div>
                                     @enderror
 
-                                    <label class="inter font-bold text-black data-title" style="display: none">Date of
-                                        Birth</label>
+                                    <label class="inter font-bold text-black data-title" style="display: none">{{ __('customer/manage-profile.date_birth') }}</label>
                                     <div class="dob-picker" style="display: none">
                                         <select class="dob-select font-regular" name="dob_month" id="dob_month">
                                             @if (empty($user->dateOfBirth))
@@ -128,8 +123,7 @@
                                         </select>
                                     </div>
 
-                                    <label for="dateOfBirth" class="inter font-bold text-black data-title">Date of
-                                        Birth</label>
+                                    <label for="dateOfBirth" class="inter font-bold text-black data-title">{{ __('customer/manage-profile.date_birth') }}</label>
                                     <div class="dob-picker">
                                         <input type="date" class="dob-select font-regular" name="dateOfBirth"
                                             id="dateOfBirth"
@@ -142,24 +136,24 @@
 
 
 
-                                    <p class="inter font-bold text-black data-title gender">Gender</p>
+                                    <p class="inter font-bold text-black data-title gender">{{ __('customer/manage-profile.gender') }}</p>
                                     <div class="gender-group">
                                         @if ($user->genderMale == 1)
                                             <input type="radio" id="male" name="gender" value="male"
                                                 class="gender-radio" checked>
-                                            <label for="male" class="gender-label">Male</label>
+                                            <label for="male" class="gender-label">{{ __('customer/manage-profile.male') }}</label>
                                             <input type="radio" id="female" name="gender" value="female"
                                                 class="gender-radio">
                                             <label for="female"
-                                                class="gender-label lexend font-medium text-black">Female</label>
+                                                class="gender-label lexend font-medium text-black">{{ __('customer/manage-profile.female') }}</label>
                                         @else
                                             <input type="radio" id="male" name="gender" value="male"
                                                 class="gender-radio">
-                                            <label for="male" class="gender-label">Male</label>
+                                            <label for="male" class="gender-label">{{ __('customer/manage-profile.male') }}</label>
                                             <input type="radio" id="female" name="gender" value="female"
                                                 class="gender-radio" checked>
                                             <label for="female"
-                                                class="gender-label lexend font-medium text-black">Female</label>
+                                                class="gender-label lexend font-medium text-black">{{ __('customer/manage-profile.female') }}</label>
                                         @endif
 
                                     </div>
@@ -186,7 +180,7 @@
                                         </label>
                                     </div>
                                     <div class="edit-btn-group">
-                                        <button class="inter font-medium edit-data">Edit</button>
+                                        <button class="inter font-medium edit-data">{{ __('customer/manage-profile.edit') }}</button>
                                     </div>
                                 </div>
                             </div>
@@ -198,20 +192,19 @@
                 <div id="management-security" class="management-section mt-4">
 
                     <div class="security-manage">
-                        <p class="lexend font-medium text-black title">Security Management</p>
-                        <p class="inter font-regular text-black description">This is where we lock security with top grade
-                            protection. Safest place on earth! Manage your account security here.</p>
+                        <p class="lexend font-medium text-black title">{{ __('customer/manage-profile.security_management') }}</p>
+                        <p class="inter font-regular text-black description">{{ __('customer/manage-profile.security_desc') }}</p>
                         <hr
                             style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
                     </div>
                     <div class="left-right-security">
                         <div class="left-security">
-                            <p class="inter font-bold title-security">MFA Management</p>
+                            <p class="inter font-bold title-security">{{__('customer/manage-profile.MFA_management')}}</p>
                             <div class="mfa-warning">
                                 <span class="material-symbols-outlined mfa-warning-icon">warning</span>
                                 <span class="inter font-bold mfa-warning-text">
-                                    Your account is not fully protected,<br>
-                                    we recommend you to activate 2FA!
+                                    {{__('customer/manage-profile.MFA_desc')}}<br>
+                                    {{__('customer/manage-profile.MFA_desc2')}}
                                 </span>
                             </div>
 
@@ -220,41 +213,40 @@
                                     <input type="checkbox" id="mfaToggle">
                                     <span class="mfa-slider"></span>
                                 </label>
-                                <span class="inter font-bold mfa-toggle-label">Enable Multi Factor Authentication</span>
+                                <span class="inter font-bold mfa-toggle-label">{{__('customer/manage-profile.MFA_toggle')}}</span>
                             </div>
 
                             <p class="mfa-desc inter font-bold">
-                                Multi Factor Authentication works by sending OTP to your email and requiring it every time
-                                you log in onto the account.
+                                {{__('customer/manage-profile.MFA_desc3')}}</span>
+                            </div>
                             </p>
                         </div>
                         <div class="security-divider"></div>
                         <div class="right-security">
-                            <p class="inter font-bold title-security">Change Password</p>
+                            <p class="inter font-bold title-security">{{__('customer/manage-profile.change_pass')}}</p>
                             <div class="change-password-form">
                                 <div class="password-input-group">
                                     <input type="password" id="oldPassword" class="password-input"
-                                        placeholder="Old Password">
+                                        placeholder="{{__('customer/manage-profile.old_pass')}}">
                                     <span class="toggle-password" data-target="oldPassword">
                                         <span class="material-symbols-outlined">visibility_off</span>
                                     </span>
                                 </div>
                                 <div class="password-input-group">
                                     <input type="password" id="newPassword" class="password-input"
-                                        placeholder="New Password">
+                                        placeholder="{{__('customer/manage-profile.new_pass')}}">
                                     <span class="toggle-password" data-target="newPassword">
                                         <span class="material-symbols-outlined">visibility_off</span>
                                     </span>
                                 </div>
                                 <div class="password-input-group">
                                     <input type="password" id="verifyPassword" class="password-input"
-                                        placeholder="New Password Verification">
-                                    <span class="toggle-password" data-target="verifyPassword">
+                                        placeholder="{{__('customer/manage-profile.new_pass_ver')}}" data-target="verifyPassword">
                                         <span class="material-symbols-outlined">visibility_off</span>
                                     </span>
                                 </div>
                                 <div class="change-btn-group">
-                                    <button class="inter save-password-btn">Change</button>
+                                    <button class="inter save-password-btn">{{__('customer/manage-profile.but_cha')}}</button>
                                 </div>
                             </div>
                         </div>
@@ -266,7 +258,7 @@
                 <form method="POST" action="{{ route('logout') }}" class="logout-form">
                     @csrf
                     <button type="submit" class="logout-btn inter font-regular">
-                        Log out
+                        {{ __('customer/manage-profile.log_out') }}
                     </button>
                 </form>
             </div>

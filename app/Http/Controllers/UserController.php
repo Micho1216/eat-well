@@ -100,7 +100,7 @@ class UserController extends Controller
 
 
         logActivity('Successfully', 'Visited', 'Manage Profile Page');
-        return view('manageProfile', compact('user'));
+        return view('customer/manageProfile', compact('user'));
     }
 
 
