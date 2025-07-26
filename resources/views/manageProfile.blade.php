@@ -9,10 +9,10 @@
 
 @section('content')
     <div class="container container-custom">
-        <div class="left-panel outer-panel">
+        <div class="left-panel outer-panel d-flex flex-column h-100">
             <div class="lexend font-medium manage-profile">
                 <div class="left-panel-in photo-prof">
-                    <img src="{{ asset($user->profilePath) }}" alt="Profile Picture" class="prof-pict">
+                    <img src="{{ asset('asset/profile/' . $user->profilePath) }}" alt="Profile Picture" class="prof-pict">
                 </div>
                 <div class="right-panel-in data-prof">
                     <p class="profile-name text-white lexend font-regular">{{ $user->name }}</p>
@@ -58,7 +58,7 @@
                     <a class="menu-link inter font-regular" href="/manage-address">Manage Address</a>
                 </li>
             </ul>
-            <div class="logout">
+            <div class="logout d-none d-md-flex">
                 <form method="POST" action="{{ route('logout') }}" class="logout-form">
                     @csrf
                     <button type="submit" class="logout-btn inter font-regular">
@@ -184,7 +184,7 @@
                                 </div>
                                 <div class="photo-data">
                                     <div class="profile-image-wrapper">
-                                        <img src="{{ asset($user->profilePath) }}" alt="Profile Picture"
+                                        <img src="{{ asset('asset/profile/' . $user->profilePath) }}" alt="Profile Picture"
                                             class="profile-picture" id="profilePicPreview">
                                         <label for="profilePicInput" class="change-image-label">
                                             <span class="material-symbols-outlined change-image-icon">
@@ -217,19 +217,33 @@
                         <div class="left-security">
                             <p class="inter font-bold title-security">MFA Management</p>
                             <div class="mfa-warning">
-                                <span class="material-symbols-outlined mfa-warning-icon">warning</span>
-                                <span class="inter font-bold mfa-warning-text">
-                                    Your account is not fully protected,<br>
-                                    we recommend you to activate 2FA!
-                                </span>
+                                @unless ($user->enabled_2fa)
+                                    <span class="material-symbols-outlined mfa-warning-icon">warning</span>
+                                    <span class="inter font-bold mfa-warning-text">
+                                        Your account is not fully protected,<br>
+                                        we recommend you to activate 2FA!
+                                    </span>
+                                @endunless
                             </div>
 
                             <div class="mfa-toggle-row">
-                                <label class="mfa-switch">
-                                    <input type="checkbox" id="mfaToggle">
-                                    <span class="mfa-slider"></span>
-                                </label>
-                                <span class="inter font-bold mfa-toggle-label">Enable Multi Factor Authentication</span>
+                                <form method="POST" action="{{ route('manage-two-factor') }}">
+                                    @csrf
+                                    <button type="submit" class="btn">
+                                        <label class="mfa-switch">
+                                            <input type="checkbox" @checked($user->enabled_2fa)/>
+                                            <span class="mfa-slider"></span>
+                                        </label>
+                                    </button>
+                                </form>
+
+                                <span class="inter font-bold mfa-toggle-label">
+                                    @if ($user->enabled_2fa)
+                                        Two Factor Authentication is enabled
+                                    @else
+                                        Enable Multi Factor Authentication
+                                    @endif
+                                </span>
                             </div>
 
                             <p class="mfa-desc inter font-bold">
@@ -269,6 +283,15 @@
                         </div>
                     </div>
                 </div>
+            </div>
+
+            <div class="logout-mobile d-flex d-md-none justify-content-center">
+                <form method="POST" action="{{ route('logout') }}" class="logout-form">
+                    @csrf
+                    <button type="submit" class="logout-btn inter font-regular">
+                        Log out
+                    </button>
+                </form>
             </div>
         </div>
     </div>

@@ -22,7 +22,7 @@ return new class extends Migration
             // $table->string('description');
             $table->string('logo');
             $table->string('phone_number', 20);
-            $table->decimal('rating', 2, 1);
+            $table->decimal('rating', 2, 1)->default(0);
             $table->timestamps();
 
             $table->softDeletes();

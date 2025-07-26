@@ -24,7 +24,7 @@ class PackageController extends Controller
 
         $cuisines = CuisineType::all();
         logActivity('Successfully', 'Visited', 'Manage Catering Package Page');
-        return view('manageCateringPackage', compact('packages', 'cuisines'));
+        return view('manageCateringPackage', compact('packages', 'cuisines', 'vendorId'));
     }
 
     // Menyimpan data package baru

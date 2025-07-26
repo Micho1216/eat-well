@@ -15,11 +15,11 @@ class VendorPreviewSeeder extends Seeder
      */
 
      private array $imagePool = [
-        'asset/catering-detail/food preview 1.jpeg',
-        'asset/catering-detail/food preview 2.jpg',
-        'asset/catering-detail/food preview 3.jpeg',
-        'asset/catering-detail/food preview 4.jpg',
-        'asset/catering-detail/food preview 5.jpg',
+        'food preview 1.jpeg',
+        'food preview 2.jpg',
+        'food preview 3.jpeg',
+        'food preview 4.jpg',
+        'food preview 5.jpeg',
     ];
 
     /**

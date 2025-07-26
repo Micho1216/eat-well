@@ -322,49 +322,45 @@
             <img src="asset/catering/homePage/logoCatering.png" alt="Logo" />
         </div>
         <div class="welcome-text">
-            <h2>Welcome, {{ $vendor->name }}!</h2>
+            <h2>{{ __('catering-home-page.welcome') }}, {{ $vendor->name }}!</h2>
             <p style="text-align: justify; color:black;">
-                Eat Well is a smart platform that connects users with healthy meal catering services.
-                Discover, compare, and subscribe to trusted catering providers based on your dietary needs
-                and preferences—all in one place.
+                {{ __('catering-home-page.intro') }}
             </p>
         </div>
     </div>
-    <div class="heading-title">Analyze Your Sales</div>
-    <div class="text-muted-subheading text-center" style="font-family: 'Roboto', sans-serif;">You can download the whole
-        report of your sales</div>
+    <div class="heading-title">{{ __('catering-home-page.analyze_sales') }}</div>
+    <div class="text-muted-subheading text-center" style="font-family: 'Roboto', sans-serif;">
+        {{ __('catering-home-page.download_report_desc') }}</div>
 
     <div class="container my-5">
         <div class="chart-container text-center">
-            <h2 class="chart-title">Statistic of Your Income on {{ $salesMonth }} </h2>
+            <h2 class="chart-title">{{ __('catering-home-page.income_statistics') }} {{ $salesMonth }} </h2>
             <canvas id="salesChart"></canvas>
-            <button class="btn-download mt-4">DOWNLOAD REPORT</button>
+            <button class="btn-download mt-4">{{ __('catering-home-page.download_report') }}</button>
         </div>
     </div>
 
-    <p class="heading-title">Today’s Catering Orders!</p>
+    <p class="heading-title">{{ __('catering-home-page.todays_orders') }}</p>
     @php
         $slotMeta = [
             'breakfast' => [
-                'title' => 'Breakfast',
+                'title' => __('catering-home-page.breakfast'),
                 'img' => asset('asset/catering/homePage/breakfastPreview.png'),
-                // ⇓ ambil langsung kolom breakfast_delivery
                 'time' => $vendor->breakfast_delivery ?? '-',
             ],
             'lunch' => [
-                'title' => 'Lunch',
+                'title' => __('catering-home-page.lunch'),
                 'img' => asset('asset/catering/homePage/lunchPreview.png'),
-                // ⇓ kolom lunch_delivery
                 'time' => $vendor->lunch_delivery ?? '-',
             ],
             'dinner' => [
-                'title' => 'Dinner',
+                'title' => __('catering-home-page.dinner'),
                 'img' => asset('asset/catering/homePage/dinnerPreview.png'),
-                // ⇓ kolom dinner_delivery
                 'time' => $vendor->dinner_delivery ?? '-',
             ],
         ];
     @endphp
+
 
 
     <div class="card-deck">
@@ -381,12 +377,12 @@
                             {{ $qty }} × {{ $pkg }}
                         </p>
                     @empty
-                        <p class="card-text text-muted">No orders yet</p>
+                        <p class="card-text text-muted">{{ __('catering-home-page.no_orders') }}</p>
                     @endforelse
                 </div>
 
                 <div class="card-footer">
-                    <small class="text-muted">Served from {{ $meta['time'] }}</small>
+                    <small class="text-muted">{{ __('catering-home-page.served_from') }} {{ $meta['time'] }}</small>
                 </div>
             </div>
         @endforeach
@@ -410,7 +406,12 @@
         new Chart(ctx, {
             type: 'line',
             data: {
-                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                labels: [
+                    '{{ __('catering-home-page.week_1') }}',
+                    '{{ __('catering-home-page.week_2') }}',
+                    '{{ __('catering-home-page.week_3') }}',
+                    '{{ __('catering-home-page.week_4') }}',
+                ],
                 datasets: [{
                     data: chartData, // ⬅️ pakai data dinamis
                     borderColor: '#000',

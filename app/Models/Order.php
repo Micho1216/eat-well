@@ -66,7 +66,7 @@ class Order extends Model
         return $this->hasMany(DeliveryStatus::class, 'orderId', 'orderId');
     }
 
-    public function vendorReviews()
+    public function vendorReview()
     {
         return $this->hasOne(VendorReview::class, 'orderId', 'orderId');
     }

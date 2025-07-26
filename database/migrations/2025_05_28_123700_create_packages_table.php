@@ -24,7 +24,7 @@ return new class extends Migration
             $table->decimal('dinnerPrice', 12, 2)->nullable();
             $table->timestamps();
 
-            $table->foreign('categoryId')->references('categoryId')->on('package_categories')->onDelete('cascade');
+            $table->foreign('categoryId')->references('categoryId')->on('package_categories')->onDelete('restrict');
             $table->foreign('vendorId')->references('vendorId')->on('vendors')->onDelete('cascade');
             $table->softDeletes();
         });

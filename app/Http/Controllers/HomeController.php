@@ -54,30 +54,24 @@ class HomeController extends Controller
             $vendors = Vendor::orderByDesc('rating')->limit(12)->get();
         }
 
-        // Get favorited vendors from this user
         $favVendors = $user->favoriteVendors()->limit(8)->get();
-        // dd($favVendors);
 
-        // Oldest active subscription
         $order = Order::where('userId', $user->userId)
             ->where('isCancelled', false)
             ->whereDate('startDate', '<=', Carbon::now())
             ->whereDate('endDate', '>=', Carbon::now())
             ->orderBy('created_at')
             ->first();
-        // dd($order);
         $slotMap = [];
 
         if($order){
             $order->load(['vendor', 'orderItems', 'deliveryStatuses']);
-    
-            // Group order items by packageTimeSlot, then by package name, and sum quantity per package
+
             $itemsBySlot = $order->orderItems
                 ->groupBy(function ($item) {
                     return strtolower($item->packageTimeSlot->value ?? $item->packageTimeSlot);
                 })
                 ->map(function ($items) {
-                    // Group by package name and sum quantity per package
                     return $items->groupBy(function ($item) {
                         return $item->package->name;
                     })->map(function ($groupedItems, $packageName) {
@@ -87,20 +81,15 @@ class HomeController extends Controller
                         ];
                     })->values();
                 });
-            // dd($itemsBySlot);
-    
-            // 2. Get today's delivery status for each slot
+
             $today = now()->toDateString();
-            // $today = '2025-06-24';
             $deliveryStatusBySlot = $order->deliveryStatuses()
                 ->whereDate('deliveryDate', $today)
                 ->get()
                 ->keyBy(function ($status) {
                     return strtolower($status->slot->value ?? $status->slot);
                 });
-            // dd($deliveryStatusBySlot);
     
-            // Merge into one mapping
             foreach ($itemsBySlot as $slotKey => $packages) {
                 $slotMap[$slotKey] = [
                     'packages' => $packages,
@@ -110,7 +99,7 @@ class HomeController extends Controller
             // dd($slotMap);
         }
 
-        $wellpay = $user->wellpay ?? 0; // Ambil saldo, default 0 jika kolom 'balance' null/tidak ada
+        $wellpay = $user->wellpay ?? 0;
 
         logActivity('successfully', 'visited', 'Homepage');
 

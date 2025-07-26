@@ -16,7 +16,7 @@ class VendorPreview extends Model
         'vendorId',
         'previewPicturePath',
     ];
-    
+
     public function vendor()
     {
         return $this->belongsTo(Vendor::class, 'vendorId', 'vendorId');

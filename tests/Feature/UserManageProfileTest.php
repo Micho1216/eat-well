@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -69,9 +70,7 @@ class UserManageProfileTest extends TestCase
 
         $payload = [
             'nameInput' => 'Amira Frami',
-            'dob_year' => '1999',
-            'dob_month' => '09',
-            'dob_day' => '11',
+            'dateOfBirth' => '1999-09-11',
             'gender' => 'female',
         ];
 
@@ -110,14 +109,12 @@ class UserManageProfileTest extends TestCase
 
         $payload = [
             'nameInput' => 'Future User',
-            'dob_year' => $tomorrow->format('Y'),
-            'dob_month' => $tomorrow->format('m'),
-            'dob_day' => $tomorrow->format('d'),
+            'dateOfBirth' => Carbon::now()->addDay(),
             'gender' => 'female',
         ];
 
         $response = $this->patch('/manage-profile', $payload);
-        $response->assertSessionHasErrors(['dob_year']);
+        $response->assertSessionHasErrors(['dateOfBirth']);
     }
 
     /** @test */

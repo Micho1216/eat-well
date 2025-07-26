@@ -13,6 +13,12 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 $(document).ready(function () {
+    const translationDataElement = document.getElementById("translation-data");
+    const packageText = translationDataElement.dataset.packageText;
+    const packagesText = translationDataElement.dataset.packagesText;
+    const itemsText = translationDataElement.dataset.itemsText;
+    const noPackageSelectedYetText = translationDataElement.dataset.noPackageSelectedYet;
+
     $(".add-button").click(function (e) {
         var accordionItem = $(this).attr("data-tab");
         $("#" + accordionItem)
@@ -85,16 +91,32 @@ $(document).ready(function () {
                     );
                     const addText = addButton.find(".add-text");
 
+                    // let currentPackageItemCount = 0;
+                    // for (const itemName in pkgData.items) {
+                    //     const qty = pkgData.items[itemName];
+                    //     currentPackageItemCount += qty;
+
+                    //     // Update the quantity display in the accordion content
+                    //     const itemRow = $(
+                    //         `#${accordionContentId} .item-row:has(span:contains('${itemName}'))`
+                    //     );
+                    //     itemRow.find(".qty").text(qty);
+                    // }
+
                     let currentPackageItemCount = 0;
-                    for (const itemName in pkgData.items) {
-                        const qty = pkgData.items[itemName];
+                    for (const mealTypeKey in pkgData.items) {
+                        const qty = pkgData.items[mealTypeKey];
                         currentPackageItemCount += qty;
 
-                        // Update the quantity display in the accordion content
                         const itemRow = $(
-                            `#${accordionContentId} .item-row:has(span:contains('${itemName}'))`
-                        );
-                        itemRow.find(".qty").text(qty);
+                            `#${accordionContentId} .item-row span[data-meal-type="${mealTypeKey}"]`
+                        ).closest('.item-row');
+
+                        if (itemRow.length) {
+                            itemRow.find(".qty").text(qty);
+                        } else {
+                            console.warn(`Element with data-meal-type="${mealTypeKey}" not found for package ${pkgId}.`);
+                        }
                     }
 
                     // Update the "Add" button text
@@ -105,7 +127,7 @@ $(document).ready(function () {
                         addText.text(`${currentPackageItemCount} Item`);
                         addButton.addClass("active");
                     } else {
-                        addText.text(`${currentPackageItemCount} Items`);
+                        addText.text(`${currentPackageItemCount} ${itemsText}`);
                         addButton.addClass("active");
                     }
                 }
@@ -122,7 +144,7 @@ $(document).ready(function () {
         const proceedToPaymentLink = $('#proceedToPaymentLink'); 
 
         if (pkgCount === 0) {
-            $(".order-message").show().text("No Package Selected Yet.");
+            $(".order-message").show().text(`${noPackageSelectedYetText}`);
             $(".package-count, .item-count, .price-total").hide();
             proceedToPaymentLink.css({
                 'cursor': 'default',
@@ -130,11 +152,11 @@ $(document).ready(function () {
             });
         } else if (pkgCount === 1) {
             $(".order-message").hide();
-            $(".package-count").show().text(`${pkgCount} Package`);
+            $(".package-count").show().text(`${pkgCount} ${packageText}`);
             if (summary.totalItems === 1) {
                 $(".item-count").show().text(`${summary.totalItems} Item`);
             } else {
-                $(".item-count").show().text(`${summary.totalItems} Items`);
+                $(".item-count").show().text(`${summary.totalItems} ${itemsText}`);
             }
             $(".price-total")
                 .show()
@@ -146,7 +168,7 @@ $(document).ready(function () {
             });
         } else {
             $(".order-message").hide();
-            $(".package-count").show().text(`${pkgCount} Packages`);
+            $(".package-count").show().text(`${pkgCount} ${packagesText}`);
             $(".item-count").show().text(`${summary.totalItems} Items`);
             $(".price-total")
                 .show()
@@ -233,7 +255,7 @@ $(document).ready(function () {
             console.log(`Initialized new package entry for pkgId: ${pkgId}`);
         }
 
-        const itemName = $(this).closest(".item-row").find("span:first").text();
+        const itemName = $(this).closest(".item-row").find("span:first").data("meal-type");
         summary.packages[pkgId].items[itemName] = qty;
 
         // console.log("DEBUG: pkgId saat ini:", pkgId);

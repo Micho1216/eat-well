@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Validation\Rules\Password;
 use Illuminate\Http\Request;
+use App\Models\User;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 class SessionController extends Controller
 {
@@ -21,30 +23,42 @@ class SessionController extends Controller
             'password' => 'required',
         ]);
 
-        $remember = request()->has('remember') ? true : false;
-
-
-        if(!Auth::attempt($attrs, $remember)){
+        $remember = request()->has('remember');
+        $user = User::where('email', $attrs['email'])->first();
+        Session(['remember' => $remember]);
+        Session(['email' => $attrs['email']]);
+        if(!$user){
             loginLog($request->email, ' Login Failed : Error, credentials do not match');
             throw ValidationException::withMessages([
                 'email' => 'Credentials do not match',
                 'password' => 'Credentials do not match'
             ]);
         }
-        else{
-            loginLog($request->email, 'Successfully');
-            request()->session()->regenerate();
-            return redirect('/home');
+        
+        if(!$user->email_verified_at || $user->enabled_2fa){
+            $otp = rand(100000, 999999);
+            $user->update([
+                'otp' => $otp,
+                'otp_expires_at' => Carbon::now()->addMinutes(3),
+            ]);
+
+            $email = $user->email;
+            Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($email){
+                $message->to($email)->subject('Your OTP');
+            });
+
+            return redirect()->route('auth.verify');
         }
-
-
+        
+        Auth::login($user, $remember);
+        loginLog($request->email, 'Successfully');
+        return redirect()->route('home');
     }
 
     public function destroy()
     {
         logActivity('Successfully', 'Logged out', 'Eat-well');
         Auth::logout();
-
         return redirect('/');
     }
 }

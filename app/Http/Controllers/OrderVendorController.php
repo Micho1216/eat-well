@@ -6,10 +6,14 @@ use App\Enums\TimeSlot;
 use App\Models\DeliveryStatus;
 use App\Models\Order;
 use App\Models\Vendor;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Payment;
+use App\Notifications\OrderArrived;
+use App\Notifications\OrderDelivered;
+use App\Notifications\OrderPrepared;
 
 class OrderVendorController extends Controller
 {
@@ -212,9 +216,35 @@ class OrderVendorController extends Controller
                 'message' => 'Delivery status not found for this order and slot.'
             ], 404);
         }
-
         $ds->status = $request->status;
         $ds->save();
+
+        #Note: Get the order, user and status
+        $order = Order::find($orderId);
+        $userId = $order->userId;
+        $user = User::find($userId);
+        $orderStatus = $request->status;
+
+        #Note: generating appropriate notification to be sent based on the status;
+        $toBeNotified = null;
+        if($orderStatus === 'Prepared')
+        {
+           $toBeNotified = new OrderPrepared($order);
+        }
+        else if($orderStatus === 'Delivered')
+        {
+            $toBeNotified = new OrderDelivered($order);
+        }
+        else if($orderStatus === 'Arrived')
+        {
+            $toBeNotified = new OrderArrived($order);
+        }
+
+        if($toBeNotified !== null)
+        {
+            #Note: only send when notification is successfuly created;
+            $user->notify($toBeNotified);
+        }
 
         return response()->json([
             'success' => true,

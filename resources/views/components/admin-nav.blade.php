@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+\<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -63,6 +63,11 @@
                                 href="/view-all-transactions">{{ __('admin-nav.transactions') }}</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('categories') ? 'active' : '' }}"
+                                href="{{route('categories.show')}}">{{ __('admin-nav.category') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-all-packages-category') ? 'active' : '' }}"
                                 href="/view-all-packages-category">{{ __('admin-nav.category') }}</a>
                         </li>
@@ -116,6 +121,7 @@
     </nav>
 
     {{-- ===== PAGE CONTENT ===== --}}
+    @yield('content')
 
     {{-- ===== FOOTER ===== --}}
     {{-- <footer class="bg-dark text-white py-0 mt-auto">
@@ -153,6 +159,7 @@
     </footer> --}}
 
     {{-- Scripts --}}
+    @yield(section: 'scripts')
 </body>
 
 </html>

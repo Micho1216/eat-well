@@ -125,6 +125,42 @@ a, button {
     box-shadow: none !important;
 }
 
+.btn-green {
+    background-color: var(--background-color) !important;
+    color: var(--secondary-color) !important;
+    border: none !important;
+    box-shadow: none !important;
+    transition: 0.3s ease;
+}
+
+.btn-green:hover,
+.btn-green:active,
+.btn-green:focus,
+.btn-green:focus-visible {
+    background-color: #194835!important;
+    color: var(--secondary-color) !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.btn-green-second {
+    background-color: #0d4d33 !important;
+    color: var(--secondary-color) !important;
+    border: none !important;
+    box-shadow: none !important;
+    transition: 0.3s ease;
+}
+
+.btn-green-second:hover,
+.btn-green-second:active,
+.btn-green-second:focus,
+.btn-green-second:focus-visible {
+    background-color: rgb(8, 67, 42)!important;
+    color: var(--secondary-color) !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
 /* TEXT WRAPPER */
 .text-wrapper {
     width: fit-content;

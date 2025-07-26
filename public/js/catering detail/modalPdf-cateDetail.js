@@ -6,14 +6,14 @@ document.addEventListener("DOMContentLoaded", function () {
     // Handle semua tombol View
     document.querySelectorAll(".view-menu-text").forEach((viewBtn) => {
         viewBtn.addEventListener("click", function () {
-            const pdfUrl = this.dataset.pdf;
+            const pdfUrl = this.dataset.pdf;  
             iframe.src = pdfUrl;
             modal.style.display = "flex";
         });
     });
 
     // Handle semua tombol Download
-    document.querySelectorAll(".download-icon").forEach((downloadBtn) => {
+    document.querySelectorAll(".download-wrapper").forEach((downloadBtn) => {
         downloadBtn.addEventListener("click", function () {
             const pdfUrl = this.dataset.pdf;
             const link = document.createElement("a");

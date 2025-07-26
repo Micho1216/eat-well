@@ -54,6 +54,15 @@
                             <form action="{{ route('search') }}" method="GET"
                                 class="d-flex align-items-center w-100 h-100">
                                 @csrf
+                                {{-- Persist Filter --}}
+                                <input type="hidden" name="min_price" value="{{ request('min_price') }}">
+                                <input type="hidden" name="max_price" value="{{ request('max_price') }}">
+                                <input type="hidden" name="rating" value="{{ request('rating') }}">
+                                @if (request()->has('category'))
+                                    @foreach (request('category') as $cat)
+                                        <input type="hidden" name="category[]" value="{{ $cat }}">
+                                    @endforeach
+                                @endif
                                 <input type="hidden" name="address_id" id="searchFormAddressId" value="{{ $mainAddress->addressId ?? '' }}">
                                 <div class="input-group">
                                     <button type="submit" class="input-group-text search-button border-end-0 p-0"
@@ -62,9 +71,9 @@
                                     </button>
                                     <input type="text" name="query"
                                         class="form-control border-start-0 input-text-style-1"
-                                        placeholder="Search for vendor, category, etc."
-                                        aria-label="Search for vendor, category, etc." value="{{ request('query') }}"
-                                        required>
+                                        placeholder="{{ __('customer/search.search_placeholder') }}"
+                                        aria-label="{{__('customer/search.search_placeholder')}}" value="{{ request('query') }}"
+                                        >
                                 </div>
                             </form>
                         </div>
@@ -85,7 +94,7 @@
                             <input type="hidden" name="address_id" id="desktopFilterAddressId" value="{{ $mainAddress->addressId ?? '' }}">
                             {{-- Price Range --}}
                             <div class="mb-4">
-                                <label class="form-label label-filter">Price Range</label>
+                                <label class="form-label label-filter">{{__('customer/search.filter_price_label')}}</label>
                                 <div class="row g-2">
                                     <div class="col">
                                         <input type="number" class="form-control" placeholder="Min" min="0"
@@ -95,7 +104,7 @@
                                         <span>to</span>
                                     </div>
                                     <div class="col">
-                                        <input type="number" class="form-control" placeholder="Max" min="0"
+                                        <input type="number" class="form-control" placeholder={{__('customer/search.filter_price_max')}} min="0"
                                             name="max_price" value="{{ request('max_price') }}">
                                     </div>
                                 </div>
@@ -135,7 +144,7 @@
                             </div>
                             {{-- Category Filter --}}
                             <div class="mb-4">
-                                <label class="form-label label-filter">Category</label>
+                                <label class="form-label label-filter">{{__('customer/search.category')}}</label>
                                 <div class="row row-cols-2">
                                     @foreach ($all_categories as $cat)
                                         <div class="col">
@@ -152,9 +161,10 @@
                                     @endforeach
                                 </div>
                             </div>
+                            <input type="hidden" name="query" value="{{ request('query') }}">
                             {{-- Apply Button --}}
                             <div class="text-start">
-                                <button type="submit" class="btn btn-orange">Apply Filter</button>
+                                <button type="submit" class="btn btn-orange">{{__('customer/search.apply')}}</button>
                             </div>
                         </form>
                     </div>
@@ -199,8 +209,8 @@
                         {{-- No Results Message (visible only when no results found) --}}
                         @if ($vendors->isEmpty())
                             <div class="no-results text-center mt-5">
-                                <h5 class="text-muted">No results found</h5>
-                                <p class="text-muted">Try adjusting your search or filter options.</p>
+                                <h5 class="text-muted">{{__('customer/search.no_result')}}</h5>
+                                <p class="text-muted">{{__('customer/search.no_result_sub')}}</p>
                             </div>
                         @endif
                     </div>
@@ -220,7 +230,7 @@
                     <input type="hidden" name="address_id" id="mobileFilterAddressId" value="{{ $mainAddress->addressId ?? '' }}">
                     {{-- Price Range --}}
                     <div class="mb-4">
-                        <label class="form-label label-filter">Price Range</label>
+                        <label class="form-label label-filter">{{__('customer/search.filter_price_label')}}</label>
                         <div class="row g-2">
                             <div class="col">
                                 <input type="number" class="form-control" placeholder="Min" min="0"
@@ -230,7 +240,7 @@
                                 <span>to</span>
                             </div>
                             <div class="col">
-                                <input type="number" class="form-control" placeholder="Max" min="0"
+                                <input type="number" class="form-control" placeholder={{__('customer/search.filter_price_max')}} min="0"
                                     name="max_price" value="{{ request('max_price') }}">
                             </div>
                         </div>
@@ -268,7 +278,7 @@
                     </div>
                     {{-- Category Filter --}}
                     <div class="mb-4">
-                        <label class="form-label label-filter">Category</label>
+                        <label class="form-label label-filter">{{__('customer/search.category')}}</label>
                         <div class="row row-cols-2">
                             @foreach ($all_categories as $cat)
                                 <div class="col">
@@ -284,8 +294,9 @@
                             @endforeach
                         </div>
                     </div>
+                    <input type="hidden" name="query" value="{{ request('query') }}">
                     <div class="text-start">
-                        <button type="submit" class="btn btn-orange w-100">Apply Filter</button>
+                        <button type="submit" class="btn btn-orange w-100">{{__('customer/search.apply')}}</button>
                     </div>
                 </form>
             </div>

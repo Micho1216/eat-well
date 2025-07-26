@@ -42,3 +42,15 @@
   background-color: #1D3A2E;
 }
 
+
+.vendor-input-logo{
+  font-size: 28px; 
+  padding-left: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 18px;
+  display: block;
+  color: black;
+  background-color: white;
+  font-size: 2rem !important;
+}

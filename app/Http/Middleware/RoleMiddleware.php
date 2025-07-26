@@ -17,11 +17,12 @@ class RoleMiddleware
     public function handle(Request $request, Closure $next, string $role): Response
     {
         $user = Auth::user();
-        $role = Str::ucfirst($role);
-        // Jika belum login
+
         if (!$user) {
             return redirect('/login');
         }
+
+        $role = Str::ucfirst($role);
 
         if($user->role->value != $role)
         {

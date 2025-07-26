@@ -67,9 +67,9 @@ class CartController extends Controller
                 if (is_array($packageData) && isset($packageData['items']) && is_array($packageData['items'])) {
                     $itemsData = $packageData['items'];
 
-                    $breakfastQty = (int) ($itemsData['Breakfast'] ?? 0);
-                    $lunchQty = (int) ($itemsData['Lunch'] ?? 0);
-                    $dinnerQty = (int) ($itemsData['Dinner'] ?? 0);
+                    $breakfastQty = (int) ($itemsData['breakfast'] ?? 0);
+                    $lunchQty = (int) ($itemsData['lunch'] ?? 0);
+                    $dinnerQty = (int) ($itemsData['dinner'] ?? 0);
 
                     Log::info("Quantities for Package {$packageId}: B={$breakfastQty}, L={$lunchQty}, D={$dinnerQty}");
 
@@ -162,9 +162,9 @@ class CartController extends Controller
                     $initialPackages[$package->packageId] = [
                         'id' => $package->packageId,
                         'items' => [
-                            'Breakfast' => $cartItem->breakfastQty,
-                            'Lunch' => $cartItem->lunchQty,
-                            'Dinner' => $cartItem->dinnerQty,
+                            'breakfast' => $cartItem->breakfastQty,
+                            'lunch' => $cartItem->lunchQty,
+                            'dinner' => $cartItem->dinnerQty,
                         ],
                     ];
                     $initialTotalItems += $cartItem->breakfastQty + $cartItem->lunchQty + $cartItem->dinnerQty;

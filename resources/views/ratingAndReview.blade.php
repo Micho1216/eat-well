@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('title')
-    {{ $vendor->name }}'s Rating and Review
+    {{ $vendor->name }}
 @endsection
 
 @section('css')
@@ -21,7 +21,7 @@
                 </a>
                 <h1 class="lexend judul-gede">{{ $vendor->name }}</h1>
             </div>
-            <h5 class="num-sold inter m-0">{{ $numSold }} Sold</h5>
+            <h5 class="num-sold inter m-0">{{ $numSold }} {{ __('catering-detail.sold') }}</h5>
         </div>
 
         <div class="review-card-container">
@@ -30,8 +30,7 @@
                     <div class="profile-rating-wrapper">
                         <div class="profile-wrapper">
                             <div class="profile">
-                                <img src="{{ asset($review->user->profilePath) }}" alt="User Profile"
-                                    class="profile-user">
+                                <img src="{{ asset($review->user->profilePath) }}" alt="User Profile" class="profile-user">
                             </div>
                             <h5 class="username inter">
                                 {{ substr($review->user->name, 0, 1) . str_repeat('*', strlen($review->user->name) - 1) }}
@@ -47,15 +46,22 @@
                             <p>
                                 {{ $review->review }}
                             </p>
-                        </div>   
+                        </div>
                     @endif
+
+                    @php
+                        $locale = app()->getLocale();
+                        $date = \Carbon\Carbon::parse($review->order->created_at)->locale($locale);
+                    @endphp
                     <div class="order-label">
-                        <p class="inter">Ordered on {{ \Carbon\Carbon::parse($review->order->created_at)->format('jS M Y') }}</p>
+                        <p class="inter">
+                            {{ __('catering-detail.ordered_on') }} {{ $locale === 'en' ? $date->translatedFormat('jS F Y') : $date->translatedFormat('j F Y') }}
+                        </p>
                     </div>
                 </div>
             @empty
                 <div class="text-center p-4">
-                    <p class="inter text-muted">No reviews for this vendor yet.</p>
+                    <p class="inter text-muted">{{ __('catering-detail.no_reviews') }}</p>
                 </div>
             @endforelse
         </div>

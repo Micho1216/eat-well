@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ app()->getLocale() }}">
 
 <head>
     <meta charset="UTF-8">
@@ -17,7 +17,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
 </head>
 
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column">
     <nav class="navbar navbar-expand-md custNavigation w-100">
         <div class="h-100 w-100 invisible position-absolute bg-black opacity-50 z-3 nav-visibility"></div>
         <div class="container-fluid">
@@ -109,11 +109,11 @@
         </div>
     </nav>
 
-    <div class="flex-grow-1">
+    <div class="flex-grow-1 w-100">
         @yield('content')
     </div>
 
-    <footer class="bg-dark text-white py-0">
+    <footer class="bg-dark text-white py-0 w-100">
         <div class="container text-center footer-page" style="margin-top: 10px; padding: 10px">
 
             <div class="mb-2">
@@ -136,7 +136,7 @@
 
             <!-- Copyright -->
             <div class="mb-1">
-                <p class="text-white-50 mb-1">&copy; {{ date('Y') }} Eat Well. All rights reserved.</p>
+                <p class="text-white-50 mb-1">&copy; {{ date('Y') }} Eat Well. {{ __('navigation.footer_rights') }}.</p>
             </div>
 
             <!-- Alamat -->
@@ -151,6 +151,7 @@
 
     @yield('scripts')
     <script src="{{ asset('js/navigation.js') }}"></script>
+
 
 </body>
 

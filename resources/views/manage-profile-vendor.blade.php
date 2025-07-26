@@ -151,19 +151,36 @@
                         <div class="left-security">
                             <p class="inter font-bold title-security">{{ __('manage-profile-vendor.mfa_management') }}</p>
                             <div class="mfa-warning">
-                                <span class="material-symbols-outlined mfa-warning-icon">warning</span>
-                                <span class="inter font-bold mfa-warning-text">{!! __('manage-profile-vendor.mfa_warning') !!}</span>
+                                @unless ($user->enabled_2fa)
+                                    <span class="material-symbols-outlined mfa-warning-icon">warning</span>
+                                    <span class="inter font-bold mfa-warning-text">
+                                        {!! __('manage-profile-vendor.mfa_warning') !!}
+                                    </span>
+                                @endunless
                             </div>
 
                             <div class="mfa-toggle-row">
-                                <label class="mfa-switch">
-                                    <input type="checkbox" id="mfaToggle">
-                                    <span class="mfa-slider"></span>
-                                </label>
-                                <span class="inter font-bold mfa-toggle-label">{{ __('manage-profile-vendor.mfa_enable') }}</span>
-                            </div>
+                                <form method="POST" action="{{ route('manage-two-factor') }}">
+                                    @csrf
+                                    <button type="submit" class="btn">
+                                        <label class="mfa-switch">
+                                            <input type="checkbox" @checked($user->enabled_2fa)/>
+                                            <span class="mfa-slider"></span>
+                                        </label>
+                                    </button>
+                                </form>
 
-                            <p class="mfa-desc inter font-bold">{{ __('manage-profile-vendor.mfa_desc') }}</p>
+                                <span class="inter font-bold mfa-toggle-label">
+                                    @if ($user->enabled_2fa)
+                                        {{ __('manage-profile-vendor.mfa_enable') }}
+                                    @else
+                                        Enable Multi Factor Authentication
+                                    @endif
+                                </span>
+                            </div>
+                            <p class="mfa-desc inter font-bold">
+                                {{ __('manage-profile-vendor.mfa_desc') }}
+                            </p>
                         </div>
                         <div class="security-divider"></div>
                         <div class="right-security">

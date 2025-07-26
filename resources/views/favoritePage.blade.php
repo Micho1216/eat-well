@@ -20,7 +20,7 @@
                 arrow_back_ios_new
             </a>
         </div>
-        <h1 class="text-left m-0">Your Favorite Vendors</h1>
+        <h1 class="text-left m-0">{{__('customer/favorites.heading')}}</h1>
     </section>
     <section class="container mb-3 fav-vendor-container">
         @if ($vendors->isEmpty())

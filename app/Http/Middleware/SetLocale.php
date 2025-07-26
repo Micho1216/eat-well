@@ -17,10 +17,13 @@ class SetLocale
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $locale = Session::get('lang', 'en');
-
-        App::setLocale($locale);
+        $lang = Session::get('lang', 'en');
+        if($request->user())
+        {
+            $lang = $request->user()->locale;
+        }
         
+        App::setLocale($lang);
         return $next($request);
     }
 }

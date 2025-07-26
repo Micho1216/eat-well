@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Address;
+use App\Http\Requests\VendorStoreRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Order;
@@ -15,13 +16,28 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Carbon\Carbon;
 
-class VendorController extends Controller
+class 
+
+VendorController extends Controller
 {
+
+    public function display()
+    {
+            return view('cateringHomePage');
+    }
+
+
     public function index()
     {
-        $vendors = Vendor::all();
-        $categories = PackageCategory::all();
+        // dd(Auth()->user);
+        // $vendors = Vendor::all();
+        // $categories = PackageCategory::all();
+
+        // if(!$vendors->name){
+        //     return redirect('cateringHomePage');
+        // }
         return view('vendors.index', compact('vendors', 'categories'));
     }
 
@@ -96,12 +112,23 @@ class VendorController extends Controller
 
     public function search(Request $request)
     {
-        // Get request query
-        $query = $request->query('query');
-        $minPrice = $request->query('min_price') ?? 0;
-        $maxPrice = $request->query('max_price') ?? 999999999;
-        $rating = $request->query('rating');
-        $categories = $request->query('category', []);
+        // validate request
+        $validated = $request->validate([
+            'query' => 'nullable|string|max:255',
+            'min_price' => 'nullable|integer',
+            'max_price' => 'nullable|integer',
+            'rating' => 'nullable|numeric',
+            'category' => 'nullable|array',
+            'category.*' => 'string',
+        ]);
+        
+        // Use validated input data
+        $query = $validated['query'] ?? null;
+        $minPrice = $validated['min_price'] ?? 0;
+        $maxPrice = $validated['max_price'] ?? 999999999;
+        $rating = $validated['rating'] ?? null;
+        $categories = $validated['category'] ?? [];
+
         $all_categories = PackageCategory::all();
 
         $vendors = \App\Models\Vendor::query()
@@ -241,17 +268,6 @@ class VendorController extends Controller
             $userId = $user->userId;
             $vendor = Vendor::where('userId', $userId)->first();
 
-            // $request_validation = $request->validate(
-            //     [
-            //         'nameInput' => 'required|string|max:255',
-            //         'telpInput' => 'required|string|max:255',
-            //     ],
-            //     [
-            //         'nameInput.required' => 'Vendor name must be filled !.',
-            //         'telpInput.required' => 'Telp number must be filled !',
-            //     ]
-            // );
-
             $validator = Validator::make($request->all(), [
                 'nameInput'=> [
                     'bail',
@@ -302,57 +318,68 @@ class VendorController extends Controller
             logActivity('Successfully', 'Updated', 'Manage Profile Vendor Page');
             return redirect()->route('manage-profile-vendor')->with('success', 'Profile updated successfully!');
         } catch (\Exception $e) {
-            // Log::error('Error updating vendor profile: ' . $e->getMessage());
             logActivity('Failed', 'Updated', 'Vendor Profile, Due to Validation Error: ' . $e->getMessage());
             return redirect()->back()->withErrors(['error' => 'Failed to update profile.']);
         }
     }
 
-    //     public function updateProfile(Request $request)
-    //     {
-    //         try {
-    //             $user = Auth::user();
-    //             $userId = $user->userId;
-    //             $vendor = Vendor::where('userId', $userId)->first();
+    public function store(VendorStoreRequest $request){
+        // validating
+        $userId = Auth::id();
 
-    //             $validator = Validator::make($request->all(), [
-    //                 'nameInput' => 'required|string|max:255',
-    //                 'telpInput' => 'required|string|max:255',
-    //             ], [
-    //                 'nameInput.required' => 'Vendor name must be filled !.',
-    //                 'telpInput.required' => 'Telp number must be filled !',
-    //             ]);
+        $vendor = Vendor::create([
+            'userId' => $userId
+        ]);
 
-    //             if ($validator->fails()) {
-    //                 return redirect()->back()->withErrors($validator)->withInput();
-    //             }
+        // upload logo
+        $logoPath = null;
+        
+        $file = $request->file('logo');
 
-    //             $vendor->name = $request->nameInput;
-    //             $vendor->phone_number = $request->telpInput;
+        $filename = time().'_'.$file->getClientOriginalName();
 
-    //             $vendor->breakfast_delivery = $request->breakfast_hour_start . ':' . $request->breakfast_minute_start . '-' .
-    //                 $request->breakfast_hour_end . ':' . $request->breakfast_minute_end;
-    //             $vendor->lunch_delivery = $request->lunch_hour_start . ':' . $request->lunch_minute_start . '-' .
-    //                 $request->lunch_hour_end . ':' . $request->lunch_minute_end;
-    //             $vendor->dinner_delivery = $request->dinner_hour_start . ':' . $request->dinner_minute_start . '-' .
-    //                 $request->dinner_hour_end . ':' . $request->dinner_minute_end;
+        $file->storeAs('public/vendor_logos', $filename);
 
-    //             if ($request->hasFile('profilePicInput')) {
-    //                 $file = $request->file('profilePicInput');
-    //                 $filename = time() . '.' . $file->getClientOriginalExtension();
-    //                 $file->move(public_path('asset/profile'), $filename);
-    //                 $vendor->logo = 'asset/profile/' . $filename;
-    //                 logActivity('Successfully', 'Added', 'Profile pict inManage Profile Vendor Page');
+        $logoPath = 'vendor_logos/'.$filename;
 
-    //             }
+        $vendor->update([
+            'logo' => $logoPath,
+        ]);
+        
+       // Convert and combine delivery times from 12-hour format (like "05:30 PM") to "HH:MM-HH:MM"
+        $breakfast = $request->startBreakfast && $request->closeBreakfast
+            ? $request->startBreakfast. '-' .$request->closeBreakfast
+            : null;
 
-    //             $vendor->save();
+        $lunch = $request->startLunch && $request->closeLunch
+            ? $request->startLunch. '-' .$request->closeLunch
+            : null;
 
-    //             logActivity('Successfully', 'Updated', 'Manage Profile Vendor Page');
-    //             return redirect()->route('manage-profile-vendor')->with('success', 'Profile updated successfully!');
-    //         } catch (\Exception $e) {
-    //             logActivity('Failed', 'Updated', 'Vendor Profile, Due to Validation Error: ' . $e->getMessage());
-    //             return redirect()->back()->withErrors(['error' => 'Failed to update profile.'])->withInput();
-    //         }
-    //     }
+        $dinner = $request->startDinner && $request->closeDinner
+            ? $request->startDinner . '-' . $request->closeDinner
+            : null;
+
+        /** @var User|Authenticable $user */
+        
+        // Store the vendor
+        $vendor->update([
+            'name'=> $request['name'],
+            'logo' => $logoPath, 
+            'phone_number'=> $request['phone_number'],
+            'breakfast_delivery'=> $breakfast,
+            'lunch_delivery'=> $lunch,
+            'dinner_delivery'=> $dinner,
+            'provinsi'=> $request['provinsi'],
+            'kota'=> $request['kota'],
+            'kabupaten'=> $request['kota'],
+            'kecamatan'=> $request['kecamatan'],
+            'kelurahan'=> $request['kelurahan'],
+            'kode_pos' => $request['kode_pos'],
+            'jalan' => $request['jalan'],
+            'rating' => 0.0,
+        ]);
+        // ]);
+
+        return redirect('cateringHomePage');
+    }
 }

@@ -6,6 +6,7 @@ use App\Models\Address;
 use App\Models\Package;
 use App\Models\User;
 use App\Models\Vendor;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -20,8 +21,9 @@ class OrderFactory extends Factory
      */
     public function definition(): array
     {
-        $start = $this->faker->dateTimeBetween("-1 month", "now");
-        $end = (clone $start)->modify("+" . rand(1, 14) . "days");
+        $start = $this->faker->dateTimeBetween("-2 week", "+1 week");
+        $start = Carbon::parse($start)->startOfWeek(Carbon::MONDAY);
+        $end = (clone $start)->modify("+6 days");
 
         // Only pick vendors who have at least one package
         $vendorId = Package::query()

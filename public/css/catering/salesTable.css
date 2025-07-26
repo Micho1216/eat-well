@@ -1,0 +1,98 @@
+/* Custom Sales Table Styles */
+.custom-sales-table th,
+.custom-sales-table td {
+    vertical-align: middle;
+    white-space: nowrap;
+}
+
+.custom-sales-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #333;
+}
+
+/* Rounded corners for the whole table */
+.custom-sales-table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+/* Top corners */
+.custom-sales-table thead tr:first-child th:first-child {
+    border-top-left-radius: 12px;
+}
+
+.custom-sales-table thead tr:first-child th:last-child {
+    border-top-right-radius: 12px;
+}
+
+/* Bottom corners */
+.custom-sales-table tfoot tr:last-child td:first-child {
+    border-bottom-left-radius: 12px;
+}
+
+.custom-sales-table tfoot tr:last-child td:last-child {
+    border-bottom-right-radius: 12px;
+}
+
+.custom-sales-table tbody .order-tr:hover {
+    background-color: #f1f1f1;
+}
+
+.custom-sales-table tfoot .order-td {
+    background-color: #e9ecef;
+    font-weight: bold;
+}
+
+
+.order-tr .order-th {
+    background-color: #13392A;
+    font-weight: 600;
+    color: #f5f5f5;
+}
+
+@media (max-width: 768px) {
+    .custom-sales-table th,
+    .custom-sales-table td {
+        font-size: 0.875rem;
+        padding: 0.5rem;
+    }
+}
+
+@media (max-width: 400px) {
+    /* Reduce title font */
+    h2 {
+        font-size: 1.25rem;
+    }
+
+    /* Smaller label and input fields */
+    .form-label {
+        font-size: 0.75rem;
+    }
+
+    .form-control {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+
+    /* Smaller button text */
+    .btn {
+        font-size: 0.75rem;
+        padding: 0.3rem 0.6rem;
+    }
+
+    /* Table font size */
+    .custom-sales-table th,
+    .custom-sales-table td {
+        font-size: 0.75rem;
+        padding: 0.3rem;
+    }
+
+    /* Responsive spacing */
+    section.container {
+        padding: 0.5rem;
+    }
+}

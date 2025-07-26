@@ -119,12 +119,12 @@
 
         {{-- ---------- HEADER (search & filter) ---------- --}}
         <div class="d-flex flex-column flex-md-row justify-content-between align-items-center mb-4">
-            <h1 class="mb-3 mb-md-0">Manage Orders</h1>
+            <h1 class="mb-3 mb-md-0">{{ __('manage-order.manage_orders') }}</h1>
             <div class="d-flex gap-2">
                 <input id="search-input" type="text" class="form-control form-control-sm"
-                    placeholder="Search by Order #" />
+                    placeholder="{{ __('manage-order.search_by_order') }}" />
                 <select id="package-filter" class="form-select form-select-sm">
-                    <option value="all">All Packages</option>
+                    <option value="all">{{ __('manage-order.all_packages') }}</option>
                     @foreach ($packages as $pkg)
                         <option value="{{ $pkg }}">{{ $pkg }}</option>
                     @endforeach
@@ -136,16 +136,16 @@
         <div class="mb-4">
             <a href="{{ route('orders.index', ['week' => 'current']) }}"
                 class="btn tab-btn {{ request('week', 'current') === 'current' ? 'active' : '' }} me-2">
-                This Week
+                {{ __('manage-order.this_week') }}
             </a>
 
             <a href="{{ route('orders.index', ['week' => 'next']) }}"
                 class="btn tab-btn {{ request('week') === 'next' ? 'active' : '' }}">
-                Next Week
+                {{ __('manage-order.next_week') }}
             </a>
         </div>
 
-        <p id="empty-msg" class="text-center fw-bold py-5" style="display:none;">No Orders Yet</p>
+        <p id="empty-msg" class="text-center fw-bold py-5" style="display:none;">{{ __('manage-order.no_orders_yet') }}</p>
 
         <div class="row g-4" id="order-container"></div>
     </main>
@@ -158,15 +158,15 @@
         const isNextWeek = {{ request('week') === 'next' ? 'true' : 'false' }}; // <<< NEW
         const mealTypes = [{
                 key: 'Morning',
-                label: 'Breakfast'
+                label: '{{ __('manage-order.breakfast') }}'
             },
             {
                 key: 'Afternoon',
-                label: 'Lunch'
+                label: '{{ __('manage-order.lunch') }}'
             },
             {
                 key: 'Evening',
-                label: 'Dinner'
+                label: '{{ __('manage-order.dinner') }}'
             }
         ];
         const statusClassMap = {
@@ -211,12 +211,12 @@
                 btn.addEventListener('click', () => {
                     const id = btn.dataset.id;
                     Swal.fire({
-                        title: 'Are you sure?',
-                        text: 'Pesanan akan dibatalkan dan tidak dapat dipulihkan.',
+                        title: '{{ __('manage-order.are_you_sure') }}',
+                        text: '{{ __('manage-order.cancel_message') }}',
                         icon: 'warning',
                         showCancelButton: true,
-                        confirmButtonText: 'Yes, cancel it!',
-                        cancelButtonText: 'No',
+                        confirmButtonText: '{{ __('manage-order.yes_cancel') }}',
+                        cancelButtonText: '{{ __('manage-order.no') }}',
                         reverseButtons: true,
 
                         confirmButtonColor: '#28a745', // hijau Bootstrap (atau ganti hex lain)
@@ -269,7 +269,7 @@
                             deliveryMap[ds.slot] = ds.status;
                         }
                     } catch (e) {
-                        console.warn('Invalid delivery_date found:', ds.delivery_date);
+                        console.warn('{{ __('manage-order.invalid_delivery_date') }}', ds.delivery_date);
                     }
                 });
 
@@ -294,9 +294,9 @@
                 <span>${meal.label}</span>
                 <select class="form-select form-select-sm meal-select ${statusClassMap[status]}"
                         onchange="updateMealStatus(this, ${order.id}, '${meal.key}')">
-                  <option value="Prepared"  ${status==='Prepared'?'selected':''}>Prepared</option>
-                  <option value="Delivered" ${status==='Delivered'?'selected':''}>Delivered</option>
-                  <option value="Arrived"   ${status==='Arrived'  ?'selected':''}>Arrived</option>
+                  <option value="Prepared"  ${status==='Prepared'?'selected':''}>{{ __('manage-order.prepared') }}</option>
+                  <option value="Delivered" ${status==='Delivered'?'selected':''}>{{ __('manage-order.delivered') }}</option>
+                  <option value="Arrived"   ${status==='Arrived'  ?'selected':''}>{{ __('manage-order.arrived') }}</option>
                 </select>
               </div>
               <div class="meal-entries">${entries}</div>

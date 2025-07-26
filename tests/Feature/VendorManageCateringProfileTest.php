@@ -58,18 +58,12 @@ class VendorManageCateringProfileTest extends TestCase
         return array_merge([
             'nameInput' => 'Nusantara Delights',
             'telpInput' => '081234567890',
-            'breakfast_hour_start' => '06',
-            'breakfast_minute_start' => '30',
-            'breakfast_hour_end' => '08',
-            'breakfast_minute_end' => '00',
-            'lunch_hour_start' => '11',
-            'lunch_minute_start' => '00',
-            'lunch_hour_end' => '13',
-            'lunch_minute_end' => '00',
-            'dinner_hour_start' => '17',
-            'dinner_minute_start' => '30',
-            'dinner_hour_end' => '19',
-            'dinner_minute_end' => '00',
+            'breakfast_time_start' => '06:30',
+            'breakfast_time_end' => '08:00',
+            'lunch_time_start' => '11:00',
+            'lunch_time_end' => '13:00',
+            'dinner_time_start' => '17:30',
+            'dinner_time_end' => '18:00',
             // 'profilePicInput' => UploadedFile::fake()->image('logo.jpg'),
         ], $overrides);
     }
@@ -90,9 +84,9 @@ class VendorManageCateringProfileTest extends TestCase
             'vendorId' => $this->vendor->vendorId,
             'name' => 'Nusantara Delights',
             'phone_number' => '081234567890',
-            'breakfast_delivery' => '06:30-08:00',
-            'lunch_delivery' => '11:00-13:00',
-            'dinner_delivery' => '17:30-19:00',
+            'breakfast_delivery' => $payload['breakfast_time_start'] . '-' . $payload['breakfast_time_end'],
+            'lunch_delivery' => $payload['lunch_time_start'] . '-' . $payload['lunch_time_end'],
+            'dinner_delivery' => $payload['dinner_time_start'] . '-' . $payload['dinner_time_end']
         ]);
     }
 

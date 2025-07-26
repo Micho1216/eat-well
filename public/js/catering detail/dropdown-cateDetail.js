@@ -11,7 +11,12 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
-    
+
+    const translationDataElement = document.getElementById("translation-data");
+    const breakfastText = translationDataElement.dataset.breakfastText;
+    const lunchText = translationDataElement.dataset.lunchText;
+    const dinnerText = translationDataElement.dataset.dinnerText;
+
     const dropdownMenuButton = document.getElementById("dropdownMenuButton");
     const dropdownItems = document.querySelectorAll(".dropdown-item");
     const mealOptionsList = document.getElementById("mealOptions");
@@ -61,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
             li.classList.add("list-group-item");
             li.innerHTML = `
               <input class="form-check-input me-1 meal-checkbox" type="checkbox" value="${breakfastPrice}" id="breakfastCheckbox" checked>
-              <label class="form-check-label stretched-link" for="breakfastCheckbox">Breakfast</label>
+              <label class="form-check-label stretched-link" for="breakfastCheckbox">${breakfastText}</label>
           `;
             mealOptionsList.appendChild(li);
         }
@@ -72,7 +77,7 @@ document.addEventListener("DOMContentLoaded", function () {
             li.classList.add("list-group-item");
             li.innerHTML = `
               <input class="form-check-input me-1 meal-checkbox" type="checkbox" value="${lunchPrice}" id="lunchCheckbox" checked>
-              <label class="form-check-label stretched-link" for="lunchCheckbox">Lunch</label>
+              <label class="form-check-label stretched-link" for="lunchCheckbox">${lunchText}</label>
           `;
             mealOptionsList.appendChild(li);
         }
@@ -83,7 +88,7 @@ document.addEventListener("DOMContentLoaded", function () {
             li.classList.add("list-group-item");
             li.innerHTML = `
               <input class="form-check-input me-1 meal-checkbox" type="checkbox" value="${dinnerPrice}" id="dinnerCheckbox" checked>
-              <label class="form-check-label stretched-link" for="dinnerCheckbox">Dinner</label>
+              <label class="form-check-label stretched-link" for="dinnerCheckbox">${dinnerText}</label>
           `;
             mealOptionsList.appendChild(li);
         }

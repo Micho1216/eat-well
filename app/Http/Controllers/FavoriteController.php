@@ -16,19 +16,6 @@ class FavoriteController extends Controller
          * @var User|null $user
          */
         $user = Auth::user();
-
-        if(!$user) {
-            return redirect('login')->with("error");
-        }
-
-        if($user->role === UserRole::Vendor) {
-            return redirect("/cateringHomePage")->with("error");
-        }
-
-        if($user->role === UserRole::Admin) {
-            return redirect("/admin-dashboard")->with("error");
-        }
-
         $vendors = $user->favoriteVendors()->paginate(21);
 
         logActivity('Successfully', 'Visited', 'Favorite Page');

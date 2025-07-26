@@ -46,7 +46,7 @@
 }
 
 .navigationcustlink {
-    color: #f0f0f0; /* Warna default tidak aktif */
+    color: #f0f0f0 !important; /* Warna default tidak aktif */
 }
 
 
