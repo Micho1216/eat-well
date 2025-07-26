@@ -61,6 +61,8 @@ Route::middleware(['guest'])->group(function () {
 ---------------------*/
 
 Route::middleware(['auth'])->group(function () {
+    Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
+    Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
     Route::post('/manage-profile', [SessionController::class, 'destroy'])->name('logout');
 });
 /* ---------------------
@@ -87,8 +89,10 @@ Route::middleware(['role:customer'])->group(function () {
     // Route::get('/manage-profile', function () {
     //     return view('manageProfile');
     // })->name('manage-profile');
-    Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
-    Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
+
+    // dipindahkan kebawah
+    // Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
+    // Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
 
     // Search Caterings
     Route::get('/caterings', [VendorController::class, 'search'])->name('search');
@@ -157,6 +161,12 @@ Route::middleware(['role:customer'])->group(function () {
 
 });
 
+
+
+
+
+
+
 /* ---------------------
      VENDOR ROUTES
 ---------------------- */
@@ -205,6 +215,9 @@ Route::middleware(['role:vendor'])->group(function () {
     Route::get('/manage-profile-vendor', [VendorController::class, 'manageProfile'])->name('manage-profile-vendor');
     Route::patch('/manage-profile-vendor', [VendorController::class, 'updateProfile'])->name('manage-profile-vendor.update');
 
+    // Route::get('/manage-profile-catering', [VendorController::class, 'manageProfile'])->name('manage-profile-vendor');
+    // Route::patch('/manage-profile-catering', [VendorController::class, 'updateProfile'])->name('manage-profile-vendor.update');
+
     Route::fallback(function () {
         return redirect()->route('cateringHomePage');
     });
@@ -219,13 +232,10 @@ Route::middleware(['role:admin'])->group(function () {
 
     Route::get('/admin-dashboard', [DashboardController::class, 'index'])->name('admin-dashboard');
 
-    Route::get('/view-all-orders', function () {
-        return view('view-all-orders');
-    });
+    Route::get('/view-all-transactions', [AdminController::class, 'view_all_transactions'])->name('view-all-transactions');
 
-    Route::get('/view-all-users', function () {
-        return view('view-all-users');
-    });
+    Route::get('/view-all-users', [AdminController::class, 'view_all_users'])->name('view-all-users');
+
 
     Route::get('/view-all-logs', [AdminController::class, 'view_all_logs'])
         ->name('view-all-logs');

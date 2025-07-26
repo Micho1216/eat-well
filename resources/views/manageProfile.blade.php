@@ -33,9 +33,17 @@
                         <a class="menu-link inter font-regular" id="securityTab" href="#management-security">Manage
                             Security</a>
                     </li>
+                    @if (Auth::user()->role->value == 'Customer')
+                        <li class="nav-item">
+                            <a class="menu-link inter font-regular" href="/manage-address">Manage Address</a>
+                        </li>
+                    @elseif (Auth::user()->role->value == 'Vendor')
                     <li class="nav-item">
-                        <a class="menu-link inter font-regular" href="/manage-address">Manage Address</a>
+                        <a class="menu-link inter font-regular" href="/manage-profile-vendor">Edit Catering Info</a>
                     </li>
+                    @endif
+
+
                 </ul>
             </div>
             <ul class="nav flex-column sidebar-menu mobile-tabs">
@@ -130,11 +138,12 @@
 
                                     <label for="dateOfBirth" class="inter font-bold text-black data-title">Date of
                                         Birth</label>
-                                    <div class="dob-picker">
+                                    <div class="dob-picker" disa>
                                         <input type="date" class="dob-select font-regular" name="dateOfBirth"
                                             id="dateOfBirth"
-                                            value="{{ old('dateOfBirth', optional($user->dateOfBirth)->format('Y-m-d')) }}">
-                                            
+                                            value="{{ old('dateOfBirth', optional($user->dateOfBirth)->format('Y-m-d')) }}"
+                                            disabled>
+
                                     </div>
                                     @error('dateOfBirth')
                                         <div class="" style="color: rgb(194, 12, 12)">{{ $message }}</div>
@@ -182,10 +191,10 @@
                                                 add_photo_alternate
                                             </span>
                                             <input type="file" id="profilePicInput" name="profilePicInput"
-                                                accept="image/*" style="display:none;">
+                                                accept="image/*" style="display:none;" disabled>
                                         </label>
                                     </div>
-                                    <div class="edit-btn-group">
+                                    <div class="edit-btn-group d-flex flex-row">
                                         <button class="inter font-medium edit-data">Edit</button>
                                     </div>
                                 </div>

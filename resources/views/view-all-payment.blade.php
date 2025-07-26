@@ -19,10 +19,10 @@
 
     <div class="container-fluid">
 
-        <h1 class="lexend fw-bold text-center mt-5 mb-5">All Payment Methods</h1>
+        <h1 class="lexend fw-bold text-center mt-5 mb-5">{{ __('view-all-payment.title') }}</h1>
         <hr>
 
-        <h6 class="fw-bold lexend">Add Payment</h6>
+        <h6 class="fw-bold lexend">{{ __('view-all-payment.add_payment') }}</h6>
         <div class="row lexend">
 
             <form action="{{ route('add-new-payment') }}" method="POST" class="d-flex">
@@ -31,7 +31,7 @@
                 {{-- <label for="payment>Payment Method :</label> --}}
                 <input class="form-control mr-3" type="text" placeholder="Payment Method" name="paymentMethod"
                     id="paymentMethod" class="col-8" style="margin-right:2vh" required>
-                <button class="btn btn-outline-success" type="submit">Add Method</button>
+                <button class="btn btn-outline-success" type="submit">{{ __('view-all-payment.add_button') }}</button>
 
             </form>
         </div>
@@ -47,13 +47,13 @@
         </div>
 
         @if ($payments->isEmpty())
-            <h3 class="text-center fw-bold lexend mt-5" style="margin-bottom: 130px">No Payment Method Available !</h3>
+            <h3 class="text-center fw-bold lexend mt-5" style="margin-bottom: 130px">{{ __('view-all-payment.no_data') }}</h3>
         @else
         <table class="table text-center" style="margin-bottom: 130px">
             <thead>
                 <tr>
                     <th scope="col-4" style="background-color: rgb(165, 203, 165) !important">ID</th>
-                    <th scope="col-4" style="background-color: rgb(165, 203, 165) !important">Payment Method</th>
+                    <th scope="col-4" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-payment.table_method') }}</th>
                     <th scope="col-4" style="background-color: rgb(165, 203, 165) !important"></th>
                 </tr>
             </thead>
@@ -68,7 +68,7 @@
                             <form action="{{ route('delete-payment', ['id' => $payment->methodId]) }}" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger">Delete</button>
+                                <button type="submit" class="btn btn-danger">{{ __('view-all-payment.delete') }}</button>
                             </form>
                         </td>
 

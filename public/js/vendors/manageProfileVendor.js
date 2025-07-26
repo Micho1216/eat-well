@@ -1,7 +1,7 @@
-document.addEventListener('DOMContentLoaded', function() {
-    
+document.addEventListener('DOMContentLoaded', function () {
+
     document.querySelectorAll('.menu-link').forEach(link => {
-        link.addEventListener('click', function(e) {
+        link.addEventListener('click', function (e) {
             document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
             this.classList.add('active');
             // e.preventDefault(); // Uncomment if you don't want the link to navigate
@@ -11,10 +11,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const input = document.getElementById('profilePicInput');
     const preview = document.getElementById('profilePicPreview');
     if (input && preview) {
-        input.addEventListener('change', function(e) {
+        input.addEventListener('change', function (e) {
             if (e.target.files && e.target.files[0]) {
                 const reader = new FileReader();
-                reader.onload = function(ev) {
+                reader.onload = function (ev) {
                     preview.src = ev.target.result;
                 }
                 reader.readAsDataURL(e.target.files[0]);
@@ -22,59 +22,43 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-     const editBtnGroup = document.querySelector('.edit-btn-group');
+    const editBtnGroup = document.querySelector('.edit-btn-group');
     const nameInput = document.getElementById('nameInput');
     const dobMonth = document.getElementById('dob_month');
     const dobDay = document.getElementById('dob_day');
     const dobYear = document.getElementById('dob_year');
-    const dateOfBirthInput = document.getElementById('dateOfBirth');
     const genderRadios = document.querySelectorAll('.gender-radio');
 
     let originalProfile = {};
 
-    // function setProfileEditMode(on) {
-    //     nameInput.readOnly = !on;
-    //     dobMonth.disabled = !on;
-    //     dobDay.disabled = !on;
-    //     dobYear.disabled = !on;
-    //     genderRadios.forEach(radio => radio.disabled = !on);
-
-    //     if (on) {
-    //         originalProfile = {
-    //             name: nameInput.value,
-    //             dobMonth: dobMonth.value,
-    //             dobDay: dobDay.value,
-    //             dobYear: dobYear.value,
-    //             gender: Array.from(genderRadios).find(r => r.checked)?.value
-    //         };
-    //     }    
-    // }
-
     function setProfileEditMode(on) {
-    nameInput.readOnly = !on;
-    dobMonth.disabled = !on;
-    dobDay.disabled = !on;
-    dobYear.disabled = !on;
-    genderRadios.forEach(radio => radio.disabled = !on);
-    profilePicInput.disabled = !on;
-    dateOfBirthInput.disabled = !on; 
-    if (on) {
-        originalProfile = {
-            name: nameInput.value,
-            dobMonth: dobMonth.value,
-            dobDay: dobDay.value,
-            dobYear: dobYear.value,
-            gender: Array.from(genderRadios).find(r => r.checked)?.value,
-            dateOfBirth: dateOfBirthInput.value
-        };
+        nameInput.readOnly = !on;
+        dobMonth.disabled = !on;
+        dobDay.disabled = !on;
+        dobYear.disabled = !on;
+        genderRadios.forEach(radio => radio.disabled = !on);
+
+        const profilePicInput = document.getElementById('profilePicInput');
+        if (profilePicInput) {
+            profilePicInput.disabled = !on;
+        }
+
+        if (on) {
+            originalProfile = {
+                name: nameInput.value,
+                dobMonth: dobMonth.value,
+                dobDay: dobDay.value,
+                dobYear: dobYear.value,
+                gender: Array.from(genderRadios).find(r => r.checked)?.value
+            };
+        }
     }
-}
 
 
     function attachEditBtnListener() {
         const editBtn = editBtnGroup.querySelector('.edit-data');
         if (editBtn) {
-            editBtn.addEventListener('click', function() {
+            editBtn.addEventListener('click', function () {
                 setProfileEditMode(true);
                 editBtnGroup.innerHTML = `
                     <button class="inter font-medium save-profile-btn" type="submit" style="margin-right:10px">Save</button>
@@ -87,10 +71,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 //     attachEditBtnListener();
                 // });
                 // Cancel
-                editBtnGroup.querySelector('.cancel-profile-btn').addEventListener('click', function() {
+                editBtnGroup.querySelector('.cancel-profile-btn').addEventListener('click', function () {
                     nameInput.value = originalProfile.name;
                     dobMonth.value = originalProfile.dobMonth;
-                    dobDay.value = originalProfile.dobDay; 
+                    dobDay.value = originalProfile.dobDay;
                     dobYear.value = originalProfile.dobYear;
                     genderRadios.forEach(radio => {
                         radio.checked = (radio.value === originalProfile.gender);
@@ -120,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function attachChangeBtnListener() {
         const changeBtn = changeBtnGroup.querySelector('.save-password-btn');
         if (changeBtn) {
-            changeBtn.addEventListener('click', function(e) {
+            changeBtn.addEventListener('click', function (e) {
                 e.preventDefault();
                 setPasswordEditMode(true);
                 changeBtnGroup.innerHTML = `
@@ -128,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <button class="inter cancel-password-btn">Cancel</button>
                 `;
                 // Save
-                changeBtnGroup.querySelector('.save-password-btn').addEventListener('click', function(e) {
+                changeBtnGroup.querySelector('.save-password-btn').addEventListener('click', function (e) {
                     e.preventDefault();
                     if (oldPassword.value === '' || newPassword.value === '' || verifyPassword.value === '') {
                         alert('Please fill all fields.');
@@ -147,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     attachChangeBtnListener();
                 });
                 // Cancel
-                changeBtnGroup.querySelector('.cancel-password-btn').addEventListener('click', function(e) {
+                changeBtnGroup.querySelector('.cancel-password-btn').addEventListener('click', function (e) {
                     e.preventDefault();
                     oldPassword.value = '';
                     newPassword.value = '';
@@ -163,8 +147,8 @@ document.addEventListener('DOMContentLoaded', function() {
     attachChangeBtnListener();
 
     // --- Password Visibility Toggle ---
-    document.querySelectorAll('.toggle-password').forEach(function(toggle) {
-        toggle.addEventListener('click', function() {
+    document.querySelectorAll('.toggle-password').forEach(function (toggle) {
+        toggle.addEventListener('click', function () {
             const targetId = this.getAttribute('data-target');
             const input = document.getElementById(targetId);
             const icon = this.querySelector('.material-symbols-outlined');

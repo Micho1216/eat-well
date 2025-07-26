@@ -55,7 +55,7 @@
 .navigationcustlink:visited,
 .navigationcustlink:focus,
 .navigationcustlink:active {
-    color: white;
+    color: white !important;
 }
 
 .navigationcustlink:hover{

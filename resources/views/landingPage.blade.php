@@ -79,12 +79,11 @@
             <div class="col-sm-5">
                 <h1>EAT WELL</h1>
 
-                <p>Eat Well is a smart platform that connects users with healthy meal catering services. Discover, compare,
-                    and subscribe to trusted catering providers based on your dietary needs and preferences—all in one
-                    place.</p>
+                <p>{{ __('landing-page.eatwellis') }}</p>
 
                 <button type="button" class="btn btn-outline-warning registerButtonLandingPage" style="margin-top: 30px">
-                    <a href="/register" class="text-white textButtonLandingPage text-decoration-none fw-bold">Register now</a>
+                    <a href="/register"
+                        class="text-white textButtonLandingPage text-decoration-none fw-bold">{{ __('landing-page.registernow') }}</a>
                     <div class="buttonpanah"><img src="{{ asset('asset/landing_page/panah.png') }}" alt="panah"
                             class="img-fluid" width="50px"></div>
                 </button>
@@ -120,7 +119,7 @@
 
             <!-- Kolom Teks 1 -->
             <div class="col-3 d-flex align-items-center justify-content-center text-center p-3">
-                <p class="mb-0">Subscribe, pause, or switch plans with just a few taps—anytime, anywhere, hassle-free.</p>
+                <p class="mb-0">{{ __('landing-page.kolomtext1') }}</p>
             </div>
 
             <!-- Divider -->
@@ -130,7 +129,7 @@
 
             <!-- Kolom Teks 2 -->
             <div class="col-3 d-flex align-items-center justify-content-center text-center p-3">
-                <p class="mb-0">Browse and compare a variety of trusted healthy meal providers in your area.</p>
+                <p class="mb-0">{{ __('landing-page.kolomtext2') }}</p>
             </div>
 
             <!-- Divider -->
@@ -140,7 +139,7 @@
 
             <!-- Kolom Teks 3 -->
             <div class="col-2 d-flex align-items-center justify-content-center text-center p-3">
-                <p class="mb-0">Enjoy balanced, portion-controlled meals every day.</p>
+                <p class="mb-0">{{ __('landing-page.kolomtext3') }}</p>
             </div>
         </div>
 
@@ -164,7 +163,7 @@
         <div class="container-fluid py-5"
             style="background: linear-gradient(to right, #2c5742, #9ccf9b); border-radius: 20px; margin-top: 50px;">
             <div class="text-center mb-5">
-                <span class="px-4 py-2 text-white rounded-pill fs-5 our-clients">OUR CLIENTS</span>
+                <span class="px-4 py-2 text-white rounded-pill fs-5 our-clients">{{ __('landing-page.ourclient') }}</span>
             </div>
 
             <div class="row justify-content-center position-relative">
@@ -175,8 +174,7 @@
                             style="width:100px; height:100px;">
                         <p class="mt-5 text-muted small px-2">
                             <i class="bi bi-quote"></i>
-                            Dulu saya sakit sampai tidak bisa berjalan dan sangat kesulitan, setelah saya menemukan website
-                            ini hidup saya lebih bermakna dan lebih praktis...
+                            {{ __('landing-page.client_desc') }}
                             <i class="bi bi-quote"></i>
                         </p>
                         <div class="bg-warning text-white fw-bold rounded-pill py-1 px-3 d-inline-block mt-3">
@@ -192,8 +190,7 @@
                             style="width:100px; height:100px;">
                         <p class="mt-5 text-muted small px-2">
                             <i class="bi bi-quote"></i>
-                            Dulu saya sakit sampai tidak bisa berjalan dan sangat kesulitan, setelah saya menemukan website
-                            ini hidup saya lebih bermakna dan lebih praktis...
+                            {{ __('landing-page.client_desc') }}
                             <i class="bi bi-quote"></i>
                         </p>
                         <div class="bg-warning text-white fw-bold rounded-pill py-1 px-3 d-inline-block mt-3">
@@ -209,8 +206,7 @@
                             style="width:100px; height:100px;">
                         <p class="mt-5 text-muted small px-2">
                             <i class="bi bi-quote"></i>
-                            Dulu saya sakit sampai tidak bisa berjalan dan sangat kesulitan, setelah saya menemukan website
-                            ini hidup saya lebih bermakna dan lebih praktis...
+                            {{ __('landing-page.client_desc') }}
                             <i class="bi bi-quote"></i>
                         </p>
                         <div class="bg-warning text-white fw-bold rounded-pill py-1 px-3 d-inline-block mt-3">
@@ -222,27 +218,26 @@
             </div>
         </div>
 
-        <h1 class="text-center mt-5 bold text-light">Why Choose Us</h1>
-        <p class="text-center fw-normal text-light" style="margin-top: 30px">We offer you a good platform to find a good
-            catering</p>
+        <h1 class="text-center mt-5 bold text-light">{{ __('landing-page.Why Choose Us') }}</h1>
+        <p class="text-center fw-normal text-light" style="margin-top: 30px">{{ __('landing-page.reason') }}</p>
         <div class="row justify-content-center" style="margin-bottom: 40px">
             <div class="row justify-content-center text-center mt-5">
                 <div class="col-4 col-sm-4 mb-4">
                     <img src="{{ asset('asset/landing_page/eat1.png') }}" class="rounded-circle img-fluid mx-auto d-block"
                         style="width: 100px; height: 100px;">
-                    <p class="fw-light text-light mt-2">100% Natural Food</p>
+                    <p class="fw-light text-light mt-2">{{ __('landing-page.reason1') }}</p>
                 </div>
 
                 <div class="col-4 col-sm-4 mb-4">
                     <img src="{{ asset('asset/landing_page/eat2.png') }}" class="rounded-circle img-fluid mx-auto d-block"
                         style="width: 100px; height: 100px;">
-                    <p class="fw-light text-light mt-2">Real healthy foods</p>
+                    <p class="fw-light text-light mt-2">{{ __('landing-page.reason2') }}</p>
                 </div>
 
                 <div class="col-4 col-sm-4 mb-4">
                     <img src="{{ asset('asset/landing_page/eat3.png') }}" class="rounded-circle img-fluid mx-auto d-block"
                         style="width: 100px; height: 100px;">
-                    <p class="fw-light text-light mt-2">Easy to Use</p>
+                    <p class="fw-light text-light mt-2">{{ __('landing-page.reason3') }}</p>
                 </div>
             </div>
 

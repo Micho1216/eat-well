@@ -12,7 +12,7 @@
 <body >
     <x-admin-nav></x-admin-nav>
 
-    <h1 class="text-center mt-5 fw-semibold lexend">All Vendors</h1>
+    <h1 class="text-center mt-5 fw-semibold lexend">{{ __('view-all-vendor.all_vendor') }}</h1>
 
     <div class="row w-100 lexend">
         <div class="col-1 p-0">
@@ -23,9 +23,9 @@
                 role="search">
                 @csrf
                 @method('post')
-                <input class="form-control me-2" type="search" placeholder="Search vendor name" aria-label="Search"
+                <input class="form-control me-2" type="search" placeholder="{{ __('view-all-vendor.search_vendor_name') }}" aria-label="Search"
                     name="name" />
-                <button class="btn btn-outline-success" type="submit">Search</button>
+                <button class="btn btn-outline-success" type="submit">{{ __('view-all-vendor.search') }}</button>
             </form>
         </div>
         <div class="col-1 p-0">
@@ -39,8 +39,8 @@
         <div class="row d-flex justify-content-center align-items-center">
 
             @if ($vendors->isEmpty())
-                <div class="text-center mt-5">
-                    <h4>No vendor found.</h4>
+                <div class="text-center mt-5" style="min-height: 100vh">
+                    <h4>{{ __('view-all-vendor.vendor_not_found') }}</h4>
                 </div>
             @else
                 @foreach ($vendors as $vendor)

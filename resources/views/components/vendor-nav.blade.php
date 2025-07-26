@@ -39,12 +39,16 @@
                 </ul>
             </div> --}}
 
-            <div class="dropdown-wrapper">
-                <select id="languageSelector" style="text-align: center; margin-left: 30px">
-                    <option value="en">EN</option>
-                    <option value="id">ID</option>
-                </select>
-            </div>
+            <form action="/lang" method="POST">
+                @csrf
+                <div class="dropdown-wrapper">
+                    <select name="lang" id="languageSelector" style="text-align: center; margin-left: 30px;"
+                        onchange="this.form.submit()">
+                        <option value="en" @if (app()->getLocale() === 'en') selected @endif>EN</option>
+                        <option value="id" @if (app()->getLocale() === 'id') selected @endif>ID</option>
+                    </select>
+                </div>
+            </form>
 
 
 
@@ -59,31 +63,22 @@
                     <ul class="navbar-nav flex-grow-1 pe-3">
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('cateringHomePage') ? 'active' : '' }}"
-                                href="/cateringHomePage">Dashboard</a>
+                                href="/cateringHomePage">{{ __('vendor-nav.dashboard') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('manageCateringPackage') ? 'active' : '' }}"
-                                href="/manageCateringPackage">My Packages</a>
+                                href="/manageCateringPackage">{{ __('vendor-nav.my_packages') }}</a>
                         </li>
-
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('manageOrder') ? 'active' : '' }}"
-                                href="/manageOrder">Orders</a>
+                                href="/manageOrder">{{ __('vendor-nav.orders') }}</a>
                         </li>
-
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('search') ? 'active' : '' }}"
-                                href="/search">Search</a>
+                                href="/search">{{ __('vendor-nav.search') }}</a>
                         </li>
-
-
-
-                        {{-- <li class="nav-item">
-                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('') ? 'active' : '' }}"
-                                href="/about-us">Active Subscription</a>
-                        </li> --}}
-
                     </ul>
+
                 </div>
             </div>
 
@@ -95,10 +90,11 @@
 
 
             @auth
-                <a href="/manage-profile-vendor">
+            @endphp
+                <a href="/manage-profile">
                     <div class="imgstyle m-2" style="border-radius:100%; width:50px; height:50px; margin-right:20px;">
                         <img class="img-fluid"
-                            src="{{ $vendorLogo ?? asset('asset/catering/homepage/breakfastPreview.jpg') }}"
+                            src="{{ asset(Auth::user()->profilePath) ?? asset('asset/catering/homepage/breakfastPreview.jpg') }}"
                             alt="Vendor Logo" width="120px" style="border-radius: 100%">
                     </div>
                 </a>
@@ -126,9 +122,9 @@
             </div>
 
             <div class="mb-0">
-                <a href="/home" class="text-white mx-4 text-decoration-none">Home</a>
-                <a href="/about-us" class="text-white mx-4 text-decoration-none">About Us</a>
-                <a href="/contact" class="text-white mx-4 text-decoration-none">Contact</a>
+                <a href="/home" class="text-white mx-4 text-decoration-none">{{ __('vendor-nav.home') }}</a>
+                <a href="/about-us" class="text-white mx-4 text-decoration-none">{{ __('vendor-nav.about_us') }}</a>
+                <a href="/contact" class="text-white mx-4 text-decoration-none">{{ __('vendor-nav.contact') }}</a>
             </div>
 
             <!-- Sosial Media -->
@@ -146,7 +142,7 @@
             <!-- Alamat -->
             <div>
                 <p class="text-white-50 small" style="margin-bottom: 0px">
-                    Jl. Pakuan No.3, Sumur Batu, Kec. Babakan Madang, Kabupaten Bogor, Jawa Barat 16810
+                    {{ __('vendor-nav.address') }}
                 </p>
             </div>
 
