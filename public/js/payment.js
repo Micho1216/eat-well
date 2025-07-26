@@ -1,4 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
+    const translationDataElement = document.getElementById("translation-data");
+    const wellpayBalanceTextTranslate = translationDataElement.dataset.wellpayBalanceText;
+    const wellpayConfirmBtnTranslate = translationDataElement.dataset.wellpayConfirmBtn;
+    const expiredCountdownTextTranslate = translationDataElement.dataset.expiredCountdownText;
+
     // --- Get DOM Elements ---
     const qrisRadio = document.getElementById("qris");
     const wellpayRadio = document.getElementById("wellpay");
@@ -101,7 +106,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (timeLeft < 0) {
                     clearInterval(timerInterval);
                     countdownTimerElement.textContent = "Expired";
-                    // Optionally: disable download button or show "expired" state
                 } else {
                     let minutes = Math.floor(timeLeft / 60);
                     let seconds = timeLeft % 60;
@@ -141,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function () {
             wellpayStage2 &&
             wellpayPasswordInput
         ) {
-            wellpayBalanceText.textContent = `Your current Wellpay balance is: ${formatRupiah(
+            wellpayBalanceText.textContent = `${wellpayBalanceTextTranslate}: ${formatRupiah(
                 balance
             )}`;
 
@@ -149,7 +153,7 @@ document.addEventListener("DOMContentLoaded", function () {
             currentWellpayPopupStage = "initial_confirm";
             wellpayStage1.style.display = "block"; // Show initial message
             wellpayStage2.style.display = "none"; // Hide password input
-            wellpayConfirmBtn.textContent = "Confirm"; // Button text for Stage 1
+            wellpayConfirmBtn.textContent = `${wellpayConfirmBtnTranslate}`; // Button text for Stage 1
 
             // Clear password input and all messages within this popup
             wellpayPasswordInput.value = "";
@@ -168,7 +172,7 @@ document.addEventListener("DOMContentLoaded", function () {
             currentWellpayPopupStage = "initial_confirm";
             if (wellpayStage1) wellpayStage1.style.display = "block";
             if (wellpayStage2) wellpayStage2.style.display = "none";
-            if (wellpayConfirmBtn) wellpayConfirmBtn.textContent = "Confirm";
+            if (wellpayConfirmBtn) wellpayConfirmBtn.textContent = `${wellpayConfirmBtnTranslate}`;
             // Also clear password and messages when closing
             if (wellpayPasswordInput) wellpayPasswordInput.value = "";
             if (wellpayPasswordError)
