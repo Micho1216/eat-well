@@ -21,12 +21,16 @@ document.addEventListener("DOMContentLoaded", function () {
                 updateStars(idx);
             });
         });
-        card.querySelector(".rating-icon-list").addEventListener(
-            "mouseleave",
-            function () {
-                updateStars(selected);
-            }
-        );
+
+        let rating_list = card.querySelector(".rating-icon-list");
+        if(rating_list){
+            card.querySelector(".rating-icon-list").addEventListener(
+                "mouseleave",
+                function () {
+                    updateStars(selected);
+                }
+            );
+        }
         function updateStars(activeIdx) {
             stars.forEach((s, i) => {
                 if (i <= activeIdx) {
@@ -42,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const modal = document.getElementById("rateReviewModal");
     const modalStars = modal.querySelectorAll(".star-icon-modal");
     let modalSelected = -1;
-
+    
     modalStars.forEach((star, idx) => {
         star.addEventListener("click", function () {
             modalSelected = idx;
@@ -144,4 +148,47 @@ document.addEventListener("DOMContentLoaded", function () {
                 showSuccessModal();
             });
     };
+
+    // Cancel Modal logic
+    const cancelModal = document.getElementById("cancelModal");
+    const cancelForm = document.getElementById("cancelForm");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+
+    document.querySelectorAll(".open-cancel-modal").forEach(function(btn) {
+        btn.addEventListener("click", function(e) {
+            console.log("masuk");
+            e.preventDefault();
+            const orderId = btn.getAttribute("data-order-id");
+            // Set the form action dynamically (adjust route as needed)
+            cancelForm.action = `/orders/${orderId}/cancel`;
+            cancelModal.classList.remove("hidden");
+            cancelModal.style.display = "flex";
+            document.body.style.overflow = "hidden";
+        });
+    });
+
+    closeModalBtn.addEventListener("click", function() {
+        cancelModal.classList.add("hidden");
+        cancelModal.style.display = "none";
+        document.body.style.overflow = "";
+    });
+
+    // Optional: Close modal when clicking outside content
+    cancelModal.addEventListener("click", function(e) {
+        if (e.target === cancelModal) {
+            cancelModal.classList.add("hidden");
+            cancelModal.style.display = "none";
+            document.body.style.overflow = "";
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const flash = document.getElementById('flash-message');
+    if (flash) {
+        setTimeout(() => {
+            flash.classList.add('fade-out');
+            setTimeout(() => flash.remove(), 500);
+        }, 3000);
+    }
 });

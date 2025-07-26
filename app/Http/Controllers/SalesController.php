@@ -20,7 +20,9 @@ class SalesController extends Controller
 
         $validated = $request->validate([
             'startDate' => 'nullable|date_format:Y-m-d',
-            'endDate' => 'nullable|date_format:Y-m-d',
+            'endDate' => 'nullable|date_format:Y-m-d|after:startDate',
+        ], [
+            'endDate.after' => 'Invalid date range',
         ]);
 
         $startDate = $validated['startDate'] ?? null;
@@ -40,6 +42,8 @@ class SalesController extends Controller
         $validated = $request->validate([
             'startDate' => 'nullable|date_format:Y-m-d',
             'endDate' => 'nullable|date_format:Y-m-d',
+        ], [
+            'endDate.after' => 'Invalid date range',
         ]);
 
         $startDate = $validated['startDate'] ?? null;

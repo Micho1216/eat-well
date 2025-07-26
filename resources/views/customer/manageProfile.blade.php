@@ -201,19 +201,33 @@
                         <div class="left-security">
                             <p class="inter font-bold title-security">{{__('customer/manage-profile.MFA_management')}}</p>
                             <div class="mfa-warning">
-                                <span class="material-symbols-outlined mfa-warning-icon">warning</span>
-                                <span class="inter font-bold mfa-warning-text">
-                                    {{__('customer/manage-profile.MFA_desc')}}<br>
-                                    {{__('customer/manage-profile.MFA_desc2')}}
-                                </span>
+                                @unless ($user->enabled_2fa)
+                                    <span class="material-symbols-outlined mfa-warning-icon">warning</span>
+                                    <span class="inter font-bold mfa-warning-text">
+                                        {{__('customer/manage-profile.MFA_desc')}}<br>
+                                        {{__('customer/manage-profile.MFA_desc2')}}
+                                    </span>
+                                @endunless
                             </div>
 
                             <div class="mfa-toggle-row">
-                                <label class="mfa-switch">
-                                    <input type="checkbox" id="mfaToggle">
-                                    <span class="mfa-slider"></span>
-                                </label>
-                                <span class="inter font-bold mfa-toggle-label">{{__('customer/manage-profile.MFA_toggle')}}</span>
+                                <form method="POST" action="{{ route('manage-two-factor') }}">
+                                    @csrf
+                                    <button type="submit" class="btn">
+                                        <label class="mfa-switch">
+                                            <input type="checkbox" @checked($user->enabled_2fa)/>
+                                            <span class="mfa-slider"></span>
+                                        </label>
+                                    </button>
+                                </form>
+
+                                <span class="inter font-bold mfa-toggle-label">
+                                    @if ($user->enabled_2fa)
+                                        Two Factor Authentication is enabled
+                                    @else
+                                        Enable Multi Factor Authentication
+                                    @endif
+                                </span>
                             </div>
 
                             <p class="mfa-desc inter font-bold">

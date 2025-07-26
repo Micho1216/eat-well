@@ -354,7 +354,7 @@ body {
   transition: 0.2s ease-in-out;
 }
 
-.label-status.status-active {
+.label-status.status-active, .label-status.status-upcoming {
   /* border-color: var(--primary-color); */
   background-color: var(--accent-color);
 }
@@ -514,6 +514,54 @@ body {
   }
 }
 
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.modal-overlay.hidden {
+    display: none;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px 30px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.modal-actions {
+    margin-top: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn-confirm, .btn-cancel {
+    padding: 8px 14px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.btn-confirm {
+    background-color: #dc3545;
+    color: white;
+}
+
+.btn-cancel {
+    background-color: #6c757d;
+    color: white;
+}
 .custom-modal-overlay {
   position: fixed;
   z-index: 1050;

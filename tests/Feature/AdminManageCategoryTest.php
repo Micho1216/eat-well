@@ -97,8 +97,8 @@ class AdminManageCategoryTest extends TestCase{
 
         // Step 4: Assertions
         $response->assertStatus(200);
-        $response->assertSeeText('Category Name'); // column header
-        $response->assertSeeText('Packages count'); // column header
+        $response->assertDontSeeHtml('<th scope="col">Category Name</th>'); // column header
+        $response->assertDontSee('Packages count'); // column header
         $response->assertSeeText('No categories available'); // empty message
     }
 

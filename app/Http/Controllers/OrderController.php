@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
+use App\Notifications\CustomerSubscribed;
 
 class OrderController extends Controller
 {
@@ -27,7 +28,15 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
+        // validate request
+        $validated = $request->validate([
+            'status' => 'nullable|string|in:all,active,upcoming,cancelled,finished',
+            'query' => 'nullable|string|max:255'
+        ]);
+
+        // get userId
         $userId = Auth::id();
+
         $status = $request->query('status', 'all');
         $query = $request->query('query');
         $now = Carbon::now();
@@ -349,6 +358,15 @@ class OrderController extends Controller
             $cart->delete();
             Log::info('Cart ' . $cart->cartId . ' deleted after successful checkout.');
 
+            // 5. Notify vendor
+            $vendor = Vendor::find($vendorId);
+            $vendorUserId = $vendor->userId;
+            $vendorUser = User::find($vendorUserId);
+
+            if($vendorUser)
+            {
+                $vendorUser->notify(new CustomerSubscribed($order));
+            }
             DB::commit();
 
             logActivity('Successfully', 'Processed', 'Checkout for Order ID: ' . $order->orderId);
@@ -412,10 +430,28 @@ class OrderController extends Controller
             $statusesBySlot[$slotKey][$dateKey] = $status;
         }
         // dd($statusesBySlot);
+        $status = '';
+        if($order->isCancelled == 1) {
+            $status = 'cancelled';
+        } else if (Carbon::now()->greaterThan($order->endDate)){
+            $status = 'finished';
+        } else if (Carbon::now()->lessThan($order->startDate)){
+            $status = 'upcoming';
+        } else {
+            $status = 'active';
+        }
 
-        logActivity('Successfully', 'Visited', 'Order Detail Page');
+        logActivity('Successfully', 'Visited', "Order #{$order->orderId} Detail Page");
+        return view('customer.orderDetail', compact('order', 'paymentMethod', 'slots', 'statusesBySlot', 'status'));
+    }
 
-        return view('customer.orderDetail', compact('order', 'paymentMethod', 'slots', 'statusesBySlot'));
+    public function cancelOrder(string $id)
+    {
+        $order = Order::findOrFail($id);
+        $order->isCancelled = true;
+        $order->save();
+
+        return redirect()->back()->with('message', 'Success cancelling order!');
     }
 
     /**

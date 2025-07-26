@@ -218,22 +218,34 @@
                         <div class="left-security">
                             <p class="inter font-bold title-security">MFA Management</p>
                             <div class="mfa-warning">
-                                <span class="material-symbols-outlined mfa-warning-icon">warning</span>
-                                <span class="inter font-bold mfa-warning-text">
-                                    Your account is not fully protected,<br>
-                                    we recommend you to activate 2FA!
-                                </span>
+                                @unless ($user->enabled_2fa)
+                                    <span class="material-symbols-outlined mfa-warning-icon">warning</span>
+                                    <span class="inter font-bold mfa-warning-text">
+                                        Your account is not fully protected,<br>
+                                        we recommend you to activate 2FA!
+                                    </span>
+                                @endunless
                             </div>
 
                             <div class="mfa-toggle-row">
-                                <label class="mfa-switch">
-                                    <input type="checkbox" id="mfaToggle">
-                                    <span class="mfa-slider"></span>
-                                </label>
-                                <span class="inter font-bold mfa-toggle-label">Enable Multi Factor
-                                    Authentication</span>
-                            </div>
+                                <form method="POST" action="{{ route('manage-two-factor') }}">
+                                    @csrf
+                                    <button type="submit" class="btn">
+                                        <label class="mfa-switch">
+                                            <input type="checkbox" @checked($user->enabled_2fa)/>
+                                            <span class="mfa-slider"></span>
+                                        </label>
+                                    </button>
+                                </form>
 
+                                <span class="inter font-bold mfa-toggle-label">
+                                    @if ($user->enabled_2fa)
+                                        Two Factor Authentication is enabled
+                                    @else
+                                        Enable Multi Factor Authentication
+                                    @endif
+                                </span>
+                            </div>
                             <p class="mfa-desc inter font-bold">
                                 Multi Factor Authentication works by sending OTP to your email and requiring it every
                                 time

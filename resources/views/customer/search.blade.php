@@ -54,6 +54,15 @@
                             <form action="{{ route('search') }}" method="GET"
                                 class="d-flex align-items-center w-100 h-100">
                                 @csrf
+                                {{-- Persist Filter --}}
+                                <input type="hidden" name="min_price" value="{{ request('min_price') }}">
+                                <input type="hidden" name="max_price" value="{{ request('max_price') }}">
+                                <input type="hidden" name="rating" value="{{ request('rating') }}">
+                                @if (request()->has('category'))
+                                    @foreach (request('category') as $cat)
+                                        <input type="hidden" name="category[]" value="{{ $cat }}">
+                                    @endforeach
+                                @endif
                                 <input type="hidden" name="address_id" id="searchFormAddressId" value="{{ $mainAddress->addressId ?? '' }}">
                                 <div class="input-group">
                                     <button type="submit" class="input-group-text search-button border-end-0 p-0"
@@ -152,6 +161,7 @@
                                     @endforeach
                                 </div>
                             </div>
+                            <input type="hidden" name="query" value="{{ request('query') }}">
                             {{-- Apply Button --}}
                             <div class="text-start">
                                 <button type="submit" class="btn btn-orange">{{__('customer/search.apply')}}</button>
@@ -284,6 +294,7 @@
                             @endforeach
                         </div>
                     </div>
+                    <input type="hidden" name="query" value="{{ request('query') }}">
                     <div class="text-start">
                         <button type="submit" class="btn btn-orange w-100">{{__('customer/search.apply')}}</button>
                     </div>

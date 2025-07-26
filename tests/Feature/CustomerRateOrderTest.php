@@ -4,6 +4,18 @@ namespace Tests\Feature;
 
 use App\Models\Order;
 use App\Models\User;
+use Database\Seeders\AddressSeeder;
+use Database\Seeders\CuisineTypeSeeder;
+use Database\Seeders\OrderItemSeeder;
+use Database\Seeders\OrderSeeder;
+use Database\Seeders\PackageCategorySeeder;
+use Database\Seeders\PackageCuisineSeeder;
+use Database\Seeders\PackageSeeder;
+use Database\Seeders\PaymentMethodSeeder;
+use Database\Seeders\UserSeeder;
+use Database\Seeders\VendorPreviewSeeder;
+use Database\Seeders\VendorReviewSeeder;
+use Database\Seeders\VendorSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -16,7 +28,42 @@ class CustomerRateOrderTest extends TestCase
         parent::setUp();
 
         $this->artisan('migrate:fresh');
-        $this->seed(); // loads DatabaseSeeder or a specific seeder
+        $this->seed([
+            UserSeeder::class,
+            AddressSeeder::class,
+            PackageCategorySeeder::class,
+            CuisineTypeSeeder::class,
+            PaymentMethodSeeder::class,
+            VendorSeeder::class,
+            PackageSeeder::class,
+            PackageCuisineSeeder::class,
+            OrderSeeder::class,
+            OrderItemSeeder::class,
+            VendorPreviewSeeder::class,
+        ]);
+    }
+
+    public function getOneFinishedOrderForSpecificCustomer(String $id)
+    {
+        $order = Order::query()
+            ->where('userId', $id)
+            ->where('isCancelled', 0)
+            ->whereDate('endDate', '<', now())
+            ->inRandomOrder()
+            ->first();
+
+        return $order;
+    }
+    public function getOneUpcomingOrderForSpecificCustomer(String $id)
+    {
+        $order = Order::query()
+            ->where('userId', $id)
+            ->where('isCancelled', 0)
+            ->whereDate('startDate', '>', now())
+            ->inRandomOrder()
+            ->first();
+
+        return $order;
     }
     /** @test */
     public function tc1_customer_can_rate_a_finished_order_with_valid_data()
@@ -25,12 +72,7 @@ class CustomerRateOrderTest extends TestCase
         $customer = User::where('role', 'Customer')->first();
 
         // Step 2: Get an existing order for that customer
-        $order = Order::where('userId', $customer->userId)->first();
-
-        // Update the order to be 'Finished' so it's valid for rating
-        $order->startDate = '2025-07-13 02:51:23';
-        $order->endDate = '2025-07-20 02:51:23';
-        $order->save();
+        $order = $this->getOneFinishedOrderForSpecificCustomer($customer->userId);
 
         // Step 3: Act as the customer
         $this->actingAs($customer);
@@ -39,7 +81,7 @@ class CustomerRateOrderTest extends TestCase
         $response = $this->post("/orders/{$order->orderId}/review", [
             'rating' => 5,
             'review' => 'Excellent!',
-        ]);
+        ])->assertStatus(200);
 
 
         // Step 5: Assert DB has the new review
@@ -63,14 +105,7 @@ class CustomerRateOrderTest extends TestCase
         // dump($customer);
 
         // Step 2: Get an existing order for that customer
-        $order = Order::where('userId', $customer->userId)->first();
-        // dump($order);
-
-
-        // Update the order to be 'Finished' so it's valid for rating
-        $order->startDate = '2025-07-13 02:51:23';
-        $order->endDate = '2025-07-20 02:51:23';
-        $order->save();
+        $order = $this->getOneFinishedOrderForSpecificCustomer($customer->userId);
 
         // Step 3: Act as the customer
         $this->actingAs($customer);
@@ -197,18 +232,13 @@ class CustomerRateOrderTest extends TestCase
         $customer = User::where('role', 'Customer')->first();
 
         // Step 2: Get one of the customer's orders and make sure it's NOT finished
-        $order = Order::where('userId', $customer->userId)->first();
-
-        // Set the order to "processing" or a date in the future to simulate unfinished
-        $order->startDate = now()->addDays(1); // starts tomorrow
-        $order->endDate = now()->addDays(7);   // ends in a week
-        $order->save();
+        $order = $this->getOneUpcomingOrderForSpecificCustomer($customer->userId);
 
         // Step 3: Act as the customer
         $this->actingAs($customer);
 
         // Step 4: Try to submit a rating
-        $response = $this->postJson("/orders/{$order->orderId}/review", [
+        $response = $this->post("/orders/{$order->orderId}/review", [
             'rating' => 4,
             'review' => 'Looks good so far',
         ]);
@@ -227,17 +257,12 @@ class CustomerRateOrderTest extends TestCase
         $customer = User::where('role', 'Customer')->first();
 
         // Step 2: Get one of their orders
-        $order = Order::where('userId', $customer->userId)->first();
+        $order = $this->getOneFinishedOrderForSpecificCustomer($customer->userId);
 
-        // Step 3: Set the order as finished
-        $order->startDate = '2025-07-10 00:00:00';
-        $order->endDate = '2025-07-15 00:00:00';
-        $order->save();
-
-        // Step 4: Act as the customer
+        // Step 3: Act as the customer
         $this->actingAs($customer);
 
-        // Step 5: Submit the first review
+        // Step 4: Submit the first review
         $firstResponse = $this->post("/orders/{$order->orderId}/review", [
             'rating' => 4,
             'review' => 'Nice experience',
@@ -353,13 +378,13 @@ class CustomerRateOrderTest extends TestCase
             'review' => 'Trying to submit zero star',
         ], [
             'Accept' => 'application/json', // 👈 force JSON response
-         ]);
+        ]);
 
         // Step 5: Assert validation fails
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['rating']);
         $response->assertJsonFragment([
-            'rating' => ['The rating field must be at least 1.'],
+            'rating' => ['The rating must be at least 1.'],
         ]);
     }
 

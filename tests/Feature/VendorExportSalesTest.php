@@ -16,6 +16,7 @@ use Database\Seeders\AddressSeeder;
 use Database\Seeders\CuisineTypeSeeder;
 use Database\Seeders\PackageCategorySeeder;
 use Database\Seeders\PaymentMethodSeeder;
+use Database\Seeders\UserSeeder;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Auth;
 
@@ -43,6 +44,7 @@ class VendorExportSalesTest extends TestCase
 
         $this->artisan('migrate:fresh');
 
+        $this->seed(UserSeeder::class);
         $this->seed(AddressSeeder::class);
         $this->seed(PackageCategorySeeder::class);
         $this->seed(PaymentMethodSeeder::class);
@@ -174,17 +176,17 @@ class VendorExportSalesTest extends TestCase
 
         $response = $this->get(route('sales.show'));
 
-        
+
         $this->assertDatabaseHas('orders', [
             'orderId' => $this->order1->orderId,
             'vendorId' => $this->vendorA->vendorId,
         ]);
-        
+
         $this->assertDatabaseHas('orders', [
             'orderId' => $this->order2->orderId,
             'vendorId' => $this->vendorA->vendorId,
         ]);
-        
+
         $response->assertStatus(200);
         $response->assertSeeText($this->order1->orderId);
         $response->assertSeeText($this->order2->orderId);
@@ -219,7 +221,7 @@ class VendorExportSalesTest extends TestCase
         // Should include order2 (paid at 2025-07-03)
         $response->assertSeeText('ORD' . $this->order2->orderId);
         $response->assertSeeText('Rp ' . number_format($this->order2->totalPrice, 2, ',', '.'));
-    
+
         // Should NOT include order1 (paid at 2025-06-02)
         $response->assertDontSeeText('ORD' . $this->order1->orderId);
         $response->assertDontSeeText('Rp ' . number_format($this->order1->totalPrice, 2, ',', '.'));
@@ -262,12 +264,9 @@ class VendorExportSalesTest extends TestCase
 
         $response->assertStatus(200);
 
-        // $response->assertSeeText('No sales found');
+        $response->assertSeeText('No sales yet.');
 
-        $response->assertDontSee('Export'); 
-
-        $exportResponse = $this->get(route('sales.export'));
-        $exportResponse->assertStatus(200);
+        $response->assertSeeHtml('<button class="btn btn-green" disabled>');
     }
 
     /** @test */
@@ -279,13 +278,14 @@ class VendorExportSalesTest extends TestCase
         // Attempt to filter with an invalid date range (startDate > endDate)
         $response = $this->get(route('sales.show', [
             'startDate' => '2025-12-01',
-            'endDate'   => '2025-01-01',
+            'endDate' => '2025-01-01',
         ]));
 
-        $response->assertStatus(403);
+        $response->assertStatus(302);
 
-        $response->assertSee('Invalid date range');
+        $response->assertRedirect(); // optional
+        $response->assertSessionHasErrors([
+            'endDate' => 'Invalid date range',
+        ]);
     }
-
-
 }

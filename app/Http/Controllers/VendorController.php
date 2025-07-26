@@ -112,12 +112,23 @@ VendorController extends Controller
 
     public function search(Request $request)
     {
-        // Get request query
-        $query = $request->query('query');
-        $minPrice = $request->query('min_price') ?? 0;
-        $maxPrice = $request->query('max_price') ?? 999999999;
-        $rating = $request->query('rating');
-        $categories = $request->query('category', []);
+        // validate request
+        $validated = $request->validate([
+            'query' => 'nullable|string|max:255',
+            'min_price' => 'nullable|integer',
+            'max_price' => 'nullable|integer',
+            'rating' => 'nullable|numeric',
+            'category' => 'nullable|array',
+            'category.*' => 'string',
+        ]);
+        
+        // Use validated input data
+        $query = $validated['query'] ?? null;
+        $minPrice = $validated['min_price'] ?? 0;
+        $maxPrice = $validated['max_price'] ?? 999999999;
+        $rating = $validated['rating'] ?? null;
+        $categories = $validated['category'] ?? [];
+
         $all_categories = PackageCategory::all();
 
         $vendors = \App\Models\Vendor::query()

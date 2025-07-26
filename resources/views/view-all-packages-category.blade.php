@@ -22,50 +22,54 @@
         </button>
     </section>
     @if (session('success'))
-    <section class="container-fluid px-sm-5">
-        <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
-            {{ session('success') }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    </section>
+        <section class="container-fluid px-sm-5">
+            <div class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+                {{ session('success') }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </section>
     @endif
-    
+
     <section class="container-fluid px-sm-5 pb-sm-4">
-        <div class="table-responsive">
-            <table class="table custom-table mt-3">
-                <thead class="table-dark">
-                    <tr>
-                        <th scope="col">No</th>
-                        <th scope="col">Category Name</th>
-                        <th scope="col">Packages count</th>
-                        <th scope="col">Created at</th>
-                        <th scope="col">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($categories as $cat)
+        @if ($categories->isEmpty())
+            <h4>No categories available</h4>
+        @else
+            <div class="table-responsive">
+                <table class="table custom-table mt-3">
+                    <thead class="table-dark">
                         <tr>
-                            <td>{{ $cat->categoryId }}</td>
-                            <td>{{ $cat->categoryName }}</td>
-                            <td>{{ $cat->packages()->count() }}</td>
-                            <td>{{ Carbon::parse($cat->created_at)->format('d M Y') }}</td>
-                            <td class="d-flex flex-wrap gap-1">
-                                {{-- <a href="#" class="btn btn-primary btn-sm d-flex gap-1 align-items-center"
+                            <th scope="col">No</th>
+                            <th scope="col">Category Name</th>
+                            <th scope="col">Packages count</th>
+                            <th scope="col">Created at</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($categories as $cat)
+                            <tr>
+                                <td>{{ $cat->categoryId }}</td>
+                                <td>{{ $cat->categoryName }}</td>
+                                <td>{{ $cat->packages()->count() }}</td>
+                                <td>{{ Carbon::parse($cat->created_at)->format('d M Y') }}</td>
+                                <td class="d-flex flex-wrap gap-1">
+                                    {{-- <a href="#" class="btn btn-primary btn-sm d-flex gap-1 align-items-center"
                                     onclick="openUpdateModal('{{ $cat->categoryId }}', '{{ $cat->categoryName }}')">
                                     <span class="material-symbols-outlined">edit</span>
                                     Edit
                                 </a> --}}
-                                <button type="button" class="btn btn-danger btn-sm d-flex gap-1 align-items-center"
-                                    onclick="handleDeleteClick('{{ $cat->categoryId }}', {{ $cat->packages()->count() }})">
-                                    <span class="material-symbols-outlined">delete</span>
-                                    Delete
-                                </button>
-                            </td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                                    <button type="button" class="btn btn-danger btn-sm d-flex gap-1 align-items-center"
+                                        onclick="handleDeleteClick('{{ $cat->categoryId }}', {{ $cat->packages()->count() }})">
+                                        <span class="material-symbols-outlined">delete</span>
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
     </section>
 
     <!-- Add Category Modal -->
