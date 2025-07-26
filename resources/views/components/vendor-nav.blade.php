@@ -81,6 +81,10 @@
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('manageOrder') ? 'active' : '' }}"
                                 href="/manageOrder">{{ __('navigation.orders') }}</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('ratingAndReviewVendor') ? 'active' : '' }}"
+                                href="/catering-detail">{{ __('navigation.rating_and_review_vendor') }}</a>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -111,7 +115,7 @@
         </div>
     </nav>
 
-    <div class="flex-grow-1 w-100">
+    <div class="flex-grow-1 w-100 wrapper">
         @yield('content')
     </div>
 

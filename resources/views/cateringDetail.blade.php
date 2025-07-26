@@ -15,16 +15,6 @@
 @endsection
 
 @section('content')
-    <div id="translation-data"
-        data-breakfast-text="{{ __('catering-detail.breakfast') }}"
-        data-lunch-text="{{ __('catering-detail.lunch') }}" 
-        data-dinner-text="{{ __('catering-detail.dinner') }}"
-        data-package-text="{{ __('catering-detail.package') }}"
-        data-packages-text="{{ __('catering-detail.packages') }}"
-        data-items-text="{{ __('catering-detail.items') }}"
-        data-no-package-selected-yet="{{ __('catering-detail.no_package_selected_yet') }}">
-    </div>
-
     <div class="profile-container">
         <div class="container daun-container">
             <img src="{{ asset('asset/catering-detail/daun1.png') }}" alt="Catering Image" class="daun1">
@@ -57,6 +47,7 @@
                             <div class="rating-container">
                                 <span class="material-symbols-outlined star-icon">star</span>
                                 @if ($vendor->rating > 0)
+                                    <span class="inter rating-and-sold">{{ $vendor->rating }}</span>
                                     <span class="inter rating-and-sold">{{ $vendor->rating }}</span>
                                 @endif
                             </div>
@@ -330,10 +321,9 @@
             <p>Debug: Selected Address Jalan = {{ $selectedAddress->jalan ?? 'N/A' }}</p>
         </div> --}}
 
-        <a href="{{ route('payment.show', ['vendor' => $vendor->vendorId, 'address_id' => $selectedAddress->addressId]) }}"
-            class="button-order inter" id="proceedToPaymentLink"
-            style="cursor: default; pointer-events: none; text-decoration: none;">
-            <span class="order-message">{{ __('catering-detail.no_package_selected_yet') }}</span>
+        <a href="{{ route('payment.show', ['vendor' => $vendor->vendorId, 'address_id' => $selectedAddress->addressId]) }}" class="button-order inter"
+            id="proceedToPaymentLink" style="cursor: default; pointer-events: none; text-decoration: none;">
+            <span class="order-message">No Package Selected Yet.</span>
             <span class="package-count" style="display:none;"></span>
             <span class="item-count" style="display:none;"></span>
             <span class="price-total" style="display:none;"></span>

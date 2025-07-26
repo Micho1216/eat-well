@@ -181,23 +181,10 @@ Route::middleware(['role:customer'])->group(function () {
      VENDOR ROUTES
 ---------------------- */
 Route::middleware(['role:vendor'])->group(function () {
-    Route::middleware(NoCateringDataMiddleware::class)->group(function () {
-        Route::get('/vendor-first-page', function () {
-            return view('vendorFirstPage');
-        })->name('vendor.first.page');
-        Route::post('/new-vendor', [VendorController::class, 'store'])->name('vendor.store');
-    });
-
-    Route::middleware(EnsureVendor::class)->group(function () {
-        // Catering dashboard
-        Route::get('/cateringHomePage', [OrderVendorController::class, 'totalOrder']);
-        // Route::get('/cateringHomePage', function () {
-        //     // untuk yang log activity, kalau suatu saat buat controllernya mohon dimasukan
-        //     // masukan sebelum returen view / return redirect
-        //     logActivity('Successfully', 'Visited', 'Catering Home Page');
-        //     return view('cateringHomePage');
-        // });
-        // Route::post('/cateringHomePage', [SessionController::class, 'destroy'])->name('logout.vendor');
+    // Catering dashboard
+    Route::get('/cateringHomePage', [OrderVendorController::class, 'totalOrder']);
+    Route::post('/cateringHomePage', [SessionController::class, 'destroy'])->name('logout.vendor');
+    Route::get('/catering-detail', [VendorController::class, 'reviewVendor'])->name('catering-detail');
 
         // Manage Packages
         Route::get('/manageCateringPackage', [PackageController::class, 'index'])->name('manageCateringPackage');

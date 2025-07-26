@@ -110,6 +110,23 @@ VendorController extends Controller
         return view('ratingAndReview', compact('vendor', 'vendorReviews', 'numSold'));
     }
 
+    public function reviewVendor()
+    {
+        // Ambil vendor yang sedang login
+        $vendor = Auth::user(); // Pastikan user login adalah vendor
+
+        // Ambil review dari vendor yang sedang login
+        $vendorReviews = VendorReview::where('vendorId', $vendor->vendorId)
+            ->with(['user', 'order']) // Load relasi user dan order
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Hitung jumlah order yang dijual oleh vendor
+        $numSold = Order::where('vendorId', $vendor->vendorId)->count();
+
+        return view('ratingAndReviewVendor', compact('vendor', 'vendorReviews', 'numSold'));
+    }
+
     public function search(Request $request)
     {
         // validate request
