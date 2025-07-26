@@ -20,20 +20,20 @@
     <div class="container-fluid">
 
         <h1 class="lexend fw-bold text-center mt-5 mb-5">{{ __('view-all-payment.title') }}</h1>
-        <hr>
 
-        <h6 class="fw-bold lexend">{{ __('view-all-payment.add_payment') }}</h6>
+
+        {{-- <h6 class="fw-bold lexend">{{ __('view-all-payment.add_payment') }}</h6> --}}
         <div class="row lexend">
 
-            <form action="{{ route('add-new-payment') }}" method="POST" class="d-flex">
+            {{-- <form action="{{ route('add-new-payment') }}" method="POST" class="d-flex">
                 @csrf
                 @method('POST')
-                {{-- <label for="payment>Payment Method :</label> --}}
+
                 <input class="form-control mr-3" type="text" placeholder="Payment Method" name="paymentMethod"
                     id="paymentMethod" class="col-8" style="margin-right:2vh" required>
                 <button class="btn btn-outline-success" type="submit">{{ __('view-all-payment.add_button') }}</button>
 
-            </form>
+            </form> --}}
         </div>
 
         <hr>

@@ -78,9 +78,9 @@ Route::middleware(['auth'])->group(function () {
     Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
     Route::post('/manage-profile', [SessionController::class, 'destroy'])->name('logout');
 
-    Route::get('/manage-profile', function () {
-        return view('manageProfile');
-    })->name('manage-profile');
+    // Route::get('/manage-profile', function () {
+    //     return view('manageProfile');
+    // })->name('manage-profile');
 
     Route::post('/manage-two-factor', [ManageTwoFactorController::class, 'index'])->name('manage-two-factor');
 });
@@ -215,6 +215,12 @@ Route::middleware(['role:vendor'])->group(function () {
         Route::put('/packages/{id}', [PackageController::class, 'update'])->name('packages.update');
         Route::delete('/packages/{id}', [PackageController::class, 'destroy'])->name('packages.destroy');
         Route::post('/packages/import', [PackageController::class, 'import'])->name('packages.import');
+
+        Route::get('/manage-profile-2', [VendorController::class, 'manage_profile'])->name('manage-profile');
+        Route::patch('/manage-profile-2', [VendorController::class, 'updateProfileUser'])->name('manage-profile.updateUser');
+        // Route::post('/manage-profile-2', [SessionController::class, 'destroy'])->name('logout');
+
+
 
         // Manage Order
         Route::get('/manageOrder', [OrderVendorController::class, 'index'])

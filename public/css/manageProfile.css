@@ -102,10 +102,6 @@ body {
     flex-direction: column;
 }
 
-.scrollable-box::-webkit-scrollbar {
-    display: none;
-}
-
 .outer-box,
 .outer-box.scrollable-box {
     margin: 80px auto;
@@ -149,14 +145,15 @@ body {
 
 .manage-profile-in {
     width: 700px;
-    height: 80%;
+    height: 110%;
     border-radius: 20px;
     border: 2px solid rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
-    margin-top: 60px;
+    margin-top: 10px;
     margin-left: 100px;
     padding-top: 40px;
+    /* margin-bottom: 120px; */
 }
 
 .manage-profile-in .data {
@@ -176,7 +173,7 @@ body {
     background: #fff;
     color: #222;
     width: 60%;
-    height: 20%;
+    height: 15%;
     display: flex;
     align-items: center;
     text-align: left;
@@ -232,6 +229,16 @@ body {
     transition: color 0.2s, border-bottom-color 0.2s;
 }
 
+/* Stick the logout button to the bottom left of the sidebar */
+/* .logout-form {
+    position: absolute;
+    left: 32px;
+    bottom: 32px;
+    width: calc(100% - 64px);
+    display: flex;
+    justify-content: flex-start;
+} */
+
 
 
 .logout-btn {
@@ -239,11 +246,15 @@ body {
     color: #fff;
     border: none;
     border-radius: 8px;
-    padding: 8px 24px;
+    padding: 10px 24px;
+    margin-left: 60px;
     font-size: 16px;
+    font-weight: 500;
     cursor: pointer;
     display: flex;
-    justify-content: left;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.2s;
 }
 
 .logout-btn:hover {
@@ -658,14 +669,6 @@ body {
     display: none;
 }
 
-.logout-mobile {
-    width: 100%;
-    margin: 32px 0 24px 0;
-    display: none;
-    /* hidden by default, shown in media query */
-    justify-content: center;
-}
-
 @media only screen and (max-width: 1025px) {
     .manage-profile-in {
         padding-bottom: 40px;
@@ -736,16 +739,6 @@ body {
         flex-direction: column;
         align-items: center;
         margin-top: 10%;
-    }
-
-    .logout {
-        display: none !important;
-        /* Hide sidebar logout on small screens */
-    }
-
-    .logout-mobile {
-        display: flex !important;
-        /* Show mobile logout below white box */
     }
 
     .outer-box {
@@ -918,4 +911,82 @@ body {
 .time-select {
     padding: 0.4rem;
     font-size: 1rem;
+}
+
+@media screen and (max-width: 390px) {
+    .datafoto {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 1.5rem;
+    }
+
+    .data,
+    .photo-data {
+        width: 100%;
+    }
+
+    .profile-picture {
+        display: block;
+        margin: 0 auto;
+        max-width: 140px;
+    }
+
+    .edit-btn-group {
+        text-align: center;
+        margin-top: 0.75rem;
+        order: 2; /* pastikan edit ada di bawah gambar */
+    }
+
+    .change-image-label {
+        display: block;
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+
+    .profile-image-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .logout
+    {
+        margin-top: -200px;
+        margin-bottom: 200px;
+        margin-left: 30px;
+    }
+    
+}
+
+
+@media screen and (min-width: 676px) {
+    .logout
+    {
+        margin-top: -200px;
+        margin-bottom: 200px;
+        /* margin-left: 30px; */
+    }
+    
+}
+
+@media screen and (max-width: 400px) {
+    .logout
+    {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-left: -30px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .edit-btn-group
+    {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }

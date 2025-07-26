@@ -89,8 +89,7 @@
             </div> --}}
 
 
-            @auth
-            @endphp
+            {{-- @auth
                 <a href="/manage-profile">
                     <div class="imgstyle m-2" style="border-radius:100%; width:50px; height:50px; margin-right:20px;">
                         <img class="img-fluid"
@@ -98,8 +97,14 @@
                             alt="Vendor Logo" width="120px" style="border-radius: 100%">
                     </div>
                 </a>
-            @endauth
+            @endauth --}}
 
+            <a href="/manage-profile-2">
+                <div class="imgstyle m-2" style="border-radius:100%; margin-right:20px">
+                    <img class="" src="{{ asset('asset/profile/' . Auth::user()->profilePath) }}"
+                        alt="Card image " width="50px" height="50px" style="border-radius: 100%">
+                </div>
+            </a>
 
 
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
@@ -136,7 +141,8 @@
 
             <!-- Copyright -->
             <div class="mb-1">
-                <p class="text-white-50 mb-1">&copy; {{ date('Y') }} Eat Well. {{ __('navigation.footer_rights') }}.</p>
+                <p class="text-white-50 mb-1">&copy; {{ date('Y') }} Eat Well.
+                    {{ __('navigation.footer_rights') }}.</p>
             </div>
 
             <!-- Alamat -->

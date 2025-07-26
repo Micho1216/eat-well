@@ -4,6 +4,8 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class VendorStoreRequest extends FormRequest
 {
@@ -31,7 +33,8 @@ class VendorStoreRequest extends FormRequest
             'name' => [
                 'required',
                 'string',
-                'max:255'
+                'max:255',
+                'not_regex:/<[^>]*>/'
             ],
             'startBreakfast' => [
                 'nullable',
@@ -119,6 +122,17 @@ class VendorStoreRequest extends FormRequest
             'phone_number.regex' => 'Phone number must start with "08" and be 10-15 digits',
 
             'jalan.required' => 'Jalan is required',
+            'nameInput.not_regex' => 'Name must not contain HTML or script tags.',
         ];
+    }
+    protected function failedValidation(Validator $validator)
+    {
+        logActivity('Failed', 'Updated', "Profile due to validation errors : " . implode($validator->errors()->all()));
+
+        throw new HttpResponseException(
+            redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+        );
     }
 }

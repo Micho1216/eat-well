@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', function () {
             editBtn.addEventListener('click', function () {
                 setProfileEditMode(true);
                 editBtnGroup.innerHTML = `
-                    <button class="inter font-medium save-profile-btn" type="submit" style="margin-right:10px">Save</button>
+                    <button class="inter font-medium save-profile-btn" type="submit" style="margin-right:10px" data-bs-toggle="modal" data-bs-target="#exampleModal">Save</button>
                     <button class="inter font-medium cancel-profile-btn">Cancel</button>
                 `;
                 // Save

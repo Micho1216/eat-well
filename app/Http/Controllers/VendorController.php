@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProfileRequest;
 use App\Models\Address;
 use App\Http\Requests\VendorStoreRequest;
 use App\Models\Cart;
@@ -308,8 +309,8 @@ VendorController extends Controller
             if ($request->hasFile('profilePicInput')) {
                 $file = $request->file('profilePicInput');
                 $filename = time() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('asset/profile'), $filename);
-                $vendor->logo = 'asset/profile/' . $filename;
+                $file->move(public_path('asset/vendorLogo'), $filename);
+                $vendor->logo = $filename;
                 logActivity('Successfully', 'Added', 'Profile pict inManage Profile Vendor Page');
             }
 
@@ -381,5 +382,45 @@ VendorController extends Controller
         // ]);
 
         return redirect('cateringHomePage');
+    }
+
+    public function manage_profile()
+    {
+        // Mengambil user yang sedang login
+        $user = Auth::user();
+
+
+        logActivity('Successfully', 'Visited', 'Manage Profile Page');
+        return view('manageProfileVendorUser', compact('user'));
+    }
+
+
+    public function updateProfileUser(ProfileRequest $request)
+    {
+        $user = Auth::user();
+        $userId = $user->userId;
+
+        $updated_user = User::find($userId);
+
+        $updated_user->name = $request->nameInput;
+
+        if ($request->filled('dateOfBirth')) {
+            $updated_user->dateOfBirth = $request->input('dateOfBirth');
+        }
+
+        if ($request->hasFile('profilePicInput')) {
+            $file = $request->file('profilePicInput');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('asset/profile'), $filename);
+            $updated_user->profilePath = $filename;
+        }
+
+        $updated_user->genderMale = ($request->gender === 'male') ? 1 : 0;
+
+        $updated_user->save();
+
+        logActivity('Successfully', 'Updated', "Profile to {$updated_user->name}");
+
+        return redirect()->route('manage-profile');
     }
 }

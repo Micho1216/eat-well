@@ -1,4 +1,4 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -66,11 +66,11 @@
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('categories') ? 'active' : '' }}"
                                 href="{{route('categories.show')}}">{{ __('admin-nav.category') }}</a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-all-packages-category') ? 'active' : '' }}"
                                 href="/view-all-packages-category">{{ __('admin-nav.category') }}</a>
-                        </li>
+                        </li> --}}
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-all-vendors') ? 'active' : '' }}"
                                 href="/view-all-vendors">{{ __('admin-nav.vendors') }}</a>

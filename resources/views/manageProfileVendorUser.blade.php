@@ -1,4 +1,4 @@
-@extends('master')
+@extends('components.vendor-nav')
 
 @section('title', 'Manage Prodile')
 @section('css')
@@ -19,25 +19,30 @@
                     <p class="profile-status lexend font-bold">{{ $user->role }}
                     <p>
                     <p class="joined-date text-white lexend font-regular">
-                        {{ __('manage-profile.joined_since') }}: <span class="date">{{ $user->created_at->format('d-m-Y') }}</span>
+                        {{ __('manage-profile.joined_since') }}: <span
+                            class="date">{{ $user->created_at->format('d-m-Y') }}</span>
                     </p>
                 </div>
             </div>
             <div class="menu ">
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="menu-link active inter font-regular" id="profileTab" href="#management-profile">{{__('manage-profile.manage_profile')}}</a>
+                        <a class="menu-link active inter font-regular" id="profileTab"
+                            href="#management-profile">{{ __('manage-profile.manage_profile') }}</a>
                     </li>
                     <li class="nav-item">
-                        <a class="menu-link inter font-regular" id="securityTab" href="#management-security">{{__('manage-profile.manage_security')}}</a>
+                        <a class="menu-link inter font-regular" id="securityTab"
+                            href="#management-security">{{ __('manage-profile.manage_security') }}</a>
                     </li>
                     @if (Auth::user()->role->value == 'Customer')
                         <li class="nav-item">
-                            <a class="menu-link inter font-regular" href="/manage-address">{{__('manage-profile.manage_address')}}</a>
+                            <a class="menu-link inter font-regular"
+                                href="/manage-address">{{ __('manage-profile.manage_address') }}</a>
                         </li>
                     @elseif (Auth::user()->role->value == 'Vendor')
                         <li class="nav-item">
-                            <a class="menu-link inter font-regular" href="/manage-profile-vendor">{{__('manage-profile.edit_catering')}}</a>
+                            <a class="menu-link inter font-regular"
+                                href="/manage-profile-vendor">{{ __('manage-profile.edit_catering') }}</a>
                         </li>
                     @endif
 
@@ -46,20 +51,24 @@
             </div>
             <ul class="nav flex-column sidebar-menu mobile-tabs">
                 <li class="nav-item">
-                        <a class="menu-link active inter font-regular" id="profileTab" href="#management-profile">{{__('manage-profile.manage_profile')}}</a>
-                    </li>
+                    <a class="menu-link active inter font-regular" id="profileTab"
+                        href="#management-profile">{{ __('manage-profile.manage_profile') }}</a>
+                </li>
+                <li class="nav-item">
+                    <a class="menu-link inter font-regular" id="securityTab"
+                        href="#management-security">{{ __('manage-profile.manage_security') }}</a>
+                </li>
+                @if (Auth::user()->role->value == 'Customer')
                     <li class="nav-item">
-                        <a class="menu-link inter font-regular" id="securityTab" href="#management-security">{{__('manage-profile.manage_security')}}</a>
+                        <a class="menu-link inter font-regular"
+                            href="/manage-address">{{ __('manage-profile.manage_address') }}</a>
                     </li>
-                    @if (Auth::user()->role->value == 'Customer')
-                        <li class="nav-item">
-                            <a class="menu-link inter font-regular" href="/manage-address">{{__('manage-profile.manage_address')}}</a>
-                        </li>
-                    @elseif (Auth::user()->role->value == 'Vendor')
-                        <li class="nav-item">
-                            <a class="menu-link inter font-regular" href="/manage-profile-vendor">{{__('manage-profile.edit_catering')}}</a>
-                        </li>
-                    @endif
+                @elseif (Auth::user()->role->value == 'Vendor')
+                    <li class="nav-item">
+                        <a class="menu-link inter font-regular"
+                            href="/manage-profile-vendor">{{ __('manage-profile.edit_catering') }}</a>
+                    </li>
+                @endif
             </ul>
 
         </div>
@@ -69,8 +78,8 @@
             <div class="lexend font-medium outer-box scrollable-box">
                 <div id="management-profile" class="management-section">
                     <div class="profile-manage">
-                        <p class="lexend font-medium text-black title">{{__('manage-profile.personal_profile')}}</p>
-                        <p class="inter font-regular text-black description">{{__('manage-profile.subtitle')}}</p>
+                        <p class="lexend font-medium text-black title">{{ __('manage-profile.personal_profile') }}</p>
+                        <p class="inter font-regular text-black description">{{ __('manage-profile.subtitle') }}</p>
                     </div>
                     <hr
                         style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
@@ -81,7 +90,8 @@
                             @method('PATCH')
                             <div class="datafoto">
                                 <div class="data">
-                                    <label class="inter font-bold text-black data-title">{{__('manage-profile.name')}}</label>
+                                    <label
+                                        class="inter font-bold text-black data-title">{{ __('manage-profile.name') }}</label>
                                     <input type="text" class="lexend font-regular text-black name-input" id="nameInput"
                                         name="nameInput" value="{{ $user->name }}">
 
@@ -89,7 +99,8 @@
                                         <div class="" style="color: rgb(194, 12, 12)">{{ $message }}</div>
                                     @enderror
 
-                                    <label class="inter font-bold text-black data-title" style="display: none">{{__('manage-profile.date_of_birth')}}</label>
+                                    <label class="inter font-bold text-black data-title"
+                                        style="display: none">{{ __('manage-profile.date_of_birth') }}</label>
                                     <div class="dob-picker" style="display: none">
                                         <select class="dob-select font-regular" name="dob_month" id="dob_month">
                                             @if (empty($user->dateOfBirth))
@@ -131,7 +142,8 @@
                                         </select>
                                     </div>
 
-                                    <label for="dateOfBirth" class="inter font-bold text-black data-title">{{__('manage-profile.date_of_birth')}}</label>
+                                    <label for="dateOfBirth"
+                                        class="inter font-bold text-black data-title">{{ __('manage-profile.date_of_birth') }}</label>
                                     <div class="dob-picker" disa>
                                         <input type="date" class="dob-select font-regular" name="dateOfBirth"
                                             id="dateOfBirth"
@@ -145,24 +157,27 @@
 
 
 
-                                    <p class="inter font-bold text-black data-title gender">{{__('manage-profile.gender')}}</p>
+                                    <p class="inter font-bold text-black data-title gender">
+                                        {{ __('manage-profile.gender') }}</p>
                                     <div class="gender-group">
                                         @if ($user->genderMale == 1)
                                             <input type="radio" id="male" name="gender" value="male"
                                                 class="gender-radio" checked>
-                                            <label for="male" class="gender-label">{{__('manage-profile.male')}}</label>
+                                            <label for="male"
+                                                class="gender-label">{{ __('manage-profile.male') }}</label>
                                             <input type="radio" id="female" name="gender" value="female"
                                                 class="gender-radio">
                                             <label for="female"
-                                                class="gender-label lexend font-medium text-black">{{__('manage-profile.female')}}</label>
+                                                class="gender-label lexend font-medium text-black">{{ __('manage-profile.female') }}</label>
                                         @else
                                             <input type="radio" id="male" name="gender" value="male"
                                                 class="gender-radio">
-                                            <label for="male" class="gender-label">{{__('manage-profile.male')}}</label>
+                                            <label for="male"
+                                                class="gender-label">{{ __('manage-profile.male') }}</label>
                                             <input type="radio" id="female" name="gender" value="female"
                                                 class="gender-radio" checked>
                                             <label for="female"
-                                                class="gender-label lexend font-medium text-black">{{__('manage-profile.female')}}</label>
+                                                class="gender-label lexend font-medium text-black">{{ __('manage-profile.female') }}</label>
                                         @endif
 
                                     </div>
@@ -178,8 +193,8 @@
                                 </div>
                                 <div class="photo-data">
                                     <div class="profile-image-wrapper">
-                                        <img src="{{ asset('asset/profile/' . $user->profilePath) }}" alt="Profile Picture"
-                                            class="profile-picture" id="profilePicPreview">
+                                        <img src="{{ asset('asset/profile/' . $user->profilePath) }}"
+                                            alt="Profile Picture" class="profile-picture" id="profilePicPreview">
                                         <label for="profilePicInput" class="change-image-label">
                                             <span class="material-symbols-outlined change-image-icon">
                                                 add_photo_alternate
@@ -190,10 +205,10 @@
                                     </div>
                                     <div class="edit-btn-group d-flex flex-column">
                                         <button class="inter font-medium edit-data">Edit</button>
-                                        <p style="color: rgb(242, 185, 12)">{{__('manage-profile.click_edit')}}</p>
+                                        <p style="color: rgb(242, 185, 12)">{{ __('manage-profile.click_edit') }}</p>
                                     </div>
 
-                                    <div class="modal fade" id="exampleModal" tabindex="-1"
+                                    {{-- <div class="modal fade" id="exampleModal" tabindex="-1"
                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
@@ -208,7 +223,36 @@
                                                 </div>
                                             </div>
                                         </div>
+                                    </div> --}}
+
+                                    @if (session('success'))
+                                        <script>
+                                            window.addEventListener('DOMContentLoaded', function() {
+                                                const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
+                                                modal.show();
+                                            });
+                                        </script>
+                                    @endif
+                                    <div class="modal fade" id="exampleModal" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel"
+                                                        style="color: rgb(46, 173, 46)">
+                                                        {{ __('manage-profile.data_saved') }}
+                                                    </h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {{ __('manage-profile.changes_saved') }}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
+
+
                                 </div>
                             </div>
                         </form>
@@ -219,18 +263,18 @@
                 <div id="management-security" class="management-section mt-4">
 
                     <div class="security-manage">
-                        <p class="lexend font-medium text-black title">{{__('manage-profile.security_management')}}</p>
-                        <p class="inter font-regular text-black description">{{__('manage-profile.subtitle')}}</p>
+                        <p class="lexend font-medium text-black title">{{ __('manage-profile.security_management') }}</p>
+                        <p class="inter font-regular text-black description">{{ __('manage-profile.subtitle') }}</p>
                         <hr
                             style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
                     </div>
                     <div class="left-right-security">
                         <div class="left-security">
-                            <p class="inter font-bold title-security">{{__('manage-profile.mfa_management')}}</p>
+                            <p class="inter font-bold title-security">{{ __('manage-profile.mfa_management') }}</p>
                             <div class="mfa-warning">
                                 <span class="material-symbols-outlined mfa-warning-icon">warning</span>
                                 <span class="inter font-bold mfa-warning-text">
-                                    {{__('manage-profile.mfa_warning')}}
+                                    {{ __('manage-profile.mfa_warning') }}
                                 </span>
                             </div>
 
@@ -239,40 +283,41 @@
                                     <input type="checkbox" id="mfaToggle">
                                     <span class="mfa-slider"></span>
                                 </label>
-                                <span class="inter font-bold mfa-toggle-label">{{__('manage-profile.enable_mfa')}}</span>
+                                <span
+                                    class="inter font-bold mfa-toggle-label">{{ __('manage-profile.enable_mfa') }}</span>
                             </div>
 
                             <p class="mfa-desc inter font-bold">
-                                {{__('manage-profile.mfa_description')}}
+                                {{ __('manage-profile.mfa_description') }}
                             </p>
                         </div>
                         <div class="security-divider"></div>
                         <div class="right-security">
-                            <p class="inter font-bold title-security">{{__('manage-profile.change_password')}}</p>
+                            <p class="inter font-bold title-security">{{ __('manage-profile.change_password') }}</p>
                             <div class="change-password-form">
                                 <div class="password-input-group">
                                     <input type="password" id="oldPassword" class="password-input"
-                                        placeholder="{{__('manage-profile.old_password')}}">
+                                        placeholder="{{ __('manage-profile.old_password') }}">
                                     <span class="toggle-password" data-target="oldPassword">
                                         <span class="material-symbols-outlined">visibility_off</span>
                                     </span>
                                 </div>
                                 <div class="password-input-group">
                                     <input type="password" id="newPassword" class="password-input"
-                                        placeholder="{{__('manage-profile.new_password')}}">
+                                        placeholder="{{ __('manage-profile.new_password') }}">
                                     <span class="toggle-password" data-target="newPassword">
                                         <span class="material-symbols-outlined">visibility_off</span>
                                     </span>
                                 </div>
                                 <div class="password-input-group">
                                     <input type="password" id="verifyPassword" class="password-input"
-                                        placeholder="{{__('manage-profile.verify_password')}}">
+                                        placeholder="{{ __('manage-profile.verify_password') }}">
                                     <span class="toggle-password" data-target="verifyPassword">
                                         <span class="material-symbols-outlined">visibility_off</span>
                                     </span>
                                 </div>
                                 <div class="change-btn-group">
-                                    <button class="inter save-password-btn">{{__('manage-profile.change')}}</button>
+                                    <button class="inter save-password-btn">{{ __('manage-profile.change') }}</button>
                                 </div>
                             </div>
                         </div>
@@ -285,7 +330,7 @@
         <form method="POST" action="{{ route('logout') }}" class="logout-form">
             @csrf
             <button type="submit" class="logout-btn inter font-regular">
-                {{__('manage-profile.logout')}}
+                {{ __('manage-profile.logout') }}
             </button>
         </form>
     </div>
