@@ -15,7 +15,7 @@
 
 @section('content')
     <section class="container-fluid px-sm-5 pb-sm-4 pt-4">
-        <h1 class="text-center">All Orders</h1>
+        <h1 class="text-center">{{ __('admin/order.title') }}</h1>
     </section>
     <section class="container-fluid px-sm-5 pb-sm-4 content-section d-flex flex-column justify-content-between"
         style="min-height: 60vh;">
@@ -23,12 +23,12 @@
             <table class="table table-bordered align-middle text-center">
                 <thead class="table-light">
                     <tr>
-                        <th scope="col">No.</th>
-                        <th scope="col">Order ID</th>
-                        <th scope="col">Vendor Name</th>
-                        <th scope="col">Customer Name</th>
-                        <th scope="col">Order Items</th>
-                        <th scope="col">Order Period</th>
+                        <th scope="col">{{ __('admin/order.no') }}</th>
+                        <th scope="col">{{ __('admin/order.order_id') }}</th>
+                        <th scope="col">{{ __('admin/order.vendor_name') }}</th>
+                        <th scope="col">{{ __('admin/order.customer_name') }}</th>
+                        <th scope="col">{{ __('admin/order.order_items') }}</th>
+                        <th scope="col">{{ __('admin/order.order_period') }}</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -53,7 +53,7 @@
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6" class="text-center text-muted">No orders found.</td>
+                            <td colspan="6" class="text-center text-muted">{{ __('admin/order.no_orders') }}</td>
                         </tr>
                     @endforelse
                 </tbody>
