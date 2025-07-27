@@ -234,10 +234,10 @@
                                                 accept="image/*" style="display:none;" disabled>
                                         </label>
                                     </div>
-                                    <div class="edit-btn-group d-flex flex-column">
+                                    <div class="edit-btn-group d-flex flex-row">
                                         <button class="inter font-medium edit-data">Edit</button>
-                                        <p style="color: rgb(242, 185, 12)">{{ __('manage-profile.click_edit') }}</p>
                                     </div>
+                                    <p class="text-center" style="color: rgb(242, 185, 12)">{{ __('manage-profile.click_edit') }}</p>
 
 
                                 </div>

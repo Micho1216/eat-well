@@ -16,7 +16,7 @@ return [
     'female' => 'Perempuan',
     'email' => 'Email',
     'edit' => 'Edit',
-    'click_edit' => 'Klik Edit untuk Mengubah!',
+    'click_edit' => 'Klik Edit untuk Mengubah Detail Profil!',
     'changes_saved' => 'Perubahan telah disimpan!',
     'data_saved' => 'Data tersimpan',
     'security_management' => 'Manajemen Keamanan',
