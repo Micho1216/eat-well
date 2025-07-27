@@ -113,7 +113,7 @@ VendorController extends Controller
     public function reviewVendor()
     {
         // Ambil vendor yang sedang login
-        $vendor = Auth::user(); // Pastikan user login adalah vendor
+        $vendor = Auth::user()->vendor; // Pastikan user login adalah vendor
 
         // Ambil review dari vendor yang sedang login
         $vendorReviews = VendorReview::where('vendorId', $vendor->vendorId)

@@ -48,7 +48,6 @@
                                 <span class="material-symbols-outlined star-icon">star</span>
                                 @if ($vendor->rating > 0)
                                     <span class="inter rating-and-sold">{{ $vendor->rating }}</span>
-                                    <span class="inter rating-and-sold">{{ $vendor->rating }}</span>
                                 @endif
                             </div>
                         </a>

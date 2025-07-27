@@ -83,7 +83,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('ratingAndReviewVendor') ? 'active' : '' }}"
-                                href="/catering-detail">{{ __('navigation.rating_and_review_vendor') }}</a>
+                                href="{{route('vendor.review')}}">{{ __('navigation.rating_and_review_vendor') }}</a>
                         </li>
                     </ul>
                 </div>

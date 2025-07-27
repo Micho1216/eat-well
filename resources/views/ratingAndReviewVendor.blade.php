@@ -16,7 +16,7 @@
     <div class="container all-container">
         <div class="title-and-num-sold">
             <div class="back-and-cate-name-wrapper">
-                <a href="{{ route('catering-detail', $vendor) }}">
+                <a href="{{ route('vendor.home') }}">
                     <span class="material-symbols-outlined back-icon">arrow_circle_left</span>
                 </a>
                 <h1 class="lexend judul-gede">{{ $vendor->name }}</h1>
