@@ -13,6 +13,7 @@ use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 
 class RegisteredUserController extends Controller
 {
@@ -34,6 +35,10 @@ class RegisteredUserController extends Controller
 
         $attrs['role'] = Str::ucfirst($role);
         $user = User::create($attrs);
+
+        $user->locale = App::currentLocale();
+        $user->save();
+
 
         $otp = rand(100000, 999999);
         $email = $attrs['email'];
