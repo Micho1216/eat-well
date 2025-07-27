@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Enums\UserRole;
 use App\Exports\SalesExport;
+use App\Http\Requests\FilterSalesRequest;
 use App\Models\Order;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -12,18 +13,12 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class SalesController extends Controller
 {
-    public function index(Request $request)
+    public function index(FilterSalesRequest $request)
     {
         $user = Auth::user();
         $vendor = $user->vendor;
         $vendorId = $vendor->vendorId;
-
-        $validated = $request->validate([
-            'startDate' => 'nullable|date_format:Y-m-d',
-            'endDate' => 'nullable|date_format:Y-m-d|after:startDate',
-        ], [
-            'endDate.after' => 'Invalid date range',
-        ]);
+        $validated = $request->validated();
 
         $startDate = $validated['startDate'] ?? null;
         $endDate = $validated['endDate'] ?? null;
@@ -34,17 +29,11 @@ class SalesController extends Controller
         return view('catering.vendorSales', compact('orders', 'totalSales', 'vendor', 'startDate', 'endDate'));
     }
 
-    public function export_sales(Request $request)
+    public function export_sales(FilterSalesRequest $request)
     {
         $user = Auth::user();
         $vendorId = $user->vendor->vendorId;
-
-        $validated = $request->validate([
-            'startDate' => 'nullable|date_format:Y-m-d',
-            'endDate' => 'nullable|date_format:Y-m-d',
-        ], [
-            'endDate.after' => 'Invalid date range',
-        ]);
+        $validated = $request->validated();
 
         $startDate = $validated['startDate'] ?? null;
         $endDate = $validated['endDate'] ?? null;

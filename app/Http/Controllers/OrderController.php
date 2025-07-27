@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FilterOrderHistoryRequest;
 use App\Http\Requests\ProcessCheckoutRequest;
 use App\Http\Requests\ShowPaymentPageRequest;
 use App\Models\Address;
@@ -28,19 +29,14 @@ class OrderController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index(Request $request)
+    public function index(FilterOrderHistoryRequest $request)
     {
-        // validate request
-        $validated = $request->validate([
-            'status' => 'nullable|string|in:all,active,upcoming,cancelled,finished',
-            'query' => 'nullable|string|max:255'
-        ]);
+        $validated = $request->validated();
 
-        // get userId
         $userId = Auth::id();
 
-        $status = $request->query('status', 'all');
-        $query = $request->query('query');
+        $status = $validated['status'] ?? 'all';
+        $query = $validated['query'] ?? null;
         $now = Carbon::now();
 
         $orders = Order::with(['orderItems.package', 'vendor', 'vendorReview'])
@@ -73,6 +69,7 @@ class OrderController extends Controller
                 });
             })
             ->orderByDesc('endDate')
+            ->orderByDesc('created_at')
             ->get();
         // dd($orders);
 
@@ -83,11 +80,6 @@ class OrderController extends Controller
     public function showPaymentPage(ShowPaymentPageRequest $request, Vendor $vendor) // Menggunakan Route Model Binding untuk Vendor
     {
         $userId = Auth::id();
-        if (!$userId) {
-            // Arahkan ke halaman login atau tampilkan error
-            // return redirect()->route('login')->with('error', 'Please log in to view your cart.');
-            return redirect()->route('landingPage');
-        }
 
         // Ambil cart user untuk vendor tertentu
         $cart = Cart::with(['cartItems.package']) // Eager load cartItems dan package untuk performa
@@ -144,7 +136,7 @@ class OrderController extends Controller
                 return redirect()->back()->with('error', 'The selected address does not belong to your account.');
             }
             // $selectedAddress = Address::find($selectedAddressId);
-        } 
+        }
 
         // Fallback jika tidak ada address_id di query string atau tidak valid
         if (!$selectedAddress && Auth::check()) {
@@ -153,8 +145,8 @@ class OrderController extends Controller
                 $selectedAddress = $user->defaultAddress;
             } else {
                 $selectedAddress = Address::where('userId', $user->userId)
-                                         ->where('is_default', 1)
-                                         ->first();
+                    ->where('is_default', 1)
+                    ->first();
             }
         }
 
@@ -477,11 +469,11 @@ class OrderController extends Controller
         }
         // dd($statusesBySlot);
         $status = '';
-        if($order->isCancelled == 1) {
+        if ($order->isCancelled == 1) {
             $status = 'cancelled';
-        } else if (Carbon::now()->greaterThan($order->endDate)){
+        } else if (Carbon::now()->greaterThan($order->endDate)) {
             $status = 'finished';
-        } else if (Carbon::now()->lessThan($order->startDate)){
+        } else if (Carbon::now()->lessThan($order->startDate)) {
             $status = 'upcoming';
         } else {
             $status = 'active';

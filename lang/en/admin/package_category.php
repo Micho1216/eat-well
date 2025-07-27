@@ -26,4 +26,9 @@ return [
     // cannot delete modal
     'canotdel_header' => 'Action Not Allowed',
     'canotdel_body' => 'This category cannot be deleted because it still has associated packages.',
+
+    // flash message
+    'store_success' => 'Category added successfully!',
+    'delete_success' => 'Category deleted successfully.',
+    'delete_failed' => 'Cannot delete category with associated packages.',
 ];

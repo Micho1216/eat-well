@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AdminViewOrderController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
@@ -295,7 +296,7 @@ Route::middleware(['role:admin'])->group(function () {
 
     // Route::post('/admin-dashboard', [SessionController::class, 'destroy'])->name('logout.admin');
 
-    Route::get('/view-order-history', [AdminController::class, 'view_order_history'])
+    Route::get('/view-order-history', [AdminViewOrderController::class, 'index'])
         ->name('view-order-history');
 
     Route::fallback(function () {

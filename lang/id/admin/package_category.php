@@ -26,4 +26,9 @@ return [
     // cannot delete modal
     'canotdel_header' => 'Aksi tidak diizinkan',
     'canotdel_body' => 'Kategori ini tidak dapat dihapus karena masih memiliki paket terkait.',
+
+    // flash message
+    'store_success' => 'Kategori berhasil ditambahkan!',
+    'delete_success' => 'Kategori berhasil dihapus.',
+    'delete_failed' => 'Tidak dapat menghapus kategori yang memiliki paket.',
 ];

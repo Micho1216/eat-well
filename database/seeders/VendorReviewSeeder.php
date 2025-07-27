@@ -60,9 +60,6 @@ class VendorReviewSeeder extends Seeder
             ->inRandomOrder()
             ->first();
 
-        if($order) $this->command->info("Creating review for order {$order->orderId}");
-        else $this->command->info("No order found for vendor ID {$id}");
-
         return $order;
     }
 }

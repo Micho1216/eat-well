@@ -1,0 +1,25 @@
+/* Pagination theme */
+.catering-pagination .page-link {
+    color: var(--background-color);
+    border: 1px solid var(--background-color);
+    background: #fff;
+    font-weight: 500;
+    transition: background 0.2s, color 0.2s;
+}
+
+.catering-pagination .page-link:hover,
+.catering-pagination .page-item.active .page-link {
+    background: var(--background-color);
+    color: #fff;
+    border-color: var(--background-color);
+}
+
+.catering-pagination .page-item .page-link:focus {
+  box-shadow: none;
+}
+
+.catering-pagination .page-item.disabled .page-link {
+    color: #bbb;
+    background: #f8f8f8;
+    border-color: #eee;
+}
