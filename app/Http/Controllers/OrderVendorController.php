@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Enums\TimeSlot;
+use App\Http\Requests\DeliveryOrderVendorIndexRequest;
+use App\Http\Requests\DeliveryStatusUpdateOrderVendorRequest;
 use App\Models\DeliveryStatus;
 use App\Models\Order;
 use App\Models\Vendor;
@@ -61,11 +63,9 @@ class OrderVendorController extends Controller
     /* ------------------------------------------------------------
      *  Daftar order (this week / next week lewat query ?week=)
      * ---------------------------------------------------------- */
-    public function index(Request $request)
+    public function index(DeliveryOrderVendorIndexRequest $request)
     {
-        $validated = $request->validate([
-            'week' => 'nullable|string|in:current,next',
-        ]);
+        $validated = $request->validated();
 
         $vendor = Auth::user()->vendor;
         $vendorId = $vendor->vendorId;
@@ -190,20 +190,9 @@ class OrderVendorController extends Controller
     /* ------------------------------------------------------------
      *  Update status delivery
      * ---------------------------------------------------------- */
-    public function updateStatus(Request $request, $orderId, $slot)
+    public function updateStatus(DeliveryStatusUpdateOrderVendorRequest $request, $orderId, $slot)
     {
-        // Force JSON validation response
-        $validated = validator($request->all(), [
-            'status' => 'required|in:Prepared,Delivered,Arrived',
-        ]);
-
-        if ($validated->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Validation failed.',
-                'errors' => $validated->errors(),
-            ], 422);
-        }
+        $validated = $request->validated();
 
         $ds = DeliveryStatus::where('orderId', $orderId)
             ->where('slot', $slot)
@@ -216,7 +205,7 @@ class OrderVendorController extends Controller
                 'message' => 'Delivery status not found for this order and slot.'
             ], 404);
         }
-        $ds->status = $request->status;
+        $ds->status = $validated['status'];
         $ds->save();
 
         #Note: Get the order, user and status

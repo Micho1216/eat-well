@@ -31,4 +31,24 @@ class DeliveryStatusUpdateOrderVendorRequest extends FormRequest
             ]
         ];
     }
+
+    public function messages()
+    {
+        return [
+            'status.required' => 'Status is required.',
+            'status.in' => 'Status must be one of: Prepared, Delivered, or Arrived.',
+        ];
+    }
+
+    /**
+     * Force JSON validation error response.
+     */
+    // protected function failedValidation(Validator $validator)
+    // {
+    //     throw new HttpResponseException(response()->json([
+    //         'success' => false,
+    //         'message' => 'Validation failed.',
+    //         'errors' => $validator->errors()
+    //     ], 422));
+    // }
 }
