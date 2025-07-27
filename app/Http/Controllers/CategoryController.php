@@ -31,7 +31,7 @@ class CategoryController extends Controller
             'updated_at' => now(),
         ]);
 
-        return redirect()->back()->with('success', 'Category added successfully!');
+        return redirect()->back()->with('success', __('category.store_success'));
     }
 
     /**
@@ -42,11 +42,11 @@ class CategoryController extends Controller
         $category = PackageCategory::findOrFail($id);
 
         if ($category->packages()->exists()) {
-            return redirect()->back()->with('error', 'Cannot delete category with associated packages.');
+            return redirect()->back()->with('error',  __('category.delete_failed'));
         }
 
         $category->delete(); // Soft delete
 
-        return redirect()->back()->with('success', 'Category deleted successfully.');
+        return redirect()->back()->with('success', __('category.delete_success'));
     }
 }
