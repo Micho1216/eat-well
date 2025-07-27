@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AddressDefaultRequest;
+use App\Http\Requests\AddressStoreRequest;
 use App\Models\Address;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,23 +24,10 @@ class AddressController extends Controller
         }
     }
 
-    public function setDefaultAddress(Request $request)
+    public function setDefaultAddress(AddressDefaultRequest $request)
     {
         $user = Auth::user();
         $loggedInUserId = $user->userId;
-
-        $request->validate([
-            'address_id' => [
-                'required',
-                'numeric',
-                // Validasi 'exists':
-                // Cek di tabel 'addresses', kolom 'addressId'
-                // Pastikan alamat tersebut juga memiliki 'userId' yang cocok dengan user yang login
-                Rule::exists('addresses', 'addressId')->where(function ($query) use ($loggedInUserId) {
-                    $query->where('userId', $loggedInUserId);
-                }),
-            ],
-        ]);
 
         $requestedAddressId = $request->input('address_id');
 
@@ -74,35 +63,19 @@ class AddressController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(AddressStoreRequest $request)
     {
-        $validatedData = $request->validate([
-            'provinsi_id' => 'required',
-            'provinsi_name' => 'required|string|max:255',
-            'kota_id' => 'required',
-            'kota_name' => 'required|string|max:255',
-            'kecamatan_id' => 'required',
-            'kecamatan_name' => 'required|string|max:255',
-            'kelurahan_id' => 'required',
-            'kelurahan_name' => 'required|string|max:255',
-            'jalan' => 'required|string|max:255',
-            'kode_pos' => 'required|string|digits:5',
-            'notes' => 'nullable|string|max:255',
-            'recipient_name' => 'required|string|max:100',
-            'recipient_phone' => 'required|string|min:10|max:15|regex:/^[0-9]+$/',
-        ]);
-
         $newAddress = new Address();
         $newAddress->userId = Auth::id();
-        $newAddress->provinsi = $validatedData['provinsi_name'];
-        $newAddress->kota = $validatedData['kota_name'];
-        $newAddress->kecamatan = $validatedData['kecamatan_name'];
-        $newAddress->kelurahan = $validatedData['kelurahan_name'];
-        $newAddress->jalan = $validatedData['jalan'];
-        $newAddress->kode_pos = $validatedData['kode_pos'];
-        $newAddress->notes = $validatedData['notes'];
-        $newAddress->recipient_name = $validatedData['recipient_name'];
-        $newAddress->recipient_phone = $validatedData['recipient_phone'];
+        $newAddress->provinsi = $request->provinsi_name;
+        $newAddress->kota = $request->kota_name;
+        $newAddress->kecamatan = $request->kecamatan_name;
+        $newAddress->kelurahan = $request->kelurahan_name;
+        $newAddress->jalan = $request->jalan;
+        $newAddress->kode_pos = $request->kode_pos;
+        $newAddress->notes = $request->notes;
+        $newAddress->recipient_name = $request->recipient_name;
+        $newAddress->recipient_phone = $request->recipient_phone;
         $newAddress->is_default = 0;
         $newAddress->kabupaten = 'kabupaten';
 
@@ -134,39 +107,23 @@ class AddressController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Address $address)
+    public function update(AddressStoreRequest $request, Address $address)
     {
         if (Auth::id() !== $address->userId) {
             abort(403, 'Unauthorized action.');
         }
 
-        $validatedData = $request->validate([
-            'provinsi_id' => 'required',
-            'provinsi_name' => 'required|string|max:255',
-            'kota_id' => 'required',
-            'kota_name' => 'required|string|max:255',
-            'kecamatan_id' => 'required',
-            'kecamatan_name' => 'required|string|max:255',
-            'kelurahan_id' => 'required',
-            'kelurahan_name' => 'required|string|max:255',
-            'jalan' => 'required|string|max:255',
-            'kode_pos' => 'required|string|digits:5',
-            'notes' => 'nullable|string|max:255',
-            'recipient_name' => 'required|string|max:100',
-            'recipient_phone' => 'required|string|min:10|max:15|regex:/^[0-9]+$/',
-        ]);
-
-        $address->provinsi = $validatedData['provinsi_name'];
-        $address->kota = $validatedData['kota_name'];
-        $address->kecamatan = $validatedData['kecamatan_name'];
-        $address->kelurahan = $validatedData['kelurahan_name'];
-        $address->jalan = $validatedData['jalan'];
-        $address->kode_pos = $validatedData['kode_pos'];
-        $address->notes = $validatedData['notes'];
-        $address->recipient_name = $validatedData['recipient_name'];
-        $address->recipient_phone = $validatedData['recipient_phone'];
+        $address->provinsi = $request->provinsi_name;
+        $address->kota = $request->kota_name;
+        $address->kecamatan = $request->kecamatan_name;
+        $address->kelurahan = $request->kelurahan_name;
+        $address->jalan = $request->jalan;
+        $address->kode_pos = $request->kode_pos;
+        $address->notes = $request->notes;
+        $address->recipient_name = $request->recipient_name;
+        $address->recipient_phone = $request->recipient_phone;
         $address->is_default = 0;
-        $address->kabupaten = $validatedData['kota_name'];
+        $address->kabupaten = 'kabupaten';
 
         $address->save();
 
