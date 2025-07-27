@@ -12,7 +12,12 @@
 
 
 @section('content')
-    @yield('content')
+    <div id="translation-data"
+        data-province-text="{{ __('vendor-first-page.province') }}"
+        data-city-text="{{ __('vendor-first-page.city') }}"
+        data-district-text="{{ __('vendor-first-page.district') }}"
+        data-village-text="{{ __('vendor-first-page.village') }}">
+    </div>
     <div class="position-fixed bg-black w-100 h-100 content opacity-50 disabled-area fix-margin"></div>
     <div class="container-fluid content content-1 min-vh-100">
         <div class="row align-items-center justify-content-center px-0 py-5">
@@ -26,7 +31,7 @@
                             </div>
                             <div class="w-100"></div>
                             <hr class="border border-blackx` order-2 align-self-center w-50 my-0 opacity-100">
-                            <h2 class="h2 text-center account-sertup-title p-2">Fill Your Data to be an EatWell Vendor</h2>
+                            <h2 class="h2 text-center account-sertup-title p-2">{{ __('vendor-first-page.fill_data') }}</h2>
                         </div>
                         <div class="row" style="margin-bottom: 20px;">
                             <div class="col-4 d-flex flex-column align-items-center justify-content-center">
@@ -55,7 +60,7 @@
                             </div>
 
                             <div class="col-8 d-flex flex-column align-items-space-between" style="margin-top:20px">
-                                <label for="vendorName" class="form-label">Vendor Name</label>
+                                <label for="vendorName" class="form-label">{{ __('vendor-first-page.vendor_name') }}</label>
                                 <input type="text" value="{{ old('name') }}"class="form-control" id="vendorName"
                                     placeholder="Vendor Name" name="name">
                                 @error('name')
@@ -64,75 +69,74 @@
                             </div>
                         </div>
                         <div class="row fw-bold mb-2">
-    <div class="col-12">Delivery Schedule</div>
-</div>
+                            <div class="col-12">{{ __('vendor-first-page.delivery_schedule') }}</div>
+                        </div>
 
-<div class="row mb-3">
-    <div class="col-12 fw-bold">Breakfast</div>
-    <div class="col-md-6">
-        <label for="fromBreakfast" class="form-label">From</label>
-        <input type="time" value="{{ old('startBreakfast') }}" id="fromBreakfast" min="00:00" max="23:59" step="60"
-            class="form-control" name="startBreakfast">
-        @error('startBreakfast')
-            <div class="text-danger mt-1">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-md-6">
-        <label for="untilBreakfast" class="form-label">Until</label>
-        <input type="time" value="{{ old('closeBreakfast') }}" id="untilBreakfast" min="00:00" max="23:59" step="60"
-            class="form-control" name="closeBreakfast">
-        @error('closeBreakfast')
-            <div class="text-danger mt-1">{{ $message }}</div>
-        @enderror
-    </div>
-</div>
+                        <div class="row mb-3">
+                            <div class="col-12 fw-bold">{{ __('vendor-first-page.breakfast') }}</div>
+                            <div class="col-md-6">
+                                <label for="fromBreakfast" class="form-label">{{ __('vendor-first-page.from') }}</label>
+                                <input type="time" value="{{ old('startBreakfast') }}" id="fromBreakfast" min="00:00"
+                                    max="23:59" step="60" class="form-control" name="startBreakfast">
+                                @error('startBreakfast')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="untilBreakfast" class="form-label">{{ __('vendor-first-page.until') }}</label>
+                                <input type="time" value="{{ old('closeBreakfast') }}" id="untilBreakfast" min="00:00"
+                                    max="23:59" step="60" class="form-control" name="closeBreakfast">
+                                @error('closeBreakfast')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
 
-<div class="row mb-3">
-    <div class="col-12 fw-bold">Lunch</div>
-    <div class="col-md-6">
-        <label for="fromLunch" class="form-label">From</label>
-        <input type="time" value="{{ old('startLunch') }}" id="fromLunch" min="00:00" max="23:59" step="60"
-            class="form-control" name="startLunch">
-        @error('startLunch')
-            <div class="text-danger mt-1">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-md-6">
-        <label for="untilLunch" class="form-label">Until</label>
-        <input type="time" value="{{ old('closeLunch') }}" id="untilLunch" min="00:00" max="23:59" step="60"
-            class="form-control" name="closeLunch">
-        @error('closeLunch')
-            <div class="text-danger mt-1">{{ $message }}</div>
-        @enderror
-    </div>
-</div>
+                        <div class="row mb-3">
+                            <div class="col-12 fw-bold">{{ __('vendor-first-page.lunch') }}</div>
+                            <div class="col-md-6">
+                                <label for="fromLunch" class="form-label">{{ __('vendor-first-page.from') }}</label>
+                                <input type="time" value="{{ old('startLunch') }}" id="fromLunch" min="00:00"
+                                    max="23:59" step="60" class="form-control" name="startLunch">
+                                @error('startLunch')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="untilLunch" class="form-label">{{ __('vendor-first-page.until') }}</label>
+                                <input type="time" value="{{ old('closeLunch') }}" id="untilLunch" min="00:00"
+                                    max="23:59" step="60" class="form-control" name="closeLunch">
+                                @error('closeLunch')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
 
-<div class="row mb-3">
-    <div class="col-12 fw-bold">Dinner</div>
-    <div class="col-md-6">
-        <label for="fromDinner" class="form-label">From</label>
-        <input type="time" value="{{ old('startDinner') }}" id="fromDinner" min="00:00" max="23:59" step="60"
-            class="form-control" name="startDinner">
-        @error('startDinner')
-            <div class="text-danger mt-1">{{ $message }}</div>
-        @enderror
-    </div>
-    <div class="col-md-6">
-        <label for="untilDinner" class="form-label">Until</label>
-        <input type="time" value="{{ old('closeDinner') }}" id="untilDinner" min="00:00" max="23:59" step="60"
-            class="form-control" name="closeDinner">
-        @error('closeDinner')
-            <div class="text-danger mt-1">{{ $message }}</div>
-        @enderror
-    </div>
-</div>
+                        <div class="row mb-3">
+                            <div class="col-12 fw-bold">{{ __('vendor-first-page.dinner') }}</div>
+                            <div class="col-md-6">
+                                <label for="fromDinner" class="form-label">{{ __('vendor-first-page.from') }}</label>
+                                <input type="time" value="{{ old('startDinner') }}" id="fromDinner" min="00:00"
+                                    max="23:59" step="60" class="form-control" name="startDinner">
+                                @error('startDinner')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="col-md-6">
+                                <label for="untilDinner" class="form-label">{{ __('vendor-first-page.until') }}</label>
+                                <input type="time" value="{{ old('closeDinner') }}" id="untilDinner" min="00:00"
+                                    max="23:59" step="60" class="form-control" name="closeDinner">
+                                @error('closeDinner')
+                                    <div class="text-danger mt-1">{{ $message }}</div>
+                                @enderror
+                            </div>
                         </div>
                         <div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 gy-3 py-2">
                             <div class="col">
-                                <label for="provinsi" class="form-label">Province</label>
+                                <label for="provinsi" class="form-label">{{ __('vendor-first-page.province') }}</label>
                                 <select id="provinsi" name="provinsi" class="form-select"
                                     aria-label="Small select example">
-                                    <option selected>Provinsi</option>
+                                    <option selected>{{ __('vendor-first-page.province') }}</option>
 
                                 </select>
                                 @error('provinsi')
@@ -140,18 +144,18 @@
                                 @enderror
                             </div>
                             <div class="col">
-                                <label for="kota" class="form-label">City/Town</label>
+                                <label for="kota" class="form-label">{{ __('vendor-first-page.city') }}</label>
                                 <select id="kota" name="kota" class="form-select">
-                                    <option selected>Kota</option>
+                                    <option selected>{{ __('vendor-first-page.city') }}</option>
                                 </select>
                                 @error('kota')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col">
-                                <label for="kecamatan" class="form-label">District</label>
+                                <label for="kecamatan" class="form-label">{{ __('vendor-first-page.district') }}</label>
                                 <select id="kecamatan" name="kecamatan" class="form-select">
-                                    <option selected>Kecamatan</option>
+                                    <option selected>{{ __('vendor-first-page.district') }}</option>
                                 </select>
                                 @error('kecamatan')
                                     <div class="text-danger mt-1">{{ $message }}</div>
@@ -160,16 +164,16 @@
                         </div>
                         <div class="row gy-3 py-2">
                             <div class="col">
-                                <label for="kelurahan" class="form-label">Municipality/Village</label>
+                                <label for="kelurahan" class="form-label">{{ __('vendor-first-page.village') }}</label>
                                 <select id="kelurahan" name="kelurahan" class="form-select">
-                                    <option selected>Kelurahan</option>
+                                    <option selected>{{ __('vendor-first-page.village')}}</option>
                                 </select>
                                 @error('kelurahan')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="col-12 col-md-4">
-                                <label for="zipCode" class="form-label">Zip Code</label>
+                                <label for="zipCode" class="form-label">{{ __('vendor-first-page.zip_code') }}</label>
                                 <input type="text" value="{{ old('kode_pos') }}" class="form-control" id="zipCode"
                                     placeholder="28162" name="kode_pos">
                                 </select>
@@ -178,9 +182,9 @@
                                 @enderror
                             </div>
                             <div class="col-12 col-md-4 phonum">
-                                <label for="recipientTel" class="form-label">Phone Number</label>
+                                <label for="recipientTel" class="form-label">{{ __('vendor-first-page.phone_number') }}</label>
                                 <input type="tel" class="form-control" value="{{ old('phone_number') }}"
-                                    id="phoneNumber" placeholder="0812-1239-3219" name="phone_number">
+                                    id="phoneNumber" placeholder="081212393219" name="phone_number">
                                 @error('phone_number')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
@@ -188,7 +192,7 @@
                         </div>
                         <div class="row align-items-center justify-content-between gy-3 py-2">
                             <div class="col-12">
-                                <label for="address" class="form-label">Address</label>
+                                <label for="address" class="form-label">{{ __('vendor-first-page.address') }}</label>
                                 <input type="text" class="form-control" value="{{ old('jalan') }}" id="address"
                                     placeholder="1234 Main St" name="jalan">
                                 @error('jalan')
@@ -196,15 +200,17 @@
                                 @enderror
                             </div>
                         </div>
-                        <div class="col-12 col-md-8 align-self-center mx-auto mt-5">
-                            <button type="submit" class="btn btn-success" id='submit-button'>Continue</button>
-                        </div>
-
-
-                    </form>
                 </div>
+
+                <div class="col-12 col-md-8 align-self-center mx-auto mt-5">
+                    <button type="submit" class="btn btn-success" id='submit-button'>{{ __('vendor-first-page.continue') }}</button>
+                </div>
+
+
+                </form>
             </div>
         </div>
+    </div>
     </div>
 @endsection
 

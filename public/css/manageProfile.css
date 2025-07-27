@@ -409,7 +409,7 @@ body {
 .left-right-security {
     display: flex;
     flex-direction: row;
-    align-items: flex-start;
+    align-items: center;
     justify-content: center;
     width: 100%;
     gap: 0;
@@ -430,12 +430,19 @@ body {
 }
 
 .security-divider {
-    width: 2px;
+    width: 70%;
     background: #222;
     opacity: 0.2;
-    min-height: 400px;
+    min-height: 1px;
     margin: 0 12px;
-    align-self: stretch;
+    align-self: stretch; 
+}
+
+.right-security{
+    padding-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .mfa-warning {
@@ -523,7 +530,7 @@ body {
     font-size: 16px;
     color: #222;
     margin-top: 24px;
-    margin-bottom: 0;
+    margin-bottom: 50px;
     margin-left: 40px;
 }
 
