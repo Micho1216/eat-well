@@ -17,8 +17,9 @@
     <section class="container-fluid px-sm-5 pb-sm-4 pt-4">
         <h1 class="text-center">All Orders</h1>
     </section>
-    <section class="container-fluid px-sm-5 pb-sm-4">
-        <div class="table-responsive">
+    <section class="container-fluid px-sm-5 pb-sm-4 content-section d-flex flex-column justify-content-between"
+        style="min-height: 60vh;">
+        <div class="table-responsive mb-3">
             <table class="table table-bordered align-middle text-center">
                 <thead class="table-light">
                     <tr>
@@ -40,7 +41,8 @@
                             <td>
                                 <ul class="mb-0 ps-3">
                                     @foreach ($order->orderItems as $item)
-                                        <li>{{ $item->package->name }} ({{ $item->packageTimeSlot}}) x{{ $item->quantity }} {{$loop->last ? '' : ', '}} </li>
+                                        <li>{{ $item->package->name }} ({{ $item->packageTimeSlot }})
+                                            x{{ $item->quantity }}{{ !$loop->last ? ',' : '' }}</li>
                                     @endforeach
                                 </ul>
                             </td>
@@ -56,30 +58,26 @@
                     @endforelse
                 </tbody>
             </table>
-
-            @if ($orders->lastPage() > 1)
-                <ul class="catering-pagination pagination justify-content-center my-3">
-                    {{-- Previous Page Link --}}
-                    <li class="page-item {{ $orders->onFirstPage() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $orders->previousPageUrl() ?? '#' }}"
-                            tabindex="-1">&laquo;</a>
-                    </li>
-
-                    {{-- Pagination Elements --}}
-                    @for ($i = 1; $i <= $orders->lastPage(); $i++)
-                        <li class="page-item {{ $orders->currentPage() == $i ? 'active' : '' }}">
-                            <a class="page-link" href="{{ $orders->url($i) }}">{{ $i }}</a>
-                        </li>
-                    @endfor
-
-                    {{-- Next Page Link --}}
-                    <li class="page-item {{ !$orders->hasMorePages() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $orders->nextPageUrl() ?? '#' }}">&raquo;</a>
-                    </li>
-                </ul>
-            @endif
         </div>
+
+        {{-- Pagination at the bottom --}}
+        @if ($orders->lastPage() > 1)
+            <ul class="catering-pagination pagination justify-content-center mt-auto">
+                <li class="page-item {{ $orders->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $orders->previousPageUrl() ?? '#' }}">&laquo;</a>
+                </li>
+                @for ($i = 1; $i <= $orders->lastPage(); $i++)
+                    <li class="page-item {{ $orders->currentPage() == $i ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $orders->url($i) }}">{{ $i }}</a>
+                    </li>
+                @endfor
+                <li class="page-item {{ !$orders->hasMorePages() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $orders->nextPageUrl() ?? '#' }}">&raquo;</a>
+                </li>
+            </ul>
+        @endif
     </section>
+
     <x-admin-footer></x-admin-footer>
 @endsection
 
