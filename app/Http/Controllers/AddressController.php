@@ -170,7 +170,7 @@ class AddressController extends Controller
 
         $address->save();
 
-        return redirect('/manage-address')->with('success', 'Alamat berhasil diperbarui');
+        return redirect('/manage-address')->with('update_success', 'Alamat berhasil diperbarui');
     }
 
     /**

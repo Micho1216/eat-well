@@ -19,4 +19,5 @@ return [
     'delivered' => 'Terkirim',
     'arrived' => 'Tiba',
     'search_by_order' => 'Cari berdasarkan Nomor Pesanan',
+    'decline_order' => 'Tolak Pesanan',
 ];

@@ -1,0 +1,299 @@
+body {
+    background-color: #064e3b !important;
+    /* hijau tua */
+    font-family: 'Lexend', sans-serif;
+    color: #f0fdf4;
+}
+
+.card-img-top {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-bottom: 1px solid #ddd;
+}
+
+.card-title {
+    font-family: 'Lexend', sans-serif;
+    text-align: center;
+}
+
+.card-footer small {
+    text-align: center;
+    color: #065f46;
+}
+
+.card-deck {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    padding: 1rem;
+    flex-wrap: wrap;
+}
+
+.card {
+    flex: 0 0 250px;
+    border: none;
+    background-color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+    color: #065f46;
+}
+
+.heading-title {
+    font-size: 30px;
+    text-align: center;
+    color: #ffffff;
+    margin-top: 2rem;
+    font-weight: 600;
+}
+
+.chart-container {
+    background: #ffffff;
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+    margin: auto;
+    color: #064e3b;
+}
+
+.chart-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #065f46;
+    margin-bottom: 2rem;
+}
+
+#salesChart {
+    max-height: 300px;
+}
+
+.btn-download {
+    background-color: #10b981;
+    color: white;
+    font-weight: bold;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 30px;
+    transition: background 0.3s;
+}
+
+.btn-download:hover {
+    background-color: #059669;
+}
+
+.text-muted {
+    color: #184b2a !important;
+}
+
+.text-muted-subheading {
+    color: #ffffff !important;
+}
+
+.welcome-banner {
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to right, #C6E4B7, #aaf3c5);
+    /* gradasi hijau muda */
+    border-radius: 20px;
+    padding: 5px 10px;
+    max-width: 800px;
+    margin: 30px auto 0 -14px;
+    /* center align */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    color: #103f0b;
+    /* teks jadi hijau tua agar kontras */
+}
+
+
+.logo-circle {
+    flex-shrink: 0;
+    width: 150px;
+    height: 150px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+}
+
+.logo-circle img {
+    width: 70%;
+    height: auto;
+}
+
+.welcome-text h2 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.welcome-text p {
+    font-size: 0.95rem;
+    color: #ffffff;
+    line-height: 1.4;
+    text-align: justify;
+}
+
+@keyframes leafFall {
+    0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0;
+    }
+
+    25% {
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: translateX(-50px) translateY(50vh) rotate(180deg);
+        opacity: 1;
+    }
+
+    75% {
+        transform: translateX(50px) translateY(75vh) rotate(270deg);
+    }
+
+    100% {
+        transform: translateX(0) translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+
+.leaf {
+    position: fixed;
+    top: -100px;
+    width: 60px;
+    height: 60px;
+    background-image: url('asset/catering/homePage/leaf.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.7;
+    pointer-events: none;
+    z-index: -1;
+    animation-name: leafFall;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+}
+
+
+
+
+@media (max-width: 768px) {
+    .chart-title {
+        font-size: 1.4rem;
+    }
+
+    .chart-container {
+        padding: 2rem 1rem;
+    }
+
+    .btn-download {
+        width: 80%;
+    }
+}
+
+@media (max-width: 768px) {
+    @media (max-width: 768px) {
+        .welcome-banner {
+            flex-direction: row;
+            align-items: flex-start;
+            text-align: left;
+            max-width: 95%;
+            padding: 15px;
+            margin: 20px 0 0 -15px;
+        }
+
+        .logo-circle {
+            width: 80px;
+            height: 80px;
+            margin-right: 10px;
+        }
+
+        .logo-circle img {
+            width: 65%;
+        }
+
+        .welcome-text h2 {
+            font-size: 1rem;
+        }
+
+        .welcome-text p {
+            font-size: 0.75rem;
+        }
+    }
+
+    .leaf {
+        position: fixed;
+        top: -100px;
+        width: 60px;
+        height: 60px;
+        /* background-image: url('asset/catering/homePage/leaf.png'); pastikan path-nya benar! */
+        background-image: url('asset/catering/homePage/leaf.png');
+        background-size: contain;
+        background-repeat: no-repeat;
+        opacity: 0.7;
+        pointer-events: none;
+        z-index: -1;
+        animation-name: leafFall;
+        animation-timing-function: ease-in-out;
+        animation-iteration-count: infinite;
+    }
+
+    @keyframes leafFall {
+        0% {
+            transform: translate(0, 0) rotate(0deg);
+            opacity: 0;
+        }
+
+        25% {
+            opacity: 0.7;
+        }
+
+        50% {
+            transform: translateX(-50px) translateY(50vh) rotate(180deg);
+            opacity: 1;
+        }
+
+        75% {
+            transform: translateX(50px) translateY(75vh) rotate(270deg);
+        }
+
+        100% {
+            transform: translateX(0) translateY(100vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .welcome-banner {
+            flex-direction: row;
+            align-items: flex-start;
+            text-align: left;
+            max-width: 95%;
+            padding: 15px;
+            margin: 20px 0 0 -15px;
+        }
+
+        .logo-circle {
+            width: 80px;
+            height: 80px;
+            margin-right: 10px;
+        }
+
+        .logo-circle img {
+            width: 65%;
+        }
+
+        .welcome-text h2 {
+            font-size: 1rem;
+        }
+
+        .welcome-text p {
+            font-size: 0.75rem;
+        }
+    }
+
+}

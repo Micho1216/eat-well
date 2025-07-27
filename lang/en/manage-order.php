@@ -19,5 +19,5 @@ return [
     'delivered' => 'Delivered',
     'arrived' => 'Arrived',
     'search_by_order' => 'Search by Order #',
-
+    'decline_order' => 'Decline Order',
 ];

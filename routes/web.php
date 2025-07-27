@@ -180,6 +180,9 @@ Route::middleware(['role:customer'])->group(function () {
 /* ---------------------
      VENDOR ROUTES
 ---------------------- */
+/* ---------------------
+     VENDOR ROUTES
+---------------------- */
 Route::middleware(['role:vendor'])->group(function () {
     Route::middleware(NoCateringDataMiddleware::class)->group(function () {
         Route::get('/vendor-first-page', function () {
@@ -190,7 +193,8 @@ Route::middleware(['role:vendor'])->group(function () {
 
     Route::middleware(EnsureVendor::class)->group(function () {
         // Catering dashboard
-        Route::get('/cateringHomePage', [OrderVendorController::class, 'totalOrder']);
+        Route::get('/cateringHomePage', [OrderVendorController::class, 'totalOrder'])->name('vendor.home');
+        Route::get('/catering-detail', [VendorController::class, 'reviewVendor'])->name('vendor.review');
         // Route::get('/cateringHomePage', function () {
         //     // untuk yang log activity, kalau suatu saat buat controllernya mohon dimasukan
         //     // masukan sebelum returen view / return redirect

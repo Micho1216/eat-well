@@ -30,6 +30,28 @@
         </div>
     @endif
 
+     {{-- Modal untuk Sukses Update --}}
+    @if (session('update_success'))
+        <div class="modal fade" id="updateSuccessModal" tabindex="-1" aria-labelledby="updateSuccessModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="updateSuccessModalLabel">Berhasil!</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>{{ session('update_success') }}</p>
+                        <i class="material-symbols-outlined text-success" style="font-size: 50px;">check_circle</i>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-bs-dismiss="modal">Oke</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div class="container d-flex justify-content-center align-items-center">
         <div class="address-container text-center">
             <div class="text-start mb-3">
@@ -194,6 +216,10 @@
         $(document).ready(function() {
             @if (session('delete_success'))
                 $('#deleteSuccessModal').modal('show');
+            @endif
+
+            @if (session('update_success'))
+                $('#updateSuccessModal').modal('show');
             @endif
         });
     </script>

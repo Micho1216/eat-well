@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
@@ -16,12 +17,9 @@ class SessionController extends Controller
         return view('auth.login');
     }
 
-    public function store(Request $request)
+    public function store(LoginRequest $request)
     {
-        $attrs = $request->validate([
-            'email' => 'required|email|max:255',
-            'password' => 'required',
-        ]);
+        $attrs = $request->validated();
 
         $remember = request()->has('remember');
         $user = User::where('email', $attrs['email'])->first();
