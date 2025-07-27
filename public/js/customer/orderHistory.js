@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 
         let rating_list = card.querySelector(".rating-icon-list");
-        if(rating_list){
+        if (rating_list) {
             card.querySelector(".rating-icon-list").addEventListener(
                 "mouseleave",
                 function () {
@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const modal = document.getElementById("rateReviewModal");
     const modalStars = modal.querySelectorAll(".star-icon-modal");
     let modalSelected = -1;
-    
+
     modalStars.forEach((star, idx) => {
         star.addEventListener("click", function () {
             modalSelected = idx;
@@ -141,11 +141,31 @@ document.addEventListener("DOMContentLoaded", function () {
             },
             body: JSON.stringify({ rating, review }),
         })
-            .then((res) => res.json())
+            .then((res) => {
+                if (!res.ok) {
+                    return res.json().then((err) => Promise.reject(err));
+                }
+                return res.json();
+            })
             .then((data) => {
                 modal.style.display = "none";
                 document.body.style.overflow = "";
                 showSuccessModal();
+            })
+            .catch((err) => {
+                // Show error
+                if (err.errors && err.errors.review) {
+                    const reviewInput = modal.querySelector("#reviewText");
+
+                    let errorEl = modal.querySelector("#reviewError");
+                    if (!errorEl) {
+                        errorEl = document.createElement("div");
+                        errorEl.id = "reviewError";
+                        errorEl.className = "text-danger mt-1";
+                        reviewInput.parentNode.appendChild(errorEl);
+                    }
+                    errorEl.textContent = err.errors.review[0];
+                }
             });
     };
 
@@ -154,8 +174,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const cancelForm = document.getElementById("cancelForm");
     const closeModalBtn = document.getElementById("closeModalBtn");
 
-    document.querySelectorAll(".open-cancel-modal").forEach(function(btn) {
-        btn.addEventListener("click", function(e) {
+    document.querySelectorAll(".open-cancel-modal").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
             console.log("masuk");
             e.preventDefault();
             const orderId = btn.getAttribute("data-order-id");
@@ -167,14 +187,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    closeModalBtn.addEventListener("click", function() {
+    closeModalBtn.addEventListener("click", function () {
         cancelModal.classList.add("hidden");
         cancelModal.style.display = "none";
         document.body.style.overflow = "";
     });
 
     // Optional: Close modal when clicking outside content
-    cancelModal.addEventListener("click", function(e) {
+    cancelModal.addEventListener("click", function (e) {
         if (e.target === cancelModal) {
             cancelModal.classList.add("hidden");
             cancelModal.style.display = "none";
@@ -183,11 +203,11 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    const flash = document.getElementById('flash-message');
+document.addEventListener("DOMContentLoaded", function () {
+    const flash = document.getElementById("flash-message");
     if (flash) {
         setTimeout(() => {
-            flash.classList.add('fade-out');
+            flash.classList.add("fade-out");
             setTimeout(() => flash.remove(), 500);
         }, 3000);
     }

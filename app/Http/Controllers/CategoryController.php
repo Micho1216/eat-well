@@ -23,9 +23,6 @@ class CategoryController extends Controller
      */
     public function store(CategoryStoreRequest $request)
     {
-        // $validated = $request->validate([
-        //     'categoryName' => 'required|unique:package_categories,categoryName',
-        // ]);
         $validated = $request->validated();
 
         PackageCategory::create([
