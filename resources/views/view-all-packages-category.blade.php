@@ -1,5 +1,6 @@
 @php
     use Carbon\Carbon;
+    Carbon::setLocale(app()->getLocale());
 @endphp
 
 @extends('components.admin-nav')
@@ -13,12 +14,12 @@
 
 @section('content')
     <section class="container-fluid pt-3 pt-sm-4 px-sm-5 d-flex justify-content-between align-items-center">
-        <h1 class="text-center m-0">Category List</h1>
+        <h1 class="text-center m-0">{{__('admin/package_category.header')}}</h1>
         <button type="button" onclick="openModal()" class="btn btn-success d-flex gap-1 align-items-center">
             <span class="material-symbols-outlined">
                 add
             </span>
-            Category
+            {{__('admin/package_category.category')}}
         </button>
     </section>
     @if (session('success'))
@@ -32,17 +33,17 @@
 
     <section class="container-fluid px-sm-5 pb-sm-4">
         @if ($categories->isEmpty())
-            <h4>No categories available</h4>
+            <h4>{{__('admin/package_category.no_category')}}</h4>
         @else
             <div class="table-responsive">
                 <table class="table custom-table mt-3">
                     <thead class="table-dark">
                         <tr>
                             <th scope="col">No</th>
-                            <th scope="col">Category Name</th>
-                            <th scope="col">Packages count</th>
-                            <th scope="col">Created at</th>
-                            <th scope="col">Action</th>
+                            <th scope="col">{{__('admin/package_category.th_cat')}}</th>
+                            <th scope="col">{{__('admin/package_category.th_pkgcount')}}</th>
+                            <th scope="col">{{__('admin/package_category.th_created')}}</th>
+                            <th scope="col">{{__('admin/package_category.th_action')}}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -51,7 +52,7 @@
                                 <td>{{ $cat->categoryId }}</td>
                                 <td>{{ $cat->categoryName }}</td>
                                 <td>{{ $cat->packages()->count() }}</td>
-                                <td>{{ Carbon::parse($cat->created_at)->format('d M Y') }}</td>
+                                <td>{{ Carbon::parse($cat->created_at)->translatedFormat('d F Y') }}</td>
                                 <td class="d-flex flex-wrap gap-1">
                                     {{-- <a href="#" class="btn btn-primary btn-sm d-flex gap-1 align-items-center"
                                     onclick="openUpdateModal('{{ $cat->categoryId }}', '{{ $cat->categoryName }}')">
@@ -61,7 +62,7 @@
                                     <button type="button" class="btn btn-danger btn-sm d-flex gap-1 align-items-center"
                                         onclick="handleDeleteClick('{{ $cat->categoryId }}', {{ $cat->packages()->count() }})">
                                         <span class="material-symbols-outlined">delete</span>
-                                        Delete
+                                        {{__('admin/package_category.delete')}}
                                     </button>
                                 </td>
                             </tr>
@@ -78,12 +79,12 @@
             <form action="{{ route('categories.store') }}" method="POST">
                 @csrf
                 <div class="custom-modal-header">
-                    <h5 class="modal-title">Add New Category</h5>
+                    <h5 class="modal-title">{{__('admin/package_category.add_cat')}}</h5>
                     <button type="button" class="close-modal-btn" onclick="closeModal()">×</button>
                 </div>
                 <div class="custom-modal-body">
                     <div class="mb-3">
-                        <label for="categoryName" class="form-label">Category Name</label>
+                        <label for="categoryName" class="form-label">{{__('admin/package_category.cat_name')}}</label>
                         <input type="text" name="categoryName" id="categoryName"
                             class="form-control @error('categoryName') is-invalid @enderror"
                             value="{{ old('categoryName') }}" required>
@@ -95,8 +96,8 @@
                     </div>
                 </div>
                 <div class="custom-modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                    <button type="submit" class="btn btn-success">Add Category</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">{{__('admin/package_category.cancel')}}</button>
+                    <button type="submit" class="btn btn-success">{{__('admin/package_category.submit')}}</button>
                 </div>
             </form>
         </div>
@@ -111,15 +112,15 @@
                 @csrf
                 @method('DELETE')
                 <div class="custom-modal-header">
-                    <h5 class="modal-title text-danger">Confirm Delete</h5>
+                    <h5 class="modal-title text-danger">{{__('admin/package_category.del_header')}}</h5>
                     <button type="button" class="close-modal-btn" onclick="closeDeleteModal()">×</button>
                 </div>
                 <div class="custom-modal-body mt-0">
-                    <p style="font-size: 14px;">Are you sure you want to delete this category?</p>
+                    <p style="font-size: 14px;">{{__('admin/package_category.del_body')}}</p>
                 </div>
                 <div class="custom-modal-footer">
-                    <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">Cancel</button>
-                    <button type="submit" class="btn btn-danger">Delete</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeDeleteModal()">{{__('admin/package_category.cancel')}}</button>
+                    <button type="submit" class="btn btn-danger">{{__('admin/package_category.del_submit')}}</button>
                 </div>
             </form>
         </div>
@@ -131,11 +132,11 @@
     <div id="cannotDeleteModal" class="custom-modal hidden">
         <div class="custom-modal-content">
             <div class="custom-modal-header">
-                <h5 class="modal-title text-danger">Action Not Allowed</h5>
+                <h5 class="modal-title text-danger">{{__('admin/package_category.canotdel_header')}}</h5>
                 <button type="button" class="close-modal-btn" onclick="closeCannotDeleteModal()">×</button>
             </div>
             <div class="custom-modal-body mt-0">
-                <p style="font-size: 14px;">This category cannot be deleted because it still has associated packages.</p>
+                <p style="font-size: 14px;">{{__('admin/package_category.canotdel_body')}}</p>
             </div>
             <div class="custom-modal-footer">
                 <button type="button" class="btn btn-danger" onclick="closeCannotDeleteModal()">OK</button>
