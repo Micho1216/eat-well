@@ -391,6 +391,6 @@ VendorController extends Controller
 
         logActivity('Successfully', 'Updated', "Profile to {$updated_user->name}");
 
-        return redirect()->route('manage-profile-vendor-account')->with('success', 'Profile updated successfully!');;
+        return redirect()->route('manage-profile-vendor-account')->with('success', 'Profile updated successfully!');
     }
 }

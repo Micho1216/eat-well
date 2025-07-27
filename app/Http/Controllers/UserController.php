@@ -131,6 +131,6 @@ class UserController extends Controller
 
         logActivity('Successfully', 'Updated', "Profile to {$updated_user->name}");
 
-        return redirect()->route('manage-profile');
+        return redirect()->route('manage-profile')->with('success', 'Profile updated successfully!');
     }
 }

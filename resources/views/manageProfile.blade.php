@@ -113,7 +113,7 @@
                         @endif
                     @endif
                     <div class="manage-profile-in">
-                        <form action="{{ route('manage-profile.updateUser') }}" method="POST"
+                        <form action="{{ route('manage-profile.update') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             @method('PATCH')
