@@ -5,6 +5,7 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/manageProfile.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 @endsection
 
 @section('content')
@@ -83,8 +84,38 @@
                     </div>
                     <hr
                         style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
+
+                    
+
+                    @if (session('success'))
+                        @if (session('success'))
+                            <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+                                <div id="successToast" class="toast align-items-center text-bg-success border-0"
+                                    role="alert" aria-live="assertive" aria-atomic="true">
+                                    <div class="d-flex">
+                                        <div class="toast-body">
+                                            {{ session('success') }}
+                                        </div>
+                                        <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                            data-bs-dismiss="toast" aria-label="Close"></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const toastEl = document.getElementById('successToast');
+                                    const toast = new bootstrap.Toast(toastEl, {
+                                        autohide: true,
+                                        delay: 3000 // 3 detik
+                                    });
+                                    toast.show();
+                                });
+                            </script>
+                        @endif
+                    @endif
                     <div class="manage-profile-in">
-                        <form action="{{ route('manage-profile.updateUser') }}" method="POST"
+                        <form action="{{ route('manage-profile-vendor-account.updateUser') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             @method('PATCH')
@@ -206,50 +237,6 @@
                                     <div class="edit-btn-group d-flex flex-column">
                                         <button class="inter font-medium edit-data">Edit</button>
                                         <p style="color: rgb(242, 185, 12)">{{ __('manage-profile.click_edit') }}</p>
-                                    </div>
-
-                                    {{-- <div class="modal fade" id="exampleModal" tabindex="-1"
-                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel"
-                                                        style="color: rgb(46, 173, 46)">{{__('manage-profile.data_saved')}}</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    {{__('manage-profile.changes_saved')}}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div> --}}
-
-                                    @if (session('success'))
-                                        <script>
-                                            window.addEventListener('DOMContentLoaded', function() {
-                                                const modal = new bootstrap.Modal(document.getElementById('exampleModal'));
-                                                modal.show();
-                                            });
-                                        </script>
-                                    @endif
-                                    <div class="modal fade" id="exampleModal" tabindex="-1"
-                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel"
-                                                        style="color: rgb(46, 173, 46)">
-                                                        {{ __('manage-profile.data_saved') }}
-                                                    </h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    {{ __('manage-profile.changes_saved') }}
-                                                </div>
-                                            </div>
-                                        </div>
                                     </div>
 
 

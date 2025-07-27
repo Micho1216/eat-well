@@ -8,6 +8,7 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/manageProfilevendor.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 @endsection
 
 @section('content')
@@ -62,9 +63,35 @@
                     </div>
                     <hr
                         style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
-                    @session('success')
-                        <p class="text-center" style="color: green">{{ session('success') }}</p>
-                    @endsession
+                    
+                    @if (session('success'))
+                        @if (session('success'))
+                            <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+                                <div id="successToast" class="toast align-items-center text-bg-success border-0"
+                                    role="alert" aria-live="assertive" aria-atomic="true">
+                                    <div class="d-flex">
+                                        <div class="toast-body">
+                                            {{ session('success') }}
+                                        </div>
+                                        <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                            data-bs-dismiss="toast" aria-label="Close"></button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    const toastEl = document.getElementById('successToast');
+                                    const toast = new bootstrap.Toast(toastEl, {
+                                        autohide: true,
+                                        delay: 3000 // 3 detik
+                                    });
+                                    toast.show();
+                                });
+                            </script>
+                        @endif
+                    @endif
+
                     <div class="manage-profile-in">
                         <form action="{{ route('manage-profile-vendor.update') }}" method="POST"
                             enctype="multipart/form-data">
@@ -87,7 +114,7 @@
                                     <label
                                         class="inter font-bold text-black data-title">{{ __('manage-profile-vendor.telephone') }}</label>
                                     <input type="text" class="lexend font-regular text-black name-input" id="telpInput"
-                                        name="telpInput" value="{{ $vendor->phone_number }}">
+                                        name="telpInput" value="{{ $vendor->phone_number }}" disabled>
                                     @error('telpInput')
                                         <p style="color: red">{{ $message }}</p>
                                     @enderror
@@ -122,33 +149,55 @@
                                             for="breakfast_time_start">{{ __('manage-profile-vendor.breakfast_delivery') }}</label>
                                         <input type="time" class="time-input" name="breakfast_time_start"
                                             id="breakfast_time_start"
-                                            value="{{ isset($breakfast_start) ? $breakfast_start : '' }}">
+                                            value="{{ isset($breakfast_start) ? $breakfast_start : '' }}" disabled>
                                         <p class="mt-2">-</p>
                                         <input type="time" class="time-input" name="breakfast_time_end"
                                             id="breakfast_time_end"
-                                            value="{{ isset($breakfast_end) ? $breakfast_end : '' }}">
+                                            value="{{ isset($breakfast_end) ? $breakfast_end : '' }}" disabled>
                                     </div>
+                                    @error('breakfast_time_start')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                    @error('breakfast_time_end')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
 
                                     <div class="time-row">
                                         <label class="time-label"
                                             for="lunch_time_start">{{ __('manage-profile-vendor.lunch_delivery') }}</label>
                                         <input type="time" class="time-input" name="lunch_time_start"
-                                            id="lunch_time_start" value="{{ isset($lunch_start) ? $lunch_start : '' }}">
+                                            id="lunch_time_start" value="{{ isset($lunch_start) ? $lunch_start : '' }}"
+                                            disabled>
+
                                         <p class="mt-2">-</p>
                                         <input type="time" class="time-input" name="lunch_time_end"
-                                            id="lunch_time_end" value="{{ isset($lunch_end) ? $lunch_end : '' }}">
+                                            id="lunch_time_end" value="{{ isset($lunch_end) ? $lunch_end : '' }}"
+                                            disabled>
                                     </div>
+                                    @error('lunch_time_start')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                    @error('lunch_time_end')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
 
                                     <div class="time-row">
                                         <label class="time-label"
                                             for="dinner_time_start">{{ __('manage-profile-vendor.dinner_delivery') }}</label>
                                         <input type="time" class="time-input" name="dinner_time_start"
                                             id="dinner_time_start"
-                                            value="{{ isset($dinner_start) ? $dinner_start : '' }}">
+                                            value="{{ isset($dinner_start) ? $dinner_start : '' }}" disabled>
                                         <p class="mt-2">-</p>
                                         <input type="time" class="time-input" name="dinner_time_end"
-                                            id="dinner_time_end" value="{{ isset($dinner_end) ? $dinner_end : '' }}">
+                                            id="dinner_time_end" value="{{ isset($dinner_end) ? $dinner_end : '' }}"
+                                            disabled>
                                     </div>
+                                    @error('dinner_time_start')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
+                                    @error('dinner_time_end')
+                                        <div class="text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
 
                                 <div class="photo-data">
@@ -166,22 +215,7 @@
                                         <button
                                             class="inter font-medium edit-data">{{ __('manage-profile-vendor.edit') }}</button>
                                     </div>
-
-                                    <div class="modal fade" id="exampleModal" tabindex="-1"
-                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: rgb(46, 173, 46)">Data saved</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Changes had been made !
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <p style="color: rgb(242, 185, 12)">{{ __('manage-profile.click_edit') }}</p>
 
                                 </div>
                             </div>

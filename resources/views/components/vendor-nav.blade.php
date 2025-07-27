@@ -99,7 +99,7 @@
                 </a>
             @endauth --}}
 
-            <a href="/manage-profile-2">
+            <a href="/manage-profile-vendor-account">
                 <div class="imgstyle m-2" style="border-radius:100%; margin-right:20px">
                     <img class="" src="{{ asset('asset/profile/' . Auth::user()->profilePath) }}"
                         alt="Card image " width="50px" height="50px" style="border-radius: 100%">

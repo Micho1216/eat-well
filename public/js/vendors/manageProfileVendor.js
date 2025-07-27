@@ -32,27 +32,40 @@ document.addEventListener('DOMContentLoaded', function () {
     let originalProfile = {};
 
     function setProfileEditMode(on) {
-        nameInput.readOnly = !on;
-        dobMonth.disabled = !on;
-        dobDay.disabled = !on;
-        dobYear.disabled = !on;
-        genderRadios.forEach(radio => radio.disabled = !on);
+    nameInput.readOnly = !on;
+    dobMonth.disabled = !on;
+    dobDay.disabled = !on;
+    dobYear.disabled = !on;
+    genderRadios.forEach(radio => radio.disabled = !on);
 
-        const profilePicInput = document.getElementById('profilePicInput');
-        if (profilePicInput) {
-            profilePicInput.disabled = !on;
-        }
-
-        if (on) {
-            originalProfile = {
-                name: nameInput.value,
-                dobMonth: dobMonth.value,
-                dobDay: dobDay.value,
-                dobYear: dobYear.value,
-                gender: Array.from(genderRadios).find(r => r.checked)?.value
-            };
-        }
+    const profilePicInput = document.getElementById('profilePicInput');
+    if (profilePicInput) {
+        profilePicInput.disabled = !on;
     }
+
+    // Tambahan: aktifkan input lainnya
+    const telpInput = document.getElementById('telpInput');
+    if (telpInput) {
+        telpInput.disabled = !on;
+    }
+
+    // Waktu pengantaran
+    const timeInputs = document.querySelectorAll('input[type="time"]');
+    timeInputs.forEach(input => input.disabled = !on);
+
+    if (on) {
+        originalProfile = {
+            name: nameInput.value,
+            dobMonth: dobMonth.value,
+            dobDay: dobDay.value,
+            dobYear: dobYear.value,
+            gender: Array.from(genderRadios).find(r => r.checked)?.value,
+            telp: telpInput?.value || '',
+            times: Array.from(timeInputs).map(input => input.value)
+        };
+    }
+}
+
 
 
     function attachEditBtnListener() {

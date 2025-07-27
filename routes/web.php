@@ -32,6 +32,7 @@ use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Auth;
 
 Route::post('/lang', LanguageController::class);
+
 use App\Http\Controllers\VerifyOtpController;
 
 /* --------------------
@@ -74,8 +75,8 @@ Route::middleware(['guest'])->group(function () {
 ---------------------*/
 
 Route::middleware(['auth'])->group(function () {
-    Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
-    Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
+    // Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
+    // Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
     Route::post('/manage-profile', [SessionController::class, 'destroy'])->name('logout');
 
     // Route::get('/manage-profile', function () {
@@ -93,6 +94,9 @@ Route::middleware(['role:customer'])->group(function () {
     Route::get('/customer-first-page', function () {
         return view('customer.customerFirstPage');
     });
+
+    Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
+    Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
 
     // Customer Home
     Route::get('/home', [HomeController::class, 'index'])->name('home');
@@ -133,8 +137,7 @@ Route::middleware(['role:customer'])->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order-detail');
     Route::put('/orders/{id}/cancel', [OrderController::class, 'cancelOrder'])->name('order.cancel');
     // Route::get('/order-detail', [OrderController::class, 'show'])->name('order-detail');
-    Route::post('/orders/{order}/review', [CustomerRatingController::class, 'store'])->middleware('auth');
-    ;
+    Route::post('/orders/{order}/review', [CustomerRatingController::class, 'store'])->middleware('auth');;
 
     // Order Payment
     // Route::get('/payment', function () {
@@ -216,9 +219,9 @@ Route::middleware(['role:vendor'])->group(function () {
         Route::delete('/packages/{id}', [PackageController::class, 'destroy'])->name('packages.destroy');
         Route::post('/packages/import', [PackageController::class, 'import'])->name('packages.import');
 
-        Route::get('/manage-profile-2', [VendorController::class, 'manage_profile'])->name('manage-profile');
-        Route::patch('/manage-profile-2', [VendorController::class, 'updateProfileUser'])->name('manage-profile.updateUser');
-        // Route::post('/manage-profile-2', [SessionController::class, 'destroy'])->name('logout');
+        // Route::get('/manage-profile-2', [VendorController::class, 'manage_profile'])->name('manage-profile');
+        // Route::patch('/manage-profile-2', [VendorController::class, 'updateProfileUser'])->name('manage-profile.updateUser');
+        // // Route::post('/manage-profile-2', [SessionController::class, 'destroy'])->name('logout');
 
 
 
@@ -257,11 +260,14 @@ Route::middleware(['role:vendor'])->group(function () {
         Route::put('/vendor-previews/{id}', [VendorPreviewController::class, 'update']);
 
         Route::get('/vendor-manage', [VendorPreviewController::class, 'showVendorDetail']);
+
+        Route::get('/manage-profile-vendor-account', [VendorController::class, 'manage_profile'])->name('manage-profile-vendor-account');
+        Route::patch('/manage-profile-vendor-account', [VendorController::class, 'updateProfileUser'])->name('manage-profile-vendor-account.updateUser');
     });
 
     // Catering Sales
-    Route::get('/vendor/sales', [SalesController::class,'index'])->name('sales.show');
-    Route::get('/vendor/sales/export', [SalesController::class,'export_sales'])->name('sales.export');
+    Route::get('/vendor/sales', [SalesController::class, 'index'])->name('sales.show');
+    Route::get('/vendor/sales/export', [SalesController::class, 'export_sales'])->name('sales.export');
 
     // Route::get('/manage-profile-catering', [VendorController::class, 'manageProfile'])->name('manage-profile-vendor');
     // Route::patch('/manage-profile-catering', [VendorController::class, 'updateProfile'])->name('manage-profile-vendor.update');
