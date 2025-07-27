@@ -26,6 +26,14 @@ class SessionController extends Controller
         Session(['remember' => $remember]);
         Session(['email' => $attrs['email']]);
         if(!$user){
+            loginLog($request->email, ' Login Failed : Error, user not found');
+            throw ValidationException::withMessages([
+                'email' => 'Email not found',
+                'password' => ''
+            ]);
+        }
+
+        if(!Auth::attempt(['email' => $attrs['email'], 'password' => $attrs['password']])){
             loginLog($request->email, ' Login Failed : Error, credentials do not match');
             throw ValidationException::withMessages([
                 'email' => 'Credentials do not match',
