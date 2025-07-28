@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VendorSearchRequest;
 use App\Models\Address;
 use App\Http\Requests\VendorStoreRequest;
 use App\Models\Cart;
@@ -18,9 +19,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
-class 
-
-VendorController extends Controller
+class VendorController extends Controller
 {
 
     public function display()
@@ -127,17 +126,9 @@ VendorController extends Controller
         return view('ratingAndReviewVendor', compact('vendor', 'vendorReviews', 'numSold'));
     }
 
-    public function search(Request $request)
+    public function search(VendorSearchRequest $request)
     {
-        // validate request
-        $validated = $request->validate([
-            'query' => 'nullable|string|max:255',
-            'min_price' => 'nullable|integer',
-            'max_price' => 'nullable|integer',
-            'rating' => 'nullable|numeric',
-            'category' => 'nullable|array',
-            'category.*' => 'string',
-        ]);
+        $validated = $request->validated();
         
         // Use validated input data
         $query = $validated['query'] ?? null;
@@ -148,7 +139,7 @@ VendorController extends Controller
 
         $all_categories = PackageCategory::all();
 
-        $vendors = \App\Models\Vendor::query()
+        $vendors = Vendor::query()
             // Search by vendor name or related models — grouped properly
             ->when($query, function ($q) use ($query) {
                 $q->where(function ($q) use ($query) {
@@ -157,9 +148,6 @@ VendorController extends Controller
                             $q2->where('name', 'like', "%{$query}%")
                                 ->orWhereHas('category', function ($q3) use ($query) {
                                     $q3->where('categoryName', 'like', "%{$query}%");
-                                })
-                                ->orWhereHas('cuisineTypes', function ($q4) use ($query) {
-                                    $q4->where('cuisineName', 'like', "%{$query}%");
                                 });
                         });
                 });
