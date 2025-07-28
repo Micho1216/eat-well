@@ -35,43 +35,33 @@ class OrderController extends Controller
 
         $userId = Auth::id();
 
-        $status = $validated['status'] ?? 'all';
+        $status = $validated['status'];
         $query = $validated['query'] ?? null;
         $now = Carbon::now();
 
         $orders = Order::with(['orderItems.package', 'vendor', 'vendorReview'])
             ->where('userId', $userId)
-            ->when($status === 'active', function ($q) use ($now) {
-                $q->where('isCancelled', 0)
-                    ->whereDate('startDate', '<=', $now)
-                    ->whereDate('endDate', '>=', $now);
-            })
-            ->when($status === 'upcoming', function ($q) use ($now) {
-                $q->where('isCancelled', 0)
-                    ->whereDate('startDate', '>', $now);
-            })
-            ->when($status === 'finished', function ($q) use ($now) {
-                $q->where('isCancelled', 0)
-                    ->whereDate('endDate', '<', $now);
-            })
-            ->when($status === 'cancelled', function ($q) use ($now) {
-                $q->where('isCancelled', 1);
-            })
-            ->when($query, function ($q) use ($query) {
-                $q->where(function ($sub) use ($query) {
-                    $sub->where('orderId', 'like', "%$query%")
-                        ->orWhereHas('vendor', function ($vendorQ) use ($query) {
-                            $vendorQ->where('name', 'like', "%$query%");
-                        })
-                        ->orWhereHas('orderItems.package', function ($packageQ) use ($query) {
-                            $packageQ->where('name', 'like', "%$query%");
-                        });
-                });
-            })
-            ->orderByDesc('endDate')
-            ->orderByDesc('created_at')
+            ->latest('endDate')
+            ->latest()
             ->get();
-        // dd($orders);
+
+        if ($query) {
+            $orders = $orders->filter(function ($order) use ($query) {
+                return str_contains($order->orderId, $query)
+                    || str_contains(strtolower($order->vendor?->name), strtolower($query))
+                    || $order->orderItems->contains(function ($item) use ($query) {
+                        return str_contains(strtolower($item->package?->name), strtolower($query));
+                    });
+            });
+        }
+
+        if ($status != 'all') {
+            $orders = $orders->filter(function (Order $order) use ($status) {
+                return $order->getOrderStatus() === $status;
+            });
+        }
+
+        // dd($filteredOrders);
 
         logActivity('Successfully', 'Visited', 'Order History Page');
         return view('customer.orderHistory', compact('orders', 'status'));
