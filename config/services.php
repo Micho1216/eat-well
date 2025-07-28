@@ -37,4 +37,8 @@ return [
         'redirect' => 'http://127.0.0.1:8000/auth/google/callback',
     ],
 
+    'binderbyte' => [
+        'key' => env('BINDER_BYTE_API_KEY'),
+    ]
+
 ];

@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\CuisineType;
+use App\Models\District;
 use App\Models\Package;
 use App\Models\PackageCategory;
 use App\Models\PackageCuisine;
@@ -18,12 +19,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
 
         $this->call([
             UserSeeder::class,
@@ -38,6 +33,10 @@ class DatabaseSeeder extends Seeder
             OrderItemSeeder::class,
             VendorPreviewSeeder::class,
             VendorReviewSeeder::class,          
+            ProvinceSeeder::class,
+            CitySeeder::class,
+            DistrictSeeder::class,
+            VillageSeeder::class
         ]);
 
     }
