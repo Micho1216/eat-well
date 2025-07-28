@@ -35,7 +35,7 @@ class OrderController extends Controller
 
         $userId = Auth::id();
 
-        $status = $validated['status'];
+        $status = $validated['status'] ?? 'all';
         $query = $validated['query'] ?? null;
         $now = Carbon::now();
 
