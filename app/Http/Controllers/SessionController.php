@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
 
 class SessionController extends Controller
 {
@@ -28,12 +28,12 @@ class SessionController extends Controller
         if(!$user){
             loginLog($request->email, ' Login Failed : Error, user not found');
             throw ValidationException::withMessages([
-                'email' => 'Email not found',
-                'password' => ''
+                'email' => 'Credentials do not match',
+                'password' => 'Credentials do not match'
             ]);
         }
 
-        if(!Auth::attempt(['email' => $attrs['email'], 'password' => $attrs['password']])){
+        if(!($user->email === $attrs['email'] && Hash::check($attrs['password'], $user->password))){
             loginLog($request->email, ' Login Failed : Error, credentials do not match');
             throw ValidationException::withMessages([
                 'email' => 'Credentials do not match',
