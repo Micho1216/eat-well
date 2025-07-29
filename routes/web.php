@@ -82,12 +82,13 @@ Route::middleware(['guest'])->group(function () {
 /* --------------------
  NORMAL USERS ROUTES
 ---------------------*/
-Route::post('api/fetch-provinces', [ProvinceController::class, 'fetchProvinces']);
-Route::post('api/fetch-cities', [CityController::class, 'fetchCities']);
-Route::post('api/fetch-districts', [DistrictController::class, 'fetchDistricts']);
-Route::post('api/fetch-villages', [VillageController::class, 'fetchVillages']);
 
 Route::middleware(['auth'])->group(function () {
+    Route::post('api/fetch-provinces', [ProvinceController::class, 'fetchProvinces']);
+    Route::post('api/fetch-cities', [CityController::class, 'fetchCities']);
+    Route::post('api/fetch-districts', [DistrictController::class, 'fetchDistricts']);
+    Route::post('api/fetch-villages', [VillageController::class, 'fetchVillages']);
+    
     Route::post('/manage-profile', [SessionController::class, 'destroy'])->name('logout');
 
     Route::get('/manage-profile', function () {

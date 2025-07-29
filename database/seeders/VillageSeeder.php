@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\District;
 use Illuminate\Support\Str;
 use GuzzleHttp\Exception\ConnectException;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 class VillageSeeder extends Seeder
 {
@@ -22,11 +24,20 @@ class VillageSeeder extends Seeder
         $apiKey = '?api_key='.env('BINDER_BYTE_API_KEY');
 
         $districts = District::all();
+        $districtsCount = count($districts);
+        
+        $output = new ConsoleOutput();
+        $insertProgress = new ProgressBar($output, $districtsCount);
+        $insertProgress->setFormat("Inserting districts\n%percent:3s%% [%bar%]   %message%\n");
+        $insertProgress->start();
+        $startTime = microtime(true);
+
+        $i = 0;
         foreach($districts as $district)
         {
             try {
                 $districtUrl = '&id_kecamatan='.substr($district->id, 0, 2).'.'.substr($district->id, 2, 2).'.'.substr($district->id, 4, 2);
-                $villages = HTTP::get($url.$hierarchy.$apiKey.$districtUrl);
+                $villages = retry(3, fn() => HTTP::get($url.$hierarchy.$apiKey.$districtUrl));
                 $villages = $villages->json('value');
         
                 foreach($villages as $village)
@@ -40,6 +51,12 @@ class VillageSeeder extends Seeder
             } catch (ConnectException $e) {
                 echo($e);
             }
+            $elapsedTime = microtime(true) - $startTime;
+            $remainingTime = ($elapsedTime/($i + 1)) * ($districtsCount - $i -1);
+            $insertProgress->setMessage(sprintf('Elapsed: %.2f sec, Remaining: %.2f sec', $elapsedTime, $remainingTime));
+            $insertProgress->advance();
+            $i += 1;
         }
+        $insertProgress->finish();
     }
 }

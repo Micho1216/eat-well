@@ -41,7 +41,6 @@ class OrderFactory extends Factory
             'isCancelled' => $this->faker->boolean(10),
             'provinsi' => $address->provinsi,
             'kota' => $address->kota,
-            'kabupaten' => $address->kabupaten,
             'kecamatan' => $address->kecamatan,
             'kelurahan' => $address->kelurahan,
             'kode_pos' => $address->kode_pos,
