@@ -24,7 +24,7 @@ class VendorController extends Controller
 
     public function display()
     {
-            return view('cateringHomePage');
+        return view('cateringHomePage');
     }
 
 
@@ -87,7 +87,7 @@ class VendorController extends Controller
         // Jika masih null, mungkin set default kosong atau tangani error
         if (!$selectedAddress) {
             // Anda bisa set default ke null atau membuat objek Address kosong
-            $selectedAddress = (object)['addressId' => null, 'jalan' => 'No Address Selected'];
+            $selectedAddress = (object) ['addressId' => null, 'jalan' => 'No Address Selected'];
             // Atau redirect user untuk memilih alamat
             // return redirect()->route('search')->with('error', 'Please select a delivery address.');
         }
@@ -125,110 +125,7 @@ class VendorController extends Controller
 
         return view('ratingAndReviewVendor', compact('vendor', 'vendorReviews', 'numSold'));
     }
-
-    public function search(VendorSearchRequest $request)
-    {
-        $validated = $request->validated();
-        
-        // Use validated input data
-        $query = $validated['query'] ?? null;
-        $minPrice = $validated['min_price'] ?? 0;
-        $maxPrice = $validated['max_price'] ?? 999999999;
-        $rating = $validated['rating'] ?? null;
-        $categories = $validated['category'] ?? [];
-
-        $all_categories = PackageCategory::all();
-
-        $vendors = Vendor::query()
-            // Search by vendor name or related models — grouped properly
-            ->when($query, function ($q) use ($query) {
-                $q->where(function ($q) use ($query) {
-                    $q->where('name', 'like', "%{$query}%")
-                        ->orWhereHas('packages', function ($q2) use ($query) {
-                            $q2->where('name', 'like', "%{$query}%")
-                                ->orWhereHas('category', function ($q3) use ($query) {
-                                    $q3->where('categoryName', 'like', "%{$query}%");
-                                });
-                        });
-                });
-            })
-
-            // Filter by rating
-            ->when($rating, function ($q) use ($rating) {
-                $q->where('rating', '>=', $rating);
-            })
-
-            // Filter by category (package's category)
-            ->when($categories, function ($q) use ($categories) {
-                $q->whereHas('packages.category', function ($q2) use ($categories) {
-                    $q2->whereIn('categoryName', (array) $categories);
-                });
-            })
-
-            // Filter by price range (any package price in range)
-            ->when($minPrice || $maxPrice, function ($q) use ($minPrice, $maxPrice) {
-                $q->whereHas('packages', function ($q2) use ($minPrice, $maxPrice) {
-                    $q2->where(function ($q3) use ($minPrice, $maxPrice) {
-                        if ($minPrice) {
-                            $q3->where(function ($q4) use ($minPrice) {
-                                $q4->where('breakfastPrice', '>=', $minPrice)
-                                    ->orWhere('lunchPrice', '>=', $minPrice)
-                                    ->orWhere('dinnerPrice', '>=', $minPrice);
-                            });
-                        }
-                        if ($maxPrice) {
-                            $q3->where(function ($q4) use ($maxPrice) {
-                                $q4->where('breakfastPrice', '<=', $maxPrice)
-                                    ->orWhere('lunchPrice', '<=', $maxPrice)
-                                    ->orWhere('dinnerPrice', '<=', $maxPrice);
-                            });
-                        }
-                    });
-                });
-            })
-
-            // Include relations
-            ->with(['packages.category', 'packages.cuisineTypes'])
-
-            // Avoid duplicate vendors due to joins
-            ->distinct()
-
-            // Paginate results and keep filters in URL
-            ->paginate(9)
-            ->appends($request->query());
-
-        Auth::check();
-        $user =  Auth::user();
-
-        $mainAddress = null;
-        $addressIdFromUrl = $request->query('address_id');
-
-        if ($addressIdFromUrl) {
-            // Coba temukan alamat berdasarkan ID dari URL
-            $mainAddress = Address::find($addressIdFromUrl);
-            // Validasi: pastikan alamat ini milik user yang sedang login
-            if ($mainAddress && $user && $mainAddress->userId !== $user->userId) {
-                $mainAddress = null; // Abaikan jika bukan milik user
-            }
-        }
-
-        // Fallback: Jika tidak ada address_id di URL atau tidak valid, gunakan alamat default user
-        if (!$mainAddress && $user) {
-            if (method_exists($user, 'defaultAddress')) { // Jika ada relasi defaultAddress di model User
-                $mainAddress = $user->defaultAddress;
-            } else {
-                // Alternatif jika tidak ada relasi defaultAddress (cari manual is_default = 1)
-                $mainAddress = Address::where('userId', $user->userId)
-                    ->where('is_default', 1)
-                    ->first();
-            }
-        }
-
-        // Pass paginated vendors to the view
-        logActivity('Successfully', 'Visited', "Vendor Search Page and Searched for: {$query}");
-        return view('customer.search', compact('vendors', 'all_categories', 'user', 'mainAddress'));
-    }
-
+    
     public function manageProfile()
     {
         $user = Auth::user();
@@ -274,7 +171,7 @@ class VendorController extends Controller
             $vendor = Vendor::where('userId', $userId)->first();
 
             $validator = Validator::make($request->all(), [
-                'nameInput'=> [
+                'nameInput' => [
                     'bail',
                     'required',
                     'string',
@@ -290,8 +187,8 @@ class VendorController extends Controller
                 'telpInput.required' => 'Telp number must be filled !',
                 'telpInput.starts_with' => 'Telp number must be start with 08',
                 'nameInput.unique' => 'Vendor name is already taken !',
-                'profilePicInput.image'   => 'Profile picture must be an image.',
-                'profilePicInput.mimes'   => 'Profile picture must be a file of type: jpg, jpeg, png.',
+                'profilePicInput.image' => 'Profile picture must be an image.',
+                'profilePicInput.mimes' => 'Profile picture must be a file of type: jpg, jpeg, png.',
                 'nameInput.not_regex' => 'HTML or script tags are not allowed in the vendor name.',
             ]);
 
@@ -328,7 +225,8 @@ class VendorController extends Controller
         }
     }
 
-    public function store(VendorStoreRequest $request){
+    public function store(VendorStoreRequest $request)
+    {
         // validating
         $userId = Auth::id();
 
@@ -338,26 +236,26 @@ class VendorController extends Controller
 
         // upload logo
         $logoPath = null;
-        
+
         $file = $request->file('logo');
 
-        $filename = time().'_'.$file->getClientOriginalName();
+        $filename = time() . '_' . $file->getClientOriginalName();
 
         $file->storeAs('public/vendor_logos', $filename);
 
-        $logoPath = 'vendor_logos/'.$filename;
+        $logoPath = 'vendor_logos/' . $filename;
 
         $vendor->update([
             'logo' => $logoPath,
         ]);
-        
-       // Convert and combine delivery times from 12-hour format (like "05:30 PM") to "HH:MM-HH:MM"
+
+        // Convert and combine delivery times from 12-hour format (like "05:30 PM") to "HH:MM-HH:MM"
         $breakfast = $request->startBreakfast && $request->closeBreakfast
-            ? $request->startBreakfast. '-' .$request->closeBreakfast
+            ? $request->startBreakfast . '-' . $request->closeBreakfast
             : null;
 
         $lunch = $request->startLunch && $request->closeLunch
-            ? $request->startLunch. '-' .$request->closeLunch
+            ? $request->startLunch . '-' . $request->closeLunch
             : null;
 
         $dinner = $request->startDinner && $request->closeDinner
@@ -365,19 +263,19 @@ class VendorController extends Controller
             : null;
 
         /** @var User|Authenticable $user */
-        
+
         // Store the vendor
         $vendor->update([
-            'name'=> $request['name'],
-            'logo' => $logoPath, 
-            'phone_number'=> $request['phone_number'],
-            'breakfast_delivery'=> $breakfast,
-            'lunch_delivery'=> $lunch,
-            'dinner_delivery'=> $dinner,
-            'provinsi'=> $request['provinsi'],
-            'kota'=> $request['kota'],
-            'kecamatan'=> $request['kecamatan'],
-            'kelurahan'=> $request['kelurahan'],
+            'name' => $request['name'],
+            'logo' => $logoPath,
+            'phone_number' => $request['phone_number'],
+            'breakfast_delivery' => $breakfast,
+            'lunch_delivery' => $lunch,
+            'dinner_delivery' => $dinner,
+            'provinsi' => $request['provinsi'],
+            'kota' => $request['kota'],
+            'kecamatan' => $request['kecamatan'],
+            'kelurahan' => $request['kelurahan'],
             'kode_pos' => $request['kode_pos'],
             'jalan' => $request['jalan'],
             'rating' => 0.0,

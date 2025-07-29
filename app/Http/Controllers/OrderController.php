@@ -67,7 +67,7 @@ class OrderController extends Controller
         return view('customer.orderHistory', compact('orders', 'status'));
     }
 
-    public function showPaymentPage(ShowPaymentPageRequest $request, Vendor $vendor) // Menggunakan Route Model Binding untuk Vendor
+    public function showPaymentPage(Vendor $vendor) // Menggunakan Route Model Binding untuk Vendor
     {
         $userId = Auth::id();
 
@@ -115,9 +115,10 @@ class OrderController extends Controller
         }
 
         // $selectedAddressId = $request->query('address_id');
-        $selectedAddressId = $request->validated('address_id');
+        $selectedAddressId = session('address_id');
         $selectedAddress = null;
 
+        // dd($selectedAddressId);
         if ($selectedAddressId) {
             $selectedAddress = Address::find($selectedAddressId);
             // Opsional: Pastikan alamat ini milik user yang sedang login
@@ -125,7 +126,10 @@ class OrderController extends Controller
                 $selectedAddress = null; // Abaikan jika bukan milik user
                 return redirect()->back()->with('error', 'The selected address does not belong to your account.');
             }
-            // $selectedAddress = Address::find($selectedAddressId);
+            
+            if($selectedAddress->provinsi != $vendor->provinsi) {
+                return redirect()->back()->with('error', 'Catering is too far from you.');
+            }
         }
 
         // Fallback jika tidak ada address_id di query string atau tidak valid

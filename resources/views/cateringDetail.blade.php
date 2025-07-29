@@ -15,12 +15,16 @@
 @endsection
 
 @section('content')
-    <div id="translation-data"
-        data-breakfast-text="{{ __('catering-detail.breakfast') }}"
-        data-lunch-text="{{ __('catering-detail.lunch') }}" 
-        data-dinner-text="{{ __('catering-detail.dinner') }}"
-        data-package-text="{{ __('catering-detail.package') }}"
-        data-packages-text="{{ __('catering-detail.packages') }}"
+    @if (session('error'))
+        <div id="flash-message" class="alert alert-danger alert-dismissible fade show shadow-lg" role="alert"
+            style="position: fixed; top: 100px; left: 50%; transform: translateX(-50%); z-index: 1055; min-width: 300px; max-width: 600px;">
+            {{ session('error') }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    @endif
+    <div id="translation-data" data-breakfast-text="{{ __('catering-detail.breakfast') }}"
+        data-lunch-text="{{ __('catering-detail.lunch') }}" data-dinner-text="{{ __('catering-detail.dinner') }}"
+        data-package-text="{{ __('catering-detail.package') }}" data-packages-text="{{ __('catering-detail.packages') }}"
         data-items-text="{{ __('catering-detail.items') }}"
         data-no-package-selected-yet="{{ __('catering-detail.no_package_selected_yet') }}">
     </div>
@@ -74,7 +78,8 @@
                         <div class="cokelat-lingkaran">
                             <div>
                                 {{-- <img src="{{ asset('asset/catering-detail/logo-aldenaire-catering.jpg') }}" alt="Catering Image" class="logo-catering"> --}}
-                                <img src="{{ asset('asset/vendorLogo/' . $vendor->logo) }}" alt="Catering Image" class="logo-catering">
+                                <img src="{{ asset('asset/vendorLogo/' . $vendor->logo) }}" alt="Catering Image"
+                                    class="logo-catering">
                             </div>
                         </div>
                     </div>
@@ -100,8 +105,8 @@
                 <div class="carousel-inner">
                     @foreach ($vendor->previews as $key => $preview)
                         <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                            <img src="{{ asset('asset/catering-preview/' . $preview->previewPicturePath) }}" class="d-block w-100"
-                                alt="Food Preview {{ $key + 1 }}">
+                            <img src="{{ asset('asset/catering-preview/' . $preview->previewPicturePath) }}"
+                                class="d-block w-100" alt="Food Preview {{ $key + 1 }}">
                         </div>
                     @endforeach
                 </div>
@@ -221,7 +226,8 @@
                                                             </span>
                                                             <span class="me-2 inter">{{ __('catering-detail.download_menu') }}</span>
                                                         </div> --}}
-                                                        <div class="download-wrapper ms-2" data-pdf="{{ asset('asset/menus/' . $package->menuPDFPath) }}">
+                                                        <div class="download-wrapper ms-2"
+                                                            data-pdf="{{ asset('asset/menus/' . $package->menuPDFPath) }}">
                                                             <span class="material-symbols-outlined download-icon">
                                                                 download
                                                             </span>
@@ -233,8 +239,7 @@
                                                         class="category-cuisine-bold">{{ __('catering-detail.category') }}:</span>
                                                     <span>{{ $package->category->categoryName ?? 'N/A' }}</span>
                                                     <div></div>
-                                                    <span
-                                                        {{-- class="category-cuisine-bold">{{ __('catering-detail.cuisine_type') }}:</span> --}}
+                                                    <span {{-- class="category-cuisine-bold">{{ __('catering-detail.cuisine_type') }}:</span> --}}
                                                         class="category-cuisine-bold">{{ __('catering-detail.avg_calories') }}:</span>
                                                     <span>
                                                         {{-- @forelse ($package->cuisineTypes as $cuisine)
@@ -273,7 +278,8 @@
                                         <div class="menu-item">
                                             @if (!is_null($package->breakfastPrice))
                                                 <div class="item-row">
-                                                    <span data-meal-type="breakfast">{{ __('catering-detail.breakfast') }}</span>
+                                                    <span
+                                                        data-meal-type="breakfast">{{ __('catering-detail.breakfast') }}</span>
                                                     <span class="price" data-price="{{ $package->breakfastPrice }}">Rp
                                                         {{ number_format($package->breakfastPrice, 0, ',', '.') }}</span>
                                                     <div class="qty-control">
@@ -299,7 +305,8 @@
 
                                             @if (!is_null($package->dinnerPrice))
                                                 <div class="item-row">
-                                                    <span data-meal-type="dinner">{{ __('catering-detail.dinner') }}</span>
+                                                    <span
+                                                        data-meal-type="dinner">{{ __('catering-detail.dinner') }}</span>
                                                     <span class="price" data-price="{{ $package->dinnerPrice }}">Rp
                                                         {{ number_format($package->dinnerPrice, 0, ',', '.') }}</span>
                                                     <div class="qty-control">
@@ -354,4 +361,17 @@
     <script src="{{ asset('js/catering detail/modalPdf-cateDetail.js') }}"></script>
     <script src="{{ asset('js/catering detail/dropdown-cateDetail.js') }}"></script>
     <script src="{{ asset('js/catering detail/package-cateDetail.js') }}"></script>
+    <script>
+        // Auto-dismiss flash message after 3 seconds
+        document.addEventListener('DOMContentLoaded', function() {
+            const flash = document.getElementById('flash-message');
+            if (flash) {
+                setTimeout(() => {
+                    flash.classList.remove('show');
+                    flash.classList.add('fade');
+                    setTimeout(() => flash.remove(), 300); // remove from DOM after fade out
+                }, 2000); // 3 seconds
+            }
+        });
+    </script>
 @endsection

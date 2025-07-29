@@ -11,6 +11,7 @@ use App\Http\Controllers\PackageController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\SearchCateringController;
 use App\Http\Controllers\VendorController;
 use App\Http\Middleware\NoCateringDataMiddleware;
 use App\Models\Order;
@@ -128,7 +129,8 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
     Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
 
     // Search Caterings
-    Route::get('/caterings', [VendorController::class, 'search'])->name('search');
+    Route::get('/caterings', [SearchCateringController::class, 'search'])->name('search');
+    Route::post('/set-address', [SearchCateringController::class, 'setAddress'])->name('set.address');
 
     // Catering Details
     Route::get('/catering-detail/{vendor}/rating-and-review', [VendorController::class, 'review'])->name('rate-and-review');

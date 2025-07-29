@@ -20,7 +20,15 @@ class HomeController extends Controller
         /** @var User|null $user */
         $user = Auth::user();
 
-        $address = $this->getDefaultAddress($user);
+        if (!session()->has('address_id')) {
+            $address = $this->getDefaultAddress($user);
+
+            if ($address) {
+                session(['address_id' => $address->addressId]);
+            }
+        } else {
+            $address = $user->addresses()->find(session('address_id'));
+        }
         $vendors = $this->getRecommendedVendors($address);
         $favVendors = $user->favoriteVendors()->limit(8)->get();
         $order = $this->getOngoingOrder($user);
@@ -49,14 +57,14 @@ class HomeController extends Controller
 
             $countNear = $nearVendors->count();
 
-            if ($countNear < 12) {
-                $extraVendors = Vendor::where('provinsi', '!=', $address->provinsi)
-                    ->orderBy('rating')
-                    ->take(12 - $countNear)
-                    ->get();
+            // if ($countNear < 12) {
+            //     $extraVendors = Vendor::where('provinsi', '!=', $address->provinsi)
+            //         ->orderBy('rating')
+            //         ->take(12 - $countNear)
+            //         ->get();
 
-                return $nearVendors->concat($extraVendors);
-            }
+            //     return $nearVendors->concat($extraVendors);
+            // }
 
             return $nearVendors;
         }
