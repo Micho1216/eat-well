@@ -188,7 +188,7 @@
                     style="background:#f44336; color:white; border:none; border-radius:10px; padding:5px 32px; font-size:18px; font-weight:500; box-shadow:0 2px 6px #0001;">
                     Cancel
                 </button>
-                <button id="wellpayConfirmBtn" class="popup-button mt-0"
+                <button id="wellpayConfirmBtn" class="popup-button mt-0 d-flex align-items-center justify-content-center"
                     style="background:#4CAF50; color:white; border:none; border-radius:10px; padding:5px 32px; font-size:18px; font-weight:500; box-shadow:0 2px 6px #0001;">
                     Confirm
                 </button>
