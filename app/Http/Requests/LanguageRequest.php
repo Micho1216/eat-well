@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class LanguageRequest extends FormRequest
 {
@@ -22,7 +23,12 @@ class LanguageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'lang' => 'required|in:en,id'
+            'lang' => [
+                'required',
+                Rule::in([
+                    'en', 'id'
+                ]),
+            ],
         ];
     }
 }
