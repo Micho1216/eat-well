@@ -36,9 +36,7 @@
             <input type="hidden" id="hiddenSelectedAddressRecipientPhone" value="{{ $selectedAddress->recipient_phone}}">
             <input type="hidden" id="hiddenSelectedAddressNotes" value="{{ $selectedAddress->notes }}">
 
-            {{-- Ini akan dieksekusi oleh Blade Engine Laravel --}}
-
-            {{-- Pastikan juga ada CSRF token untuk AJAX POST request --}}
+            {{-- CSRF token untuk AJAX POST request --}}
             <meta name="csrf-token" content="{{ csrf_token() }}">
 
             <div class="orderdet">
@@ -48,11 +46,10 @@
                 <p class="lexend font-medium text-black que">Active Period:</p>
                 <p class="lexend font-bold text-black ans">{{ $startDate }} until {{ $endDate }}</p>
             </div>
-            <div class="detail">
+            {{-- <div class="detail">
                 <p class="lexend font-medium text-black que">Order Date & Time:</p>
-                {{-- <p class="lexend font-bold text-black ans">06:00 AM Sat, 01 May 2025</p> --}}
                 <p class="lexend font-bold text-black ans">{{ \Carbon\Carbon::now()->format('h:i A || D, d M Y') }}</p>
-            </div>
+            </div> --}}
             <hr
                 style="height: 1.5px; background-color:black; opacity:100%; border: none; margin-left: 20px; margin-right: 20px;">
 
@@ -93,27 +90,36 @@
             <div class="payment-meth">
                 <p class="inter font-semibold text-black detail pack-name mb-0">Payment Method</p>
                 <div class="button-payment lexend font-medium text-black">
-                    <div class="form-check m-0">
+                    @foreach ($paymentMethod as $payment)
+                        <div class="form-check m-0">
+                            <input class="form-check-input radio-custom" type="radio" name="payment-button" id="{{ Str::slug($payment->name) }}"
+                                value="{{ $payment->methodId }}">
+                            <label class="form-check-label" for="{{ Str::slug($payment->name) }}">
+                                {{ $payment->name }}
+                            </label>
+                        </div>
+                    @endforeach
+                    {{-- <div class="form-check m-0">
                         <input class="form-check-input radio-custom" type="radio" name="payment-button" id="wellpay"
                             value="1">
                         <label class="form-check-label" for="wellpay">
                             Wellpay
                         </label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check m-0">
                         <input class="form-check-input radioButtonPayment radio-custom" type="radio" name="payment-button"
                             id="qris" value="2">
                         <label class="form-check-label" for="qris">
                             QRIS
                         </label>
                     </div>
-                    <div class="form-check">
+                    <div class="form-check m-0">
                         <input class="form-check-input radio-custom" type="radio" name="payment-button" id="bva"
                             value="3">
                         <label class="form-check-label" for="bva">
                             BCA Virtual Account
                         </label>
-                    </div>
+                    </div> --}}
                 </div>
             </div>
             <hr

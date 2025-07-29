@@ -84,8 +84,6 @@ class OrderController extends Controller
     {
         $userId = Auth::id();
         if (!$userId) {
-            // Arahkan ke halaman login atau tampilkan error
-            // return redirect()->route('login')->with('error', 'Please log in to view your cart.');
             return redirect()->route('landingPage');
         }
 
@@ -165,7 +163,10 @@ class OrderController extends Controller
         }
 
         logActivity('Successfully', 'Visited', 'Vendor Payment Page');
-        return view('payment', compact('vendor', 'cart', 'cartDetails', 'totalOrderPrice', 'startDate', 'endDate', 'selectedAddress'));
+
+        $paymentMethod = PaymentMethod::all();
+
+        return view('payment', compact('vendor', 'cart', 'cartDetails', 'totalOrderPrice', 'startDate', 'endDate', 'selectedAddress', 'paymentMethod'));
     }
 
     public function getUserWellpayBalance()

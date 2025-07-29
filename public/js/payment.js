@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
     // --- Get DOM Elements ---
-    const qrisRadio = document.getElementById("qris");
+    const qrisRadio = document.getElementById("qr");
+    console.log(qrisRadio);
     const wellpayRadio = document.getElementById("wellpay");
+    console.log(wellpayRadio);
     const mainPayButton = document.getElementById("mainPayButton");
 
     // Popups elements
@@ -442,7 +444,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 } finally {
                     hideLoading();
                 }
-            } else if (selectedMethod.id === "qris") {
+            } else if (selectedMethod.id === "qr") {
                 showQrisPopup();
             } else {
                 showGeneralConfirmPopup();
