@@ -41,6 +41,9 @@ class DistrictSeeder extends Seeder
                     return true;
                 })->get($url.$hierarchy.$apiKey.$cityUrl);
                 $districts = $districts->json('value');
+
+                // Command line berikut untuk menggenerate semua kecamatan yang ada
+                $districts = array_slice($districts, 0, 5);
         
                 foreach($districts as $district)
                 {

@@ -21,6 +21,10 @@ class DatabaseSeeder extends Seeder
     {
 
         $this->call([
+            ProvinceSeeder::class, // Provinsi sedang dibatasi jadi max 15 provinsi utk keperluan pengembangan
+            CitySeeder::class, // City seeder sedang dibatasi jadi max 5 kabkot per provinsi untuk mempercepat seeding
+            DistrictSeeder::class, //District seeder sedang dibatasi jadi max 7 kecamatan per kab/kot utk mempercepat seeding
+            VillageSeeder::class,
             UserSeeder::class,
             AddressSeeder::class,
             PackageCategorySeeder::class,
@@ -33,11 +37,6 @@ class DatabaseSeeder extends Seeder
             OrderItemSeeder::class,
             VendorPreviewSeeder::class,
             VendorReviewSeeder::class,          
-            ProvinceSeeder::class,
-            CitySeeder::class,
-            DistrictSeeder::class,
-            VillageSeeder::class
         ]);
-
     }
 }

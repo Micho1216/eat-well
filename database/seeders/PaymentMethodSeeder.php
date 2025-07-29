@@ -14,7 +14,7 @@ class PaymentMethodSeeder extends Seeder
     public function run(): void
     {
         $methods = [
-            'WellPay', 'QR', 'Virtual Account'
+            'WellPay'
         ];
 
         foreach ($methods as $method) {

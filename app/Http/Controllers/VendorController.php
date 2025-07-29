@@ -376,7 +376,6 @@ class VendorController extends Controller
             'dinner_delivery'=> $dinner,
             'provinsi'=> $request['provinsi'],
             'kota'=> $request['kota'],
-            'kabupaten'=> $request['kota'],
             'kecamatan'=> $request['kecamatan'],
             'kelurahan'=> $request['kelurahan'],
             'kode_pos' => $request['kode_pos'],
