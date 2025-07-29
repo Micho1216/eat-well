@@ -27,7 +27,7 @@ class VillageSeeder extends Seeder
         
         $output = new ConsoleOutput();
         $insertProgress = new ProgressBar($output, $districtsCount);
-        $insertProgress->setFormat("Inserting districts\n%percent:3s%% [%bar%]   %message%\n");
+        $insertProgress->setFormat("Inserting villages\n%percent:3s%% [%bar%]   %message%\n");
         $insertProgress->start();
         $startTime = microtime(true);
 
