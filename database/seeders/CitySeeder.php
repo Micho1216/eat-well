@@ -2,12 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use App\Models\Province;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Str;
 use Exception;
 use Symfony\Component\Console\Helper\ProgressBar;

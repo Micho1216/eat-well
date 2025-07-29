@@ -2,12 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use App\Models\City;
-use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Str;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Helper\ProgressBar;
@@ -52,7 +50,7 @@ class DistrictSeeder extends Seeder
                         'city_id' => (int) Str::replace('.', '', $district['id_kabupaten'])
                     ]);
                 }
-            } catch(ConnectionException $e){
+            } catch(Exception $e){
                 echo($e);
             }
 

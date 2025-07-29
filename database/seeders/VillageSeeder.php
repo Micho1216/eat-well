@@ -2,15 +2,14 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\DB;
 use App\Models\District;
 use Illuminate\Support\Str;
-use GuzzleHttp\Exception\ConnectException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Exception;
 
 class VillageSeeder extends Seeder
 {
@@ -48,7 +47,7 @@ class VillageSeeder extends Seeder
                         'district_id' => (int) Str::replace('.', '', $village['id_kecamatan'])
                     ]);
                 }
-            } catch (ConnectException $e) {
+            } catch (Exception $e) {
                 echo($e);
             }
             $elapsedTime = microtime(true) - $startTime;
