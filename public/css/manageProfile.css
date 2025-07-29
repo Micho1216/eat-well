@@ -430,11 +430,13 @@ body {
 }
 
 .security-divider {
-    width: 70%;
+    width: 1px;
     background: #222;
     opacity: 0.2;
     min-height: 1px;
+    max-height: 90%;
     margin: 0 12px;
+    margin-bottom: 20px;
     align-self: stretch; 
 }
 
@@ -443,6 +445,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 80px;
 }
 
 .mfa-warning {

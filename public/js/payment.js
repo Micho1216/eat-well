@@ -2,7 +2,22 @@ document.addEventListener("DOMContentLoaded", function () {
     const translationDataElement = document.getElementById("translation-data");
     const wellpayBalanceTextTranslate = translationDataElement.dataset.wellpayBalanceText;
     const wellpayConfirmBtnTranslate = translationDataElement.dataset.wellpayConfirmBtn;
-    const expiredCountdownTextTranslate = translationDataElement.dataset.expiredCountdownText;
+    const selectPaymethTextTranslate = translationDataElement.dataset.selectPaymethText;
+    const noPaymethTextTranslate = translationDataElement.dataset.noPaymethText;
+    const missingOrderTextTranslate = translationDataElement.dataset.missingOrderText;
+    const unknownErrorTextTranslate = translationDataElement.dataset.unknownErrorText;
+    const checkoutFailedTextTranslate = translationDataElement.dataset.checkoutFailedText;
+    const wellpayInsufficientTextTranslate = translationDataElement.dataset.wellpayInsufficientText;
+    const wellpayFormatErrorTextTranslate = translationDataElement.dataset.wellpayFormatErrorText;
+    const insufficientWellpayBalanceTextTranslate = translationDataElement.dataset.insufficientWellpayBalanceText;
+    const yourBalanceTextTranslate = translationDataElement.dataset.yourBalanceText;
+    const amountPayTextTranslate = translationDataElement.dataset.amountPayText;
+    const retrieveWellpayBalanceTextTranslate = translationDataElement.dataset.retrieveWellpayBalanceText;
+    const retrieveCheckConnectionTextTranslate = translationDataElement.dataset.retrieveCheckConnectionText;
+    const enterPassTextTranslate = translationDataElement.dataset.enterPassText;
+    const wellpayCancelTextTranslate = translationDataElement.dataset.wellpayCancelText;
+    const continueTextTranslate = translationDataElement.dataset.continueText;
+
 
     // --- Get DOM Elements ---
     const qrisRadio = document.getElementById("qris");
@@ -11,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Popups elements
     const qrisPopup = document.getElementById("qrisPopup");
+    const qrisPopUpCancelled = document.getElementById("qrisPopupCancelled");
     const wellpayConfirmPopup = document.getElementById("wellpayConfirmPopup");
     const confirmationPopup = document.getElementById("confirmationPopup"); // General confirmation popup
     const successPopup = document.getElementById("successPopup");
@@ -20,10 +36,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const doneBtn = document.getElementById("doneBtn");
     const downloadQrisBtn = document.getElementById("downloadQrisBtn");
     const qrCodeImage = document.getElementById("qrCodeImage");
+    const expiresInMess = document.getElementById('expiresInMess');
     const countdownTimerElement = document.getElementById("countdownTimer");
     const messageBoxText = document.getElementById("messageBoxText");
     const messageBoxOkBtn = document.getElementById("messageBoxOkBtn");
     const wellpayBalanceText = document.getElementById("wellpayBalanceText");
+    const closeBtn = document.getElementById("closeBtn");
 
     // Elements for Wellpay popup stages
     const wellpayStage1 = document.getElementById("wellpayStage1");
@@ -105,7 +123,14 @@ document.addEventListener("DOMContentLoaded", function () {
             if (countdownTimerElement) {
                 if (timeLeft < 0) {
                     clearInterval(timerInterval);
-                    countdownTimerElement.textContent = "Expired";
+                    hideQrisPopup();
+                    qrisPopUpCancelled.classList.add("active");
+                    if(closeBtn){
+                        closeBtn.addEventListener("click", function(){
+                            qrisPopUpCancelled.classList.remove("active");
+                        });
+                        qrisRadio.checked = false;
+                    }
                 } else {
                     let minutes = Math.floor(timeLeft / 60);
                     let seconds = timeLeft % 60;
@@ -212,7 +237,7 @@ document.addEventListener("DOMContentLoaded", function () {
             'input[name="payment-button"]:checked'
         );
         if (!selectedMethod) {
-            showMessage("No payment method selected for processing.");
+            showMessage(`${noPaymethTextTranslate}`);
             return;
         }
 
@@ -234,9 +259,7 @@ document.addEventListener("DOMContentLoaded", function () {
         const notes = document.getElementById("hiddenSelectedAddressNotes")?.value;
 
         if (!vendorId || !startDate || !endDate) {
-            showMessage(
-                "Missing essential order details. Please refresh the page."
-            );
+            showMessage(`${missingOrderTextTranslate}`);
             console.error("Missing essential order details for AJAX:", {
                 vendorId,
                 startDate,
@@ -261,10 +284,6 @@ document.addEventListener("DOMContentLoaded", function () {
             recipient_name: recipient_name,
             recipient_phone: recipient_phone,
             notes: notes,
-            // recipient_name: '...', // Isi dengan data alamat sebenarnya
-            // recipient_phone: '...', // Isi dengan data alamat sebenarnya
-            // notes: '...', // Isi dengan data alamat sebenarnya
-            // etc.
         };
 
         // Add password if payment method is Wellpay
@@ -286,12 +305,9 @@ document.addEventListener("DOMContentLoaded", function () {
                 hideWellpayConfirmPopup();
                 showSuccessPopup();
             } else {
-                // This block handles cases where backend returns 200 OK but with a custom error message
-                // For Wellpay specific errors (like insufficient balance), it should ideally be handled
-                // by the 4xx status codes. This might catch other generic 200 OK errors.
                 wellpayPopupMessage.textContent =
                     response.message ||
-                    "An unknown error occurred during checkout.";
+                    `${unknownErrorTextTranslate}`;
                 wellpayPopupMessage.classList.remove("text-success");
                 wellpayPopupMessage.classList.add("text-danger");
                 wellpayPopupMessage.style.display = "block";
@@ -311,7 +327,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const errorMessage =
                 responseJson?.message ||
                 xhr.responseText ||
-                "Checkout failed. Please try again.";
+                `${checkoutFailedTextTranslate}`;
 
             if (xhr.status === 422 && responseJson?.errors?.password) {
                 // CASE: INCORRECT PASSWORD - STATUS 422 AND HAS 'password' ERROR
@@ -322,7 +338,7 @@ document.addEventListener("DOMContentLoaded", function () {
             } else if (
                 xhr.status === 402 &&
                 responseJson?.message ===
-                    "Insufficient Wellpay balance. Please top up."
+                    `${wellpayInsufficientTextTranslate}`
             ) {
                 // CASE: INSUFFICIENT BALANCE
                 wellpayPopupMessage.textContent = errorMessage;
@@ -357,7 +373,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 'input[name="payment-button"]:checked'
             );
             if (!selectedMethod) {
-                showMessage("Please select a payment method first.");
+                showMessage(`${selectPaymethTextTranslate}`);
                 return;
             }
 
@@ -380,16 +396,16 @@ document.addEventListener("DOMContentLoaded", function () {
                                 response.wellpay
                             );
                             showMessage(
-                                "Wellpay balance format error. Please contact support."
+                                `${wellpayFormatErrorTextTranslate}`
                             );
                             return;
                         }
 
                         // Check if Wellpay balance is sufficient
                         if (userWellpayBalance < totalOrderPrice) {
-                            const insufficientMessage ='<span style="color: red; font-weight: bold;">Insufficient Wellpay balance.</span>';
-                            const balanceMessage ="Your balance: " + formatRupiah(userWellpayBalance) +".";
-                            const totalToPayMessage ="Total to pay: " +formatRupiah(totalOrderPrice) +".";
+                            const insufficientMessage =`<span style="color: red; font-weight: bold;">${insufficientWellpayBalanceTextTranslate}</span>`;
+                            const balanceMessage =`${yourBalanceTextTranslate}`+ " " + formatRupiah(userWellpayBalance) +".";
+                            const totalToPayMessage =`${amountPayTextTranslate}`+ " " +formatRupiah(totalOrderPrice) +".";
 
                             showMessage(
                                 insufficientMessage +"<br><br>" +balanceMessage +"<br>" +totalToPayMessage
@@ -400,7 +416,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         showWellpayConfirmPopup(userWellpayBalance); // Ini akan menampilkan Stage 1
                     } else {
                         showMessage(
-                            "Could not retrieve Wellpay balance. Please try again."
+                            `${retrieveWellpayBalanceTextTranslate}`
                         );
                         console.error(
                             "Wellpay balance response format incorrect:",
@@ -410,7 +426,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 } catch (xhr) {
                     console.error("Failed to fetch Wellpay balance:", xhr);
                     showMessage(
-                        "Failed to retrieve Wellpay balance. Please check your internet connection."
+                        `${retrieveCheckConnectionTextTranslate}`
                     );
                 }
             } else if (selectedMethod.id === "qris") {
@@ -429,7 +445,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 currentWellpayPopupStage = "password_input";
                 wellpayStage1.style.display = "none";
                 wellpayStage2.style.display = "block";
-                wellpayConfirmBtn.textContent = "Continue";
+                wellpayConfirmBtn.textContent = `${continueTextTranslate}`;
 
                 // Bersihkan pesan error/status sebelumnya saat pindah tahap
                 wellpayPasswordInput.value = "";
@@ -440,7 +456,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 wellpayPasswordInput.focus();
 
                 // Set total yang akan dibayar di stage 2 (agar selalu up-to-date)
-                wellpayAmountToPay.textContent = `Total to pay: ${formatRupiah(
+                wellpayAmountToPay.textContent = `${amountPayTextTranslate}: ${formatRupiah(
                     totalOrderPrice
                 )}`;
             } else if (currentWellpayPopupStage === "password_input") {
@@ -451,7 +467,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 if (password.trim() === "") {
                     wellpayPasswordError.textContent =
-                        "Please enter your password.";
+                        `${enterPassTextTranslate}`;
                     wellpayPasswordError.style.display = "block";
                     return; // Jangan lanjutkan jika password kosong
                 }
@@ -466,7 +482,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (wellpayCancelBtn) {
         wellpayCancelBtn.addEventListener("click", function () {
             hideWellpayConfirmPopup(); // Ini akan mereset stage
-            showMessage("Wellpay payment cancelled.");
+            showMessage(`${wellpayCancelTextTranslate}`);
             if (wellpayRadio) wellpayRadio.checked = false; // Optionally uncheck Wellpay radio
         });
     }

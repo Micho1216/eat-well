@@ -17,6 +17,10 @@ return [
     'expires_in' => 'Expires in ',
     'download' => 'Download',
     'done' => 'Done',
+    'expired_qris' => 'Expired QRIS barcode, please try again.',
+    'close' => 'Close',
+
+
 
     //CONFIRM BCA VA
     'warning' => 'Warning!',
@@ -24,14 +28,15 @@ return [
     'confirm_va' => 'Confirm Payment',
 
     //CONFIRM WELLPAY
-    'confirm_wellpay' => 'Confirm Wellpay Payment',
-    'wellpay_balance' => 'Your current Wellpay balance',
-    'wellpay_yousure' => 'Are you sure you want to pay with Wellpay?',
+    'confirm_wellpay' => 'Confirm WellPay Payment',
+    'wellpay_balance' => 'Your current WellPay balance',
+    'wellpay_yousure' => 'Are you sure you want to pay with WellPay?',
     'enter_pass' => 'Enter Your Password',
     'amount_pay' => 'Total to pay',
     'pass_label' => 'Password',
     'cancel' => 'Cancel',
     'confirm' => 'Confirm',
+    'acc_pass' => 'Enter your account\'s password',
 
     //SUCCESS 
     'success_desc' => 'Successfully added to your subscription. Thank you for your purchase.',
@@ -41,5 +46,18 @@ return [
     'select_payment' => 'Please select a payment method.',
 
     //JS
-    'expired_countdown' => 'Expired',
+    'select_paymeth' => 'Please select a payment method first.',
+    'no_paymeth' => 'No payment method selected for processing.',
+    'missing_order' => 'Missing essential order details. Please refresh the page.',
+    'unknown_error' => 'An unknown error occured during checkout',
+    'checkout_failed'=> 'Checkout failed. Please try again.',
+    'wellpay_insufficient' => 'Insufficient WellPay balance. Please top up.',
+    'wellpay_format_error' => 'WellPay balance format error. Please contact support.',
+    'insufficient_wellpay_balance' => 'Insufficient WellPay balance.',
+    'your_balance' => 'Your balance',
+    'retrieve_wellpay_balance' => 'Could not retrieve WellPay balance. Please try again.',
+    'retrieve_check_connection' => 'Failed to retrieve Wellpay balance. Please check your internet connection.',
+    'wellpay_cancel' => 'Wellpay payment cancelled.',
+    'continue' => 'Continue',
+
 ];

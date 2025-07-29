@@ -19,11 +19,21 @@ return[
     'MFA_management'=> 'MFA Management',
     'MFA_desc'=> 'Your account is not fully protected,',
     'MFA_desc2'=> 'we recommend you to activate 2FA!',
+    'MFA_ytoggle'=> 'Multi Factor Authentication is enabled',
     'MFA_toggle' => 'Enable Multi Factor Authentication',
     'MFA_desc3' => 'Multi Factor Authentication works by sending OTP to your email and requiring it every time you log in onto the account.',
     'change_pass' => 'Change Password',
     'old_pass'=> 'Old Password',
     'new_pass' => 'New Password',
-    'new_pass_ver' => 'New Password Verification',
+    'new_pass_ver' => 'Confirm New Password',
     'but_cha' => 'Change',
+
+    //JS
+    'save' => 'Save',
+    'cancel' => 'Cancel',
+    'pass_fill_all' => 'Please fill all fields.',
+    'pass_no_match' => 'New password do not match.',
+    'pass_cha'=> 'Password changed successfully!',
+
+
 ];

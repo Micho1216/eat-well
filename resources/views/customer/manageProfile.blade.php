@@ -8,6 +8,15 @@
 @endsection
 
 @section('content')
+    <div id="translation-data"
+        data-save-text = "{{ __('customer/manage-profile.save') }}"
+        data-cancel-text = "{{ __('customer/manage-profile.cancel') }}"
+        data-edit-text = "{{ __('customer/manage-profile.edit') }}"
+        data-pass-fill-all-text= "{{ __('customer/manage-profile.pass_fill_all') }}"
+        data-pass-no-match-text= "{{ __('customer/manage-profile.pass_no_match') }}"
+        data-pass-cha-text= "{{ __('customer/manage-profile.pass_cha') }}"
+        data-but-cha-text= "{{ __('customer/manage-profile.but_cha') }}">
+    </div>  
     <div class="container container-custom">
         <div class="left-panel outer-panel d-flex flex-column h-100">
             <div class="lexend font-medium manage-profile">
@@ -65,8 +74,7 @@
                         <p class="lexend font-medium text-black title">{{ __('customer/manage-profile.personal_profile') }}</p>
                         <p class="inter font-regular text-black description">{{ __('customer/manage-profile.profile_desc') }}</p>
                     </div>
-                    <hr
-                        style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
+                    <hr style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
                     <div class="manage-profile-in">
                         <form action="{{ route('manage-profile.update') }}" method="POST" enctype="multipart/form-data">
                             @csrf
@@ -81,6 +89,7 @@
                                         <div class="" style="color: rgb(194, 12, 12)">{{ $message }}</div>
                                     @enderror
 
+                
                                     <label class="inter font-bold text-black data-title" style="display: none">{{ __('customer/manage-profile.date_birth') }}</label>
                                     <div class="dob-picker" style="display: none">
                                         <select class="dob-select font-regular" name="dob_month" id="dob_month">
@@ -134,8 +143,6 @@
                                         <div class="" style="color: rgb(194, 12, 12)">{{ $message }}</div>
                                     @enderror
 
-
-
                                     <p class="inter font-bold text-black data-title gender">{{ __('customer/manage-profile.gender') }}</p>
                                     <div class="gender-group">
                                         @if ($user->genderMale == 1)
@@ -155,7 +162,6 @@
                                             <label for="female"
                                                 class="gender-label lexend font-medium text-black">{{ __('customer/manage-profile.female') }}</label>
                                         @endif
-
                                     </div>
 
 
@@ -190,12 +196,10 @@
 
                 <hr class="section-divider">
                 <div id="management-security" class="management-section mt-4">
-
                     <div class="security-manage">
                         <p class="lexend font-medium text-black title">{{ __('customer/manage-profile.security_management') }}</p>
                         <p class="inter font-regular text-black description">{{ __('customer/manage-profile.security_desc') }}</p>
-                        <hr
-                            style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
+                        <hr style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
                     </div>
                     <div class="left-right-security">
                         <div class="left-security">
@@ -223,16 +227,15 @@
 
                                 <span class="inter font-bold mfa-toggle-label">
                                     @if ($user->enabled_2fa)
-                                        Two Factor Authentication is enabled
+                                        {{ __('customer/manage-profile.MFA_ytoggle') }}
                                     @else
-                                        Enable Multi Factor Authentication
+                                        {{ __('customer/manage-profile.MFA_toggle') }}
                                     @endif
                                 </span>
                             </div>
 
                             <p class="mfa-desc inter font-bold">
-                                {{__('customer/manage-profile.MFA_desc3')}}</span>
-                            </div>
+                                {{__('customer/manage-profile.MFA_desc3')}}
                             </p>
                         </div>
                         <div class="security-divider"></div>
@@ -255,7 +258,8 @@
                                 </div>
                                 <div class="password-input-group">
                                     <input type="password" id="verifyPassword" class="password-input"
-                                        placeholder="{{__('customer/manage-profile.new_pass_ver')}}" data-target="verifyPassword">
+                                        placeholder="{{__('customer/manage-profile.new_pass_ver')}}">
+                                    <span class="toggle-password" data-target="verifyPassword">
                                         <span class="material-symbols-outlined">visibility_off</span>
                                     </span>
                                 </div>

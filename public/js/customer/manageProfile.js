@@ -1,5 +1,13 @@
 document.addEventListener('DOMContentLoaded', function() {
-    
+    const translationDataElement = document.getElementById('translation-data');
+    const saveTextTranslate = translationDataElement.dataset.saveText;
+    const cancelTextTranslate = translationDataElement.dataset.cancelText;
+    const editTextTranslate = translationDataElement.dataset.editText;
+    const passFillAllTextTranslate = translationDataElement.dataset.passFillAllText;
+    const passNoMatchTextTranslate = translationDataElement.dataset.passNoMatchText;
+    const passChaTextTranslate = translationDataElement.dataset.passChaText;
+    const butChaTextTranslate = translationDataElement.dataset.butChaText;
+
     document.querySelectorAll('.menu-link').forEach(link => {
         link.addEventListener('click', function(e) {
             document.querySelectorAll('.menu-link').forEach(l => l.classList.remove('active'));
@@ -55,16 +63,9 @@ document.addEventListener('DOMContentLoaded', function() {
             editBtn.addEventListener('click', function() {
                 setProfileEditMode(true);
                 editBtnGroup.innerHTML = `
-                    <button class="inter font-medium save-profile-btn" type="submit">Save</button>
-                    <button class="inter font-medium cancel-profile-btn">Cancel</button>
+                    <button class="inter font-medium save-profile-btn" type="submit">${saveTextTranslate}</button>
+                    <button class="inter font-medium cancel-profile-btn">${cancelTextTranslate}</button>
                 `;
-                // Save
-                // editBtnGroup.querySelector('.save-profile-btn').addEventListener('click', function() {
-                //     setProfileEditMode(false);
-                //     editBtnGroup.innerHTML = `<button class="inter font-medium edit-data">Edit</button>`;
-                //     attachEditBtnListener();
-                // });
-                // Cancel
                 editBtnGroup.querySelector('.cancel-profile-btn').addEventListener('click', function() {
                     nameInput.value = originalProfile.name;
                     dobMonth.value = originalProfile.dobMonth;
@@ -74,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         radio.checked = (radio.value === originalProfile.gender);
                     });
                     setProfileEditMode(false);
-                    editBtnGroup.innerHTML = `<button class="inter font-medium edit-data">Edit</button>`;
+                    editBtnGroup.innerHTML = `<button class="inter font-medium edit-data">${editTextTranslate}</button>`;
                     attachEditBtnListener();
                 });
             });
@@ -102,26 +103,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 e.preventDefault();
                 setPasswordEditMode(true);
                 changeBtnGroup.innerHTML = `
-                    <button class="inter save-password-btn">Save</button>
-                    <button class="inter cancel-password-btn">Cancel</button>
+                    <button class="inter save-password-btn">${saveTextTranslate}</button>
+                    <button class="inter cancel-password-btn">${cancelTextTranslate}</button>
                 `;
                 // Save
                 changeBtnGroup.querySelector('.save-password-btn').addEventListener('click', function(e) {
                     e.preventDefault();
                     if (oldPassword.value === '' || newPassword.value === '' || verifyPassword.value === '') {
-                        alert('Please fill all fields.');
+                        alert(`${passFillAllTextTranslate}`);
                         return;
                     }
                     if (newPassword.value !== verifyPassword.value) {
-                        alert('New password and verification do not match.');
+                        alert(`${passNoMatchTextTranslate}`);
                         return;
                     }
-                    alert('Password changed successfully!');
+                    alert(`${passChaTextTranslate}`);
                     oldPassword.value = '';
                     newPassword.value = '';
                     verifyPassword.value = '';
                     setPasswordEditMode(false);
-                    changeBtnGroup.innerHTML = `<button class="save-password-btn">Change</button>`;
+                    changeBtnGroup.innerHTML = `<button class="save-password-btn">${butChaTextTranslate}</button>`;
                     attachChangeBtnListener();
                 });
                 // Cancel
@@ -131,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     newPassword.value = '';
                     verifyPassword.value = '';
                     setPasswordEditMode(false);
-                    changeBtnGroup.innerHTML = `<button class="save-password-btn">Change</button>`;
+                    changeBtnGroup.innerHTML = `<button class="save-password-btn">${butChaTextTranslate}</button>`;
                     attachChangeBtnListener();
                 });
             });

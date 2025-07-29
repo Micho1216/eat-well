@@ -8,11 +8,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@1" rel="stylesheet" />
 @endsection
 
+@php
+    use Carbon\Carbon;
+    Carbon::setLocale(app()->getLocale());
+@endphp
+
 @section('content')
     <div id="translation-data"
         data-wellpay-balance-text="{{ __('customer/payment.wellpay_balance') }}"
         data-wellpay-confirm-btn="{{ __('customer/payment.confirm') }}"
-        data-expired-countdown-text="{{ __('customer/payment.expired_countdown') }}">
+        data-select-paymeth-text="{{ __('customer/payment.select_paymeth') }}"
+        data-no-paymeth-text="{{ __('customer/payment.no_paymeth') }}"
+        data-missing-order-text="{{ __('customer/payment.missing_order') }}"
+        data-unknown-error-text="{{ __('customer/payment.unknown_error') }}"
+        data-checkout-failed-text="{{ __('customer/payment.checkout_failed') }}"
+        data-wellpay-insufficient-text="{{ __('customer/payment.wellpay_insufficient') }}"
+        data-wellpay-format-error-text="{{ __('customer/payment.wellpay_format_error') }}"
+        data-insufficient-wellpay-balance-text="{{ __('customer/payment.insufficient_wellpay_balance') }}"
+        data-your-balance-text="{{ __('customer/payment.your_balance')}}"
+        data-amount-pay-text="{{ __('customer/payment.amount_pay') }}"
+        data-retrieve-wellpay-balance-text="{{ __('customer/payment.retrieve_wellpay_balance') }}"
+        data-retrieve-check-connection-text="{{ __('customer/payment.retrieve_check_connection') }}"
+        data-enter-pass-text="{{ __('customer/payment.enter_pass')}}"
+        data-wellpay-cancel-text="{{ __('customer/payment.wellpay_cancel') }}"
+        data-continue-text="{{ __('customer/payment.continue')}}"
+        >
     </div>
     <div class="container">
         <h1 class="lexend font-semi-bold text-white your-order mt-3">{{ __('customer/payment.your_order') }}</h1>
@@ -56,7 +76,7 @@
             <div class="detail">
                 <p class="lexend font-medium text-black que">{{ __('customer/payment.order_date_time') }}:</p>
                 {{-- <p class="lexend font-bold text-black ans">06:00 AM Sat, 01 May 2025</p> --}}
-                <p class="lexend font-bold text-black ans">{{ \Carbon\Carbon::now()->format('h:i A || D, d M Y') }}</p>
+                <p class="lexend font-bold text-black ans">{{ Carbon::now()->translatedFormat('H:i || D, d M Y') }}</p>
             </div>
             <hr
                 style="height: 1.5px; background-color:black; opacity:100%; border: none; margin-left: 20px; margin-right: 20px;">
@@ -102,7 +122,7 @@
                         <input class="form-check-input radio-custom" type="radio" name="payment-button" id="wellpay"
                             value="1">
                         <label class="form-check-label" for="wellpay">
-                            Wellpay
+                            WellPay
                         </label>
                     </div>
                     <div class="form-check">
@@ -139,10 +159,19 @@
             <div class="qr-code-container">
                 <img src="" alt="QR Code" id="qrCodeImage">
             </div>
-            <p class="timer">{{ __('customer/payment.expires_in') }}<span id="countdownTimer">00:59</span></p>
+            <p class="timer" ><span id="expiresInMess">{{ __('customer/payment.expires_in') }}</span><span id="countdownTimer">00:59</span></p>
             <div class="d-flex">
                 <button class="popup-button download-qris me-3" id="downloadQrisBtn">{{ __('customer/payment.download') }} QRIS</button>
                 <button class="popup-button done" id="doneBtn">{{ __('customer/payment.done') }}</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="qrisPopupCancelled" class="popup-overlay">
+        <div class="popup-content" style="width: fit-content;">
+            <h6>{{ __('customer/payment.expired_qris') }}<h6>
+            <div class="d-flex">
+                <button class="popup-button download-qris me-3" id="closeBtn">{{ __('customer/payment.close') }}</button>
             </div>
         </div>
     </div>
@@ -181,7 +210,7 @@
                 </p>
                 <div class="mb-3">
                     <label for="wellpayPasswordInput" class="form-label visually-hidden">{{ __('customer/payment.pass_label') }}</label>
-                    <input type="password" class="form-control" id="wellpayPasswordInput" placeholder="Enter your account's password">
+                    <input type="password" class="form-control" id="wellpayPasswordInput" placeholder= "{{ __('customer/payment.acc_pass') }}">
                     <div id="wellpayPasswordError" class="text-danger mt-1" style="display: none;"></div>
                 </div>
             </div>
