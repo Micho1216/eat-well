@@ -24,7 +24,6 @@ class AddressFactory extends Factory
         return [
             'provinsi' => fake()->state(),
             'kota' => fake()->city(),
-            'kabupaten' => fake()->city(),
             'kecamatan' => fake()->streetName(),
             'kelurahan' => fake()->streetName(),
             'kode_pos' => fake()->numerify('#####'),
