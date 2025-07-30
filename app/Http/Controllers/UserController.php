@@ -111,6 +111,10 @@ class UserController extends Controller
         $userId = $user->userId;
 
         $updated_user = User::find($userId);
+        
+        if($user->name != $request->nameInput) {
+            logActivity('Successfully', 'Updated', "Profile to {$updated_user->name}");
+        }
 
         $updated_user->name = $request->nameInput;
 
@@ -123,13 +127,15 @@ class UserController extends Controller
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('asset/profile'), $filename);
             $updated_user->profilePath = $filename;
+            logActivity('Successfully', 'Updated', "Profile picture {$updated_user->name}");
         }
+
 
         $updated_user->genderMale = ($request->gender === 'male') ? 1 : 0;
 
         $updated_user->save();
 
-        logActivity('Successfully', 'Updated', "Profile to {$updated_user->name}");
+        
 
         return redirect()->route('manage-profile')->with('success', 'Profile updated successfully!');
     }

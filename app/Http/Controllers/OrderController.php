@@ -136,10 +136,12 @@ class OrderController extends Controller
             $selectedAddress = Address::find($selectedAddressId);
             if ($selectedAddress && $userId && $selectedAddress->userId !== $userId) {
                 $selectedAddress = null;
+                logActivity('Failed', '', 'Payment with invalid address');
                 return redirect()->back()->with('error', 'The selected address does not belong to your account.');
             }
             
             if($selectedAddress->provinsi != $vendor->provinsi) {
+                logActivity('Failed', '', 'Payment, Catering is too far from customer');
                 return redirect()->back()->with('error', 'Catering is too far from you.');
             }
         } else {
@@ -153,10 +155,11 @@ class OrderController extends Controller
         }
 
         if (!$selectedAddress) {
+            logActivity('Failed', '', 'Payment with no address selected');
             return redirect()->back()->with('error', 'Alamat pengiriman tidak valid atau tidak dipilih.');
         }
 
-        logActivity('Successfully', 'Visited', 'Vendor Payment Page');
+        // logActivity('Successfully', 'Visited', 'Vendor Payment Page');
 
         $paymentMethod = PaymentMethod::all();
 
@@ -499,6 +502,7 @@ class OrderController extends Controller
         $order->isCancelled = true;
         $order->save();
 
+        logActivity('Successfullyy', 'Cancelled', "Order ". $order->orderId);
         return redirect()->back()->with('message', 'Success cancelling order!');
     }
 

@@ -37,13 +37,13 @@
 
                     <div class="text-center mb-4">
                         @if ($vendor->logo)
-                             <img src="{{ asset('asset/vendorLogo/' . $vendor->logo) }}" alt="Profile Picture"
-                            class="profile-picture" id="profilePicPreview">
+                            <img src="{{ asset('asset/vendorLogo/' . $vendor->logo) }}" alt="Profile Picture adas"
+                                class="profile-picture" id="profilePicPreview">
                         @else
-                             <img src="{{ asset('asset/profile/no-profile.png') }}" alt="Profile Picture"
-                            class="profile-picture" id="profilePicPreview">
+                            <img src="{{ asset('asset/profile/no-profile.png') }}" alt="Profile Picture"
+                                class="profile-picture" id="profilePicPreview">
                         @endif
-                       
+
                         <div>
                             <label for="profilePicInput" class="btn btn-secondary mt-2">
                                 {{ __('manage-profile-vendor.edit') }} Foto
@@ -64,7 +64,9 @@
 
                     <div class="form-group">
                         <label for="nameInput">{{ __('manage-profile-vendor.name') }}</label>
-                        <input type="text" name="nameInput" id="nameInput" value="{{ $vendor->name }}">
+                        <input type="text" name="nameInput" id="nameInput"
+                            value="{{ old('nameInput', $vendor->name) }}">
+
                         @error('nameInput')
                             <p class="text-danger">{{ $message }}</p>
                         @enderror
@@ -72,7 +74,8 @@
 
                     <div class="form-group">
                         <label for="telpInput">{{ __('manage-profile-vendor.telephone') }}</label>
-                        <input type="text" name="telpInput" id="telpInput" value="{{ $vendor->phone_number }}">
+                        <input type="text" name="telpInput" id="telpInput"
+                            value="{{ old('telpInput', $vendor->phone_number) }}">
                     </div>
                     @error('telpInput')
                         <p style="color: red">{{ $message }}</p>
@@ -82,10 +85,10 @@
                         <label for="breakfast_time_start">{{ __('manage-profile-vendor.breakfast_delivery') }}</label>
                         <div class="d-flex gap-2">
                             <input type="time" name="breakfast_time_start" id="breakfast_time_start"
-                                value="{{ $breakfast_start ?? '' }}">
-                            <span class="mt-2">-</span>
+                                value="{{ old('breakfast_time_start', $breakfast_start ?? '') }}">
+                            <span class="mt-3">-</span>
                             <input type="time" name="breakfast_time_end" id="breakfast_time_end"
-                                value="{{ $breakfast_end ?? '' }}">
+                                value="{{ old('breakfast_time_end', $breakfast_end ?? '') }}">
                         </div>
                     </div>
                     @error('breakfast_time_start')
@@ -99,9 +102,11 @@
                         <label for="lunch_time_start">{{ __('manage-profile-vendor.lunch_delivery') }}</label>
                         <div class="d-flex gap-2">
                             <input type="time" name="lunch_time_start" id="lunch_time_start"
-                                value="{{ $lunch_start ?? '' }}">
-                            <span class="mt-2">-</span>
-                            <input type="time" name="lunch_time_end" id="lunch_time_end" value="{{ $lunch_end ?? '' }}">
+                                value="{{ old('lunch_time_start', $lunch_start ?? '') }}">
+                            <span class="mt-3">-</span>
+                            <input type="time" name="lunch_time_end" id="lunch_time_end"
+                                value="{{ old('lunch_time_end', $lunch_end ?? '') }}">
+
                         </div>
                     </div>
                     @error('lunch_time_start')
@@ -115,10 +120,11 @@
                         <label for="dinner_time_start">{{ __('manage-profile-vendor.dinner_delivery') }}</label>
                         <div class="d-flex gap-2">
                             <input type="time" name="dinner_time_start" id="dinner_time_start"
-                                value="{{ $dinner_start ?? '' }}">
-                            <span class="mt-2">-</span>
+                                value="{{ old('dinner_time_start', $dinner_start ?? '') }}">
+                            <span class="mt-3">-</span>
                             <input type="time" name="dinner_time_end" id="dinner_time_end"
-                                value="{{ $dinner_end ?? '' }}">
+                                value="{{ old('dinner_time_end', $dinner_end ?? '') }}">
+
                         </div>
                     </div>
                     @error('dinner_time_start')

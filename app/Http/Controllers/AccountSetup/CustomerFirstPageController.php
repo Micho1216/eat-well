@@ -45,6 +45,7 @@ class CustomerFirstPageController extends Controller
             'userId' => $user->userId,
         ]);
         $user->save();
+        logActivity('Successfully', 'Registered', 'Customer Account with id : ' . $user->userId);
         return redirect()->route('home');
 
     }

@@ -35,7 +35,6 @@ class HomeController extends Controller
         $slotMap = $this->getOrderSlotMap($order);
         $wellpay = $user->wellpay ?? 0;
 
-        logActivity('successfully', 'visited', 'Homepage');
 
         return view('customer.home', compact('vendors', 'favVendors', 'order', 'slotMap', 'wellpay'));
     }

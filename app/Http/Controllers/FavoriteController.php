@@ -34,7 +34,9 @@ class FavoriteController extends Controller
             $user->favoriteVendors()->attach($id);
         }
 
-        logActivity('Successfully', 'Favorited', 'Catering');
+        $vendor = Vendor::findOrFail($id);
+
+        logActivity('Successfully', 'Favorited', 'Catering : ' . $vendor->name);
         return response()->json(['favorited' => true]);
     }
 
@@ -45,7 +47,10 @@ class FavoriteController extends Controller
          */
         $user = Auth::user();
         $user->favoriteVendors()->detach($id);
-        logActivity('Successfully', 'Unfavorited', 'Catering');
+
+        $vendor = Vendor::findOrFail($id);
+
+        logActivity('Successfully', 'Unfavorited', 'Catering : ' . $vendor->name);
         return response()->json(['favorited' => false]);
     }
 }

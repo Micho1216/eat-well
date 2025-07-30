@@ -76,7 +76,7 @@ class VendorController extends Controller
             }
         }
 
-        logActivity('Successfully', 'Visited', 'Catering Detail Page');
+        // logActivity('Successfully', 'Visited', 'Catering Detail Page');
         return view('cateringDetail', compact('vendor', 'packages', 'numSold', 'selectedAddress'));
     }
 
@@ -153,6 +153,11 @@ class VendorController extends Controller
         $user = Auth::user();
         $userId = $user->userId;
         $vendor = Vendor::where('userId', $userId)->first();
+
+        if ($vendor->name != $request->nameInput)
+        {
+            logActivity('Successfully', 'Updated', 'Vendor Name to ' . $request->nameInput);
+        }
 
         $vendor->name = $request->nameInput;
         $vendor->phone_number = $request->telpInput;

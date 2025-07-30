@@ -16,4 +16,5 @@ return [
     'method' => 'Method',
     'time' => 'Time',
     'view_all_logs' => 'View All Logs',
+    'desc' => 'Description',
 ];

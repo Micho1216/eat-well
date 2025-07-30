@@ -73,12 +73,12 @@
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('manageOrder') ? 'active' : '' }}"
                                 href="/manageOrder">{{ __('vendor-nav.orders') }}</a>
                         </li>
+                        {{-- <li class="nav-item">
+                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('caterings') ? 'active' : '' }}"
+                                href="/caterings">{{ __('vendor-nav.search') }}</a>
+                        </li> --}}
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('search') ? 'active' : '' }}"
-                                href="/search">{{ __('vendor-nav.search') }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('ratingAndReviewVendor') ? 'active' : '' }}"
+                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('catering-detail') ? 'active' : '' }}"
                                 href="{{route('vendor.review')}}">{{ __('navigation.rating_and_review_vendor') }}</a>
                         </li>
                     </ul>

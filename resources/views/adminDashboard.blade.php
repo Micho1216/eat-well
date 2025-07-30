@@ -85,6 +85,7 @@
                                 <th scope="col">{{ __('admin-dashboard.username') }}</th>
                                 <th scope="col">{{ __('admin-dashboard.role') }}</th>
                                 <th scope="col">{{ __('admin-dashboard.url') }}</th>
+                                <th scope="col">{{ __('admin-dashboard.desc') }}</th>
                                 <th scope="col">{{ __('admin-dashboard.method') }}</th>
                                 <th scope="col">{{ __('admin-dashboard.time') }}</th>
                             </tr>
@@ -96,6 +97,7 @@
                                 <td>{{ $log->name }}</td>
                                 <td>{{ $log->role }}</td>
                                 <td>{{ $log->url }}</td>
+                                <td>{{ $log->description }}</td>
                                 <td>{{ $log->method }}</td>
                                 <td>{{ $log->accessed_at }}</td>
                             </tr>

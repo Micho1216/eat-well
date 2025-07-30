@@ -3,6 +3,10 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Log;
 
 class StorePackageRequest extends FormRequest
 {
@@ -34,5 +38,16 @@ class StorePackageRequest extends FormRequest
             'categoryId.exists' => 'Selected category does not exist in the database',
             'name.required' => 'Package name required',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        logActivity('Failed', 'Add', 'Package due to validation errors : ' . implode($validator->errors()->all()));
+
+        throw new HttpResponseException(
+            redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+        );
     }
 }

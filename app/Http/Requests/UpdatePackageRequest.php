@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UpdatePackageRequest extends FormRequest
 {
@@ -48,5 +50,16 @@ class UpdatePackageRequest extends FormRequest
             'dinnerPrice.decimal' => 'Dinner price must be numeric',
             'dinnerPrice.gte' => 'Dinner price must be >= 0',
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        logActivity('Failed', 'Updated', "Packages due to validation errors : " . implode($validator->errors()->all()));
+
+        throw new HttpResponseException(
+            redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+        );
     }
 }

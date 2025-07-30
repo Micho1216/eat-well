@@ -80,12 +80,10 @@
                                     href="/home">{{ __('navigation.home') }}</a>
                             </li>
                         @else
-
                             <li class="nav-item">
                                 <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('landingPage') ? 'active' : '' }}"
                                     href="/landingPage">Landing page</a>
                             </li>
-
                         @endif
 
 
@@ -138,12 +136,13 @@
                 <a href="/manage-profile">
                     <div class="imgstyle m-2" style="border-radius:100%; margin-right:20px">
 
-                        @if (!Auth::user()->profilePath)
-                            <img class="" src="{{ asset('asset/profile/no-profile.png') }}" alt="Card image "
-                                width="50px" height="50px" style="border-radius: 100%">
-                        @else
-                             <img src="{{ asset('asset/profile/' . Auth::user()->profilePath) }}" width="50px" height="50px" style="border-radius: 100%">
-                        @endif
+                        @php
+                            $profilePath = Auth::user()->profilePath;
+                        @endphp
+
+                        <img src="{{ $profilePath ? asset('asset/profile/' . basename($profilePath)) : asset('profile/no-profile.png') }}"
+                            alt="Profile Image" width="50" height="50" style="border-radius: 100%">
+
 
                     </div>
                 </a>

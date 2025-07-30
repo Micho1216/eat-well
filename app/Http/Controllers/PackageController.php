@@ -60,6 +60,7 @@ class PackageController extends Controller
         // unset($validated['cuisine_types']);
 
         // Simpan ke database (tanpa cuisine_types)
+        logActivity('Successfully', 'Added', 'Catering Package with Name : ' . $validated['name']);
         $newpackage = Package::create($validated);
 
         // if (!empty($cuisineTypes)) {
@@ -82,7 +83,7 @@ class PackageController extends Controller
 
         $package->delete();
 
-        logActivity('Successfully', 'Deleted', 'Catering Package');
+        logActivity('Successfully', 'Deleted', 'Package : ' . $package->name);
 
         return response()->json([
             'success' => true,

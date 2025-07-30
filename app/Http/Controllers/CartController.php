@@ -2,8 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoadCartRequest;
-use App\Http\Requests\UpdateCartRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Package;
@@ -13,15 +11,17 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function updateOrderSummary(UpdateCartRequest $request)
+    public function updateOrderSummary(Request $request)
     {
         $selectedPackages = $request->input('packages', []);
+        // $userId = auth()->id();
         $userId = Auth::id();
+        // $userId = 1;
         $vendorId = $request->input('vendor_id');
 
-        // Log::info('--- updateOrderSummary Dijalankan ---');
-        // Log::info('User ID: ' . $userId . ', Vendor ID: ' . $vendorId);
-        // Log::info('Selected Packages (Raw Input from Frontend):', $selectedPackages);
+        Log::info('--- updateOrderSummary Dijalankan ---');
+        Log::info('User ID: ' . $userId . ', Vendor ID: ' . $vendorId);
+        Log::info('Selected Packages (Raw Input from Frontend):', $selectedPackages);
 
         if (!$userId) {
             Log::warning('User not authenticated, returning 401.');
@@ -46,7 +46,7 @@ class CartController extends Controller
         $packageIdsInRequest = array_keys($selectedPackages);
         Log::info('Package IDs in current request:', $packageIdsInRequest);
 
-        // Penghapusan semua item jika tidak ada paket yang dipilih
+        // --- LOGIKA PENGHAPUSAN SEMUA ITEM ---
         if (empty($selectedPackages)) {
             // Jika frontend mengirim objek 'packages' kosong, hapus semua cart items
             $deletedAllCount = $cart->cartItems()->delete();
@@ -134,8 +134,10 @@ class CartController extends Controller
         ]);
     }
 
-    public function loadCart(LoadCartRequest $request)
+    public function loadCart(Request $request)
     {
+        // $userId = auth()->id();
+        // $userId = 1;
         $userId = Auth::id();
         $vendorId = $request->input('vendor_id');
 
