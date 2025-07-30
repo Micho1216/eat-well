@@ -207,10 +207,10 @@
             <p style="font-weight:600; color:#222; text-align:center; margin-bottom:24px;">
                 Successfully added to your subscription. Thank you for your purchase.
             </p>
-            <button id="backHomeBtn" class="popup-button"
-                style="background:#E77133; color:white; border:none; border-radius:24px; padding:12px 32px; font-size:18px; font-weight:500; box-shadow:0 2px 6px #0001;">
-                Back to Homepage
-            </button>
+            <a href={{route('order-history')}} id="backHomeBtn" class="popup-button"
+                style="background:#E77133; color:white; border:none; border-radius:24px; padding:12px 32px; font-size:18px; font-weight:500; box-shadow:0 2px 6px #0001; text-decoration: none;">
+                See my order
+            </a>
         </div>
     </div>
 

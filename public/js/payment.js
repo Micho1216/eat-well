@@ -529,11 +529,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Success Popup buttons
-    if (backHomeBtn) {
-        backHomeBtn.addEventListener("click", function () {
-            window.location.href = "/home"; // Adjust to your actual homepage route
-        });
-    }
+    // if (backHomeBtn) {
+    //     backHomeBtn.addEventListener("click", function () {
+    //         window.location.href = "/home"; // Adjust to your actual homepage route
+    //     });
+    // }
 
     // QRIS Popup buttons
     if (doneBtn) {
