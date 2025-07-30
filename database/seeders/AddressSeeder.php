@@ -19,7 +19,7 @@ class AddressSeeder extends Seeder
      */
     public function run(): void
     {
-        $users = User::all();
+        $users = User::query()->where('role', 'LIKE', 'Customer')->get();
         $provinces = Province::all();
         $cities = City::all()->groupBy('province_id');
         $districts = District::all()->groupBy('city_id');
