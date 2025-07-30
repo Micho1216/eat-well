@@ -151,7 +151,10 @@ class OrderController extends Controller
         }
 
         logActivity('Successfully', 'Visited', 'Vendor Payment Page');
-        return view('payment', compact('vendor', 'cart', 'cartDetails', 'totalOrderPrice', 'startDate', 'endDate', 'selectedAddress'));
+
+        $paymentMethod = PaymentMethod::all();
+
+        return view('payment', compact('vendor', 'cart', 'cartDetails', 'totalOrderPrice', 'startDate', 'endDate', 'selectedAddress', 'paymentMethod'));
     }
 
     public function getUserWellpayBalance()
