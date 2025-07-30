@@ -3,7 +3,10 @@
 return [
     'home' => 'Home',
     'my_packages' => 'My Packages',
+    'search vendor' => 'Search Vendor',
+    'favorited catering' => 'Favorited Catering',
     'orders' => 'Orders',
+    'aboutus' => 'About Us',
     'about_us' => 'About Us',
     'contact' => 'Contact',
     'footer_rights' => 'All rights reserved',

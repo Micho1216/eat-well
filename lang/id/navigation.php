@@ -3,7 +3,10 @@
 return [
     'home' => 'Beranda',
     'my_packages' => 'Paket Saya',
+    'search vendor' => 'Cari Catering',
+    'favorited catering' => 'Favorit',
     'orders' => 'Pesanan',
+    'aboutus' => 'Tentang kami',
     'about_us' => 'Tentang Kami',
     'contact' => 'Kontak',
     'footer_rights' => 'Seluruh hak cipta dilindungi',
