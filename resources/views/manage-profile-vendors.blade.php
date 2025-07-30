@@ -8,51 +8,149 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/manageProfilevendor.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 @endsection
 
 @section('content')
-    <div class="container" style="margin-top: 5vh">
-        <div class="p-4" style="background-color: white; border-radius: 50px">
-            @if (session('success'))
-                @if (session('success'))
-                    <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
-                        <div id="successToast" class="toast align-items-center text-bg-success border-0" role="alert"
-                            aria-live="assertive" aria-atomic="true">
-                            <div class="d-flex">
-                                <div class="toast-body">
-                                    {{ session('success') }}
-                                </div>
-                                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                                    aria-label="Close"></button>
-                            </div>
+    <div class="container profile-edit-container">
+        <div class="form-wrapper">
+
+            <!-- Back Button -->
+            <div class="row">
+                <div class="col-2">
+                    <a href="{{ route('manage-profile-vendor-account') }}"
+                        style="text-decoration: none; font-size: 40px; font-weight:900" class="fw-bold">
+                        ←
+                    </a>
+                </div>
+                <div class="col-8">
+                    <h2 class="lexend font-medium text-center mb-4">
+                        {{ __('manage-profile-vendor.manage_profile') }}
+                    </h2>
+                </div>
+            </div>
+
+
+            <div class="form-inner-box">
+                <form action="{{ route('manage-profile-vendor.update') }}" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PATCH')
+
+                    <div class="text-center mb-4">
+                        @if ($vendor->logo)
+                             <img src="{{ asset('asset/vendorLogo/' . $vendor->logo) }}" alt="Profile Picture"
+                            class="profile-picture" id="profilePicPreview">
+                        @else
+                             <img src="{{ asset('asset/profile/no-profile.png') }}" alt="Profile Picture"
+                            class="profile-picture" id="profilePicPreview">
+                        @endif
+                       
+                        <div>
+                            <label for="profilePicInput" class="btn btn-secondary mt-2">
+                                {{ __('manage-profile-vendor.edit') }} Foto
+                            </label>
+                            <input type="file" id="profilePicInput" name="profilePicInput" accept="image/*"
+                                style="display: none;">
                         </div>
+                        @error('profilePicInput')
+                            <div class="text-danger">{{ $message }}</div>
+                        @enderror
+
                     </div>
 
-                    <script>
-                        document.addEventListener('DOMContentLoaded', function() {
-                            const toastEl = document.getElementById('successToast');
-                            const toast = new bootstrap.Toast(toastEl, {
-                                autohide: true,
-                                delay: 3000 // 3 detik
-                            });
-                            toast.show();
-                        });
-                    </script>
-                @endif
-            @endif
-            <h2 class="text-center fw-bold lexend">Vendor Profile</h2>
-            <p class = "text-center lexend">This page for customizing your catering profile</p>
-            <hr>
+                    <div class="form-group">
+                        <label>{{ __('manage-profile-vendor.email') }}</label>
+                        <input type="text" class="form-control" value="{{ $user->email }}" disabled>
+                    </div>
 
-            <div class="profileInputForm" style="border: solid black 2px; border-radius: ">
+                    <div class="form-group">
+                        <label for="nameInput">{{ __('manage-profile-vendor.name') }}</label>
+                        <input type="text" name="nameInput" id="nameInput" value="{{ $vendor->name }}">
+                        @error('nameInput')
+                            <p class="text-danger">{{ $message }}</p>
+                        @enderror
+                    </div>
 
+                    <div class="form-group">
+                        <label for="telpInput">{{ __('manage-profile-vendor.telephone') }}</label>
+                        <input type="text" name="telpInput" id="telpInput" value="{{ $vendor->phone_number }}">
+                    </div>
+                    @error('telpInput')
+                        <p style="color: red">{{ $message }}</p>
+                    @enderror
+
+                    <div class="form-group">
+                        <label for="breakfast_time_start">{{ __('manage-profile-vendor.breakfast_delivery') }}</label>
+                        <div class="d-flex gap-2">
+                            <input type="time" name="breakfast_time_start" id="breakfast_time_start"
+                                value="{{ $breakfast_start ?? '' }}">
+                            <span class="mt-2">-</span>
+                            <input type="time" name="breakfast_time_end" id="breakfast_time_end"
+                                value="{{ $breakfast_end ?? '' }}">
+                        </div>
+                    </div>
+                    @error('breakfast_time_start')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                    @error('breakfast_time_end')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+
+                    <div class="form-group">
+                        <label for="lunch_time_start">{{ __('manage-profile-vendor.lunch_delivery') }}</label>
+                        <div class="d-flex gap-2">
+                            <input type="time" name="lunch_time_start" id="lunch_time_start"
+                                value="{{ $lunch_start ?? '' }}">
+                            <span class="mt-2">-</span>
+                            <input type="time" name="lunch_time_end" id="lunch_time_end" value="{{ $lunch_end ?? '' }}">
+                        </div>
+                    </div>
+                    @error('lunch_time_start')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                    @error('lunch_time_end')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+
+                    <div class="form-group">
+                        <label for="dinner_time_start">{{ __('manage-profile-vendor.dinner_delivery') }}</label>
+                        <div class="d-flex gap-2">
+                            <input type="time" name="dinner_time_start" id="dinner_time_start"
+                                value="{{ $dinner_start ?? '' }}">
+                            <span class="mt-2">-</span>
+                            <input type="time" name="dinner_time_end" id="dinner_time_end"
+                                value="{{ $dinner_end ?? '' }}">
+                        </div>
+                    </div>
+                    @error('dinner_time_start')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+                    @error('dinner_time_end')
+                        <div class="text-danger">{{ $message }}</div>
+                    @enderror
+
+                    <div class="text-center">
+                        <button type="submit" class="submit-btn">{{ __('manage-profile-vendor.save') }}</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-
 @endsection
 
 @section('scripts')
-    <script src="{{ asset('js/vendors/manageProfileVendor.js') }}"></script>
+    <script>
+        const inputFile = document.getElementById('profilePicInput');
+        const preview = document.getElementById('profilePicPreview');
+
+        inputFile.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+    </script>
 @endsection
