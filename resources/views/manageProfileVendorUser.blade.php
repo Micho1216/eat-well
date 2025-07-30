@@ -5,7 +5,9 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/manageProfile.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous">
+    </script>
 @endsection
 
 @section('content')
@@ -85,7 +87,7 @@
                     <hr
                         style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
 
-                    
+
 
                     @if (session('success'))
                         @if (session('success'))
@@ -224,20 +226,23 @@
                                 </div>
                                 <div class="photo-data">
                                     <div class="profile-image-wrapper">
-                                        <img src="{{ asset('asset/profile/' . $user->profilePath) }}"
+                                        <img src="{{ $user->profilePath ? asset('asset/profile/' . basename($user->profilePath)) : asset('profile/no-profile.png') }}"
                                             alt="Profile Picture" class="profile-picture" id="profilePicPreview">
+
                                         <label for="profilePicInput" class="change-image-label">
                                             <span class="material-symbols-outlined change-image-icon">
                                                 add_photo_alternate
                                             </span>
                                             <input type="file" id="profilePicInput" name="profilePicInput"
-                                                accept="image/*" style="display:none;" disabled>
+                                                accept="image/*" style="display: none;" disabled>
                                         </label>
                                     </div>
+
                                     <div class="edit-btn-group d-flex flex-row">
                                         <button class="inter font-medium edit-data">Edit</button>
                                     </div>
-                                    <p class="text-center" style="color: rgb(242, 185, 12)">{{ __('manage-profile.click_edit') }}</p>
+                                    <p class="text-center" style="color: rgb(242, 185, 12)">
+                                        {{ __('manage-profile.click_edit') }}</p>
 
 
                                 </div>
