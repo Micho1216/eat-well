@@ -170,7 +170,7 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
     // Route::get('/vendor/{vendor}/payment', [OrderController::class, 'showPaymentPage'])->name('payment.show');
     // Route::post('/checkout', [OrderController::class, 'processCheckout'])->name('checkout.process');
 
-    Route::get('/vendor/{vendor}/payment', [OrderController::class, 'showPaymentPage'])->name('payment.show');
+    Route::get('/payment', [OrderController::class, 'showPaymentPage'])->name('payment.show');
     Route::post('/checkout', [OrderController::class, 'processCheckout'])->name('checkout.process');
     Route::get('/user/wellpay-balance', [OrderController::class, 'getUserWellpayBalance'])->name('user.wellpay.balance');
 

@@ -96,7 +96,7 @@
                                 <div class="d-flex flex-row gap-2">
                                     <span class="material-symbols-outlined" style="font-size: 18px;">location_on</span>
                                     <p class="recipient-address">
-                                        {{ $order->jalan . ', ' . $order->kelurahan . ', ' . $order->kecamatan . ', ' . $order->kabupaten . ', ' . $order->provinsi . ', ' . $order->kode_pos }}
+                                        {{ $order->jalan . ', ' . $order->kelurahan . ', ' . $order->kecamatan . ', ' . $order->kota . ', ' . $order->provinsi . ', ' . $order->kode_pos }}
                                     </p>
                                 </div>
                                 @if ($order->notes)
