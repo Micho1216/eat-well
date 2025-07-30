@@ -337,7 +337,7 @@
             <p>Debug: Selected Address Jalan = {{ $selectedAddress->jalan ?? 'N/A' }}</p>
         </div> --}}
 
-        <a href="{{ route('payment.show', ['vendor' => $vendor->vendorId, 'address_id' => $selectedAddress->addressId]) }}"
+        <a href="{{ route('payment.show') }}"
             class="button-order inter" id="proceedToPaymentLink"
             style="cursor: default; pointer-events: none; text-decoration: none;">
             <span class="order-message">{{ __('catering-detail.no_package_selected_yet') }}</span>

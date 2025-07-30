@@ -274,23 +274,19 @@ document.addEventListener("DOMContentLoaded", function () {
         const postData = {
             _token: $('meta[name="csrf-token"]').attr("content"),
             payment_method_id: methodId,
-            vendor_id: vendorId,
+            // vendor_id: vendorId,
             start_date: startDate,
             end_date: endDate,
-            provinsi: provinsi,
-            kota: kota,
-            kabupaten: kabupaten,
-            kecamatan: kecamatan,
-            kelurahan: kelurahan,
-            kode_pos: kode_pos,
-            jalan: jalan,
-            recipient_name: recipient_name,
-            recipient_phone: recipient_phone,
-            notes: notes,
-            // recipient_name: '...', // Isi dengan data alamat sebenarnya
-            // recipient_phone: '...', // Isi dengan data alamat sebenarnya
-            // notes: '...', // Isi dengan data alamat sebenarnya
-            // etc.
+            // provinsi: provinsi,
+            // kota: kota,
+            // kabupaten: kabupaten,
+            // kecamatan: kecamatan,
+            // kelurahan: kelurahan,
+            // kode_pos: kode_pos,
+            // jalan: jalan,
+            // recipient_name: recipient_name,
+            // recipient_phone: recipient_phone,
+            // notes: notes,
         };
 
         // Add password if payment method is Wellpay
@@ -533,11 +529,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Success Popup buttons
-    if (backHomeBtn) {
-        backHomeBtn.addEventListener("click", function () {
-            window.location.href = "/home"; // Adjust to your actual homepage route
-        });
-    }
+    // if (backHomeBtn) {
+    //     backHomeBtn.addEventListener("click", function () {
+    //         window.location.href = "/home"; // Adjust to your actual homepage route
+    //     });
+    // }
 
     // QRIS Popup buttons
     if (doneBtn) {

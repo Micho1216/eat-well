@@ -49,52 +49,34 @@ class VendorController extends Controller
      * @param  \App\Models\Vendor  $vendor
      * @return \Illuminate\View\View|\Illuminate\Http\RedirectResponse
      */
-    public function show(Vendor $vendor, Request $request)
+    public function show(Vendor $vendor)
     {
-        // Memuat relasi User dan Address secara efisien jika Anda ingin menampilkannya
         $vendor->load(['user', 'previews']);
-        // MEMUAT PAKET DENGAN RELASI CATEGORY DAN CUISINE_TYPES SECARA EFFICIENT
-        // Pastikan Anda telah mendefinisikan relasi 'packages' di model Vendor dan relasi 'category' serta 'cuisineTypes' di model Package.
-        $packages = $vendor->packages()->with(['category', 'cuisineTypes'])->get();
+        session()->put(['selected_vendor_id' => $vendor->vendorId]);
+        $packages = $vendor->packages()->with(['category'])->get();
         $numSold = Order::where('vendorId', $vendor->vendorId)->count();
 
-        $selectedAddressId = $request->query('address_id');
-
-        Log::info('VendorController@show: selectedAddressId received = ' . $selectedAddressId);
-
+        $user = Auth::user();
+        $selectedAddressId = session('address_id');
         $selectedAddress = null;
         if ($selectedAddressId) {
             $selectedAddress = Address::find($selectedAddressId);
-            // Opsional: Pastikan alamat ini milik user yang sedang login
-            if ($selectedAddress && Auth::check() && $selectedAddress->userId !== Auth::id()) {
-                $selectedAddress = null; // Abaikan jika bukan milik user
+            if (!$selectedAddress || $selectedAddress->userId !== $user->userId) {
+                $selectedAddress = null;
             }
         }
 
-        // Fallback jika tidak ada address_id di query string atau tidak valid
-        if (!$selectedAddress && Auth::check()) {
-            $user = Auth::user();
-            // Jika Anda punya relasi defaultAddress di model User:
+        if (!$selectedAddress && $user) {
             if (method_exists($user, 'defaultAddress')) {
                 $selectedAddress = $user->defaultAddress;
             } else {
-                // Atau cari manual jika tidak ada relasi defaultAddress (pastikan user->userId benar)
                 $selectedAddress = Address::where('userId', $user->userId)
                     ->where('is_default', 1)
                     ->first();
             }
         }
 
-        // Pastikan $selectedAddress tidak null sebelum diakses di view
-        // Jika masih null, mungkin set default kosong atau tangani error
-        if (!$selectedAddress) {
-            // Anda bisa set default ke null atau membuat objek Address kosong
-            $selectedAddress = (object) ['addressId' => null, 'jalan' => 'No Address Selected'];
-            // Atau redirect user untuk memilih alamat
-            // return redirect()->route('search')->with('error', 'Please select a delivery address.');
-        }
-
-        // logActivity('Successfully', 'Visited', 'Catering Detail Page');
+        logActivity('Successfully', 'Visited', 'Catering Detail Page');
         return view('cateringDetail', compact('vendor', 'packages', 'numSold', 'selectedAddress'));
     }
 

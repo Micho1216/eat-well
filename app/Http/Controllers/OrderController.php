@@ -67,9 +67,22 @@ class OrderController extends Controller
         return view('customer.orderHistory', compact('orders', 'status'));
     }
 
-    public function showPaymentPage(Vendor $vendor) // Menggunakan Route Model Binding untuk Vendor
+    public function showPaymentPage() // Menggunakan Route Model Binding untuk Vendor
     {
-        $userId = Auth::id();
+        // User should be authorized from middleware
+        $user = Auth::user();
+        $userId = $user->userId;
+        $vendorId = session('selected_vendor_id');
+
+        if(!$vendorId) {
+            return redirect()->back();
+        }
+
+        $vendor = Vendor::find($vendorId);
+
+        if(!$vendor) {
+            return redirect()->back();
+        }
 
         // Ambil cart user untuk vendor tertentu
         $cart = Cart::with(['cartItems.package']) // Eager load cartItems dan package untuk performa
@@ -121,20 +134,15 @@ class OrderController extends Controller
         // dd($selectedAddressId);
         if ($selectedAddressId) {
             $selectedAddress = Address::find($selectedAddressId);
-            // Opsional: Pastikan alamat ini milik user yang sedang login
-            if ($selectedAddress && Auth::check() && $selectedAddress->userId !== Auth::id()) {
-                $selectedAddress = null; // Abaikan jika bukan milik user
+            if ($selectedAddress && $userId && $selectedAddress->userId !== $userId) {
+                $selectedAddress = null;
                 return redirect()->back()->with('error', 'The selected address does not belong to your account.');
             }
             
             if($selectedAddress->provinsi != $vendor->provinsi) {
                 return redirect()->back()->with('error', 'Catering is too far from you.');
             }
-        }
-
-        // Fallback jika tidak ada address_id di query string atau tidak valid
-        if (!$selectedAddress && Auth::check()) {
-            $user = Auth::user();
+        } else {
             if (method_exists($user, 'defaultAddress')) {
                 $selectedAddress = $user->defaultAddress;
             } else {
@@ -144,9 +152,7 @@ class OrderController extends Controller
             }
         }
 
-        // Pastikan $selectedAddress tidak null
         if (!$selectedAddress) {
-            // Redirect kembali atau tampilkan pesan error jika alamat tidak ditemukan/tidak valid
             return redirect()->back()->with('error', 'Alamat pengiriman tidak valid atau tidak dipilih.');
         }
 
@@ -172,18 +178,26 @@ class OrderController extends Controller
      */
     public function processCheckout(ProcessCheckoutRequest $request)
     {
-        $userId = Auth::id();
         /** @var \App\Models\User $user */
         $user = Auth::user();
+        $userId = $user->userId;
 
         $validatedData = $request->validated();
 
-        $vendorId = $validatedData['vendor_id'];
+        $vendorId = session('selected_vendor_id');
+        if(!$vendorId) {
+            return response()->json(['message' => 'No vendor selected.'], 400);
+        }
         $paymentMethodId = $validatedData['payment_method_id'];
         $startDate = $validatedData['start_date'];
         $endDate = $validatedData['end_date'];
         $password = $validatedData['password'] ?? null;
-        $orderAddressData = $this->extractOrderAddressData($validatedData);
+        $addressId = session('address_id');
+        $address = Address::find($addressId);
+        if(!$address){
+            return response()->json(['message' => 'No address selected.'], 400);
+        }
+        $orderAddressData = $this->extractOrderAddressData($address);
         $notes = $validatedData['notes'] ?? null;
 
         try {
@@ -253,18 +267,17 @@ class OrderController extends Controller
     /**
      * Extracts address and recipient data from validated request data.
      */
-    private function extractOrderAddressData(array $validatedData): array
+    private function extractOrderAddressData(Address $address): array
     {
         return [
-            'provinsi' => $validatedData['provinsi'],
-            'kota' => $validatedData['kota'],
-            'kabupaten' => $validatedData['kabupaten'],
-            'kecamatan' => $validatedData['kecamatan'],
-            'kelurahan' => $validatedData['kelurahan'],
-            'kode_pos' => $validatedData['kode_pos'],
-            'jalan' => $validatedData['jalan'],
-            'recipient_name' => $validatedData['recipient_name'],
-            'recipient_phone' => $validatedData['recipient_phone'],
+            'provinsi' => $address->provinsi,
+            'kota' => $address->kota,
+            'kecamatan' => $address->kecamatan,
+            'kelurahan' => $address->kelurahan,
+            'kode_pos' => $address->kode_pos,
+            'jalan' => $address->jalan,
+            'recipient_name' => $address->recipient_name,
+            'recipient_phone' => $address->recipient_phone,
         ];
     }
 
