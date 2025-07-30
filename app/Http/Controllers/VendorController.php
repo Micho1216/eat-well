@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\VendorSearchRequest;
 use App\Http\Requests\ProfileRequest;
 use App\Http\Requests\UpdateProfileVendorRequest;
 use App\Models\Address;
@@ -20,9 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
 
-class
-
-VendorController extends Controller
+class VendorController extends Controller
 {
 
     public function display()
@@ -90,7 +89,7 @@ VendorController extends Controller
         // Jika masih null, mungkin set default kosong atau tangani error
         if (!$selectedAddress) {
             // Anda bisa set default ke null atau membuat objek Address kosong
-            $selectedAddress = (object)['addressId' => null, 'jalan' => 'No Address Selected'];
+            $selectedAddress = (object) ['addressId' => null, 'jalan' => 'No Address Selected'];
             // Atau redirect user untuk memilih alamat
             // return redirect()->route('search')->with('error', 'Please select a delivery address.');
         }
@@ -112,120 +111,23 @@ VendorController extends Controller
         return view('ratingAndReview', compact('vendor', 'vendorReviews', 'numSold'));
     }
 
-    public function search(Request $request)
+    public function reviewVendor()
     {
-        // validate request
-        $validated = $request->validate([
-            'query' => 'nullable|string|max:255',
-            'min_price' => 'nullable|integer',
-            'max_price' => 'nullable|integer',
-            'rating' => 'nullable|numeric',
-            'category' => 'nullable|array',
-            'category.*' => 'string',
-        ]);
+        // Ambil vendor yang sedang login
+        $vendor = Auth::user()->vendor; // Pastikan user login adalah vendor
 
-        // Use validated input data
-        $query = $validated['query'] ?? null;
-        $minPrice = $validated['min_price'] ?? 0;
-        $maxPrice = $validated['max_price'] ?? 999999999;
-        $rating = $validated['rating'] ?? null;
-        $categories = $validated['category'] ?? [];
+        // Ambil review dari vendor yang sedang login
+        $vendorReviews = VendorReview::where('vendorId', $vendor->vendorId)
+            ->with(['user', 'order']) // Load relasi user dan order
+            ->orderBy('created_at', 'desc')
+            ->get();
 
-        $all_categories = PackageCategory::all();
+        // Hitung jumlah order yang dijual oleh vendor
+        $numSold = Order::where('vendorId', $vendor->vendorId)->count();
 
-        $vendors = \App\Models\Vendor::query()
-            // Search by vendor name or related models — grouped properly
-            ->when($query, function ($q) use ($query) {
-                $q->where(function ($q) use ($query) {
-                    $q->where('name', 'like', "%{$query}%")
-                        ->orWhereHas('packages', function ($q2) use ($query) {
-                            $q2->where('name', 'like', "%{$query}%")
-                                ->orWhereHas('category', function ($q3) use ($query) {
-                                    $q3->where('categoryName', 'like', "%{$query}%");
-                                })
-                                ->orWhereHas('cuisineTypes', function ($q4) use ($query) {
-                                    $q4->where('cuisineName', 'like', "%{$query}%");
-                                });
-                        });
-                });
-            })
-
-            // Filter by rating
-            ->when($rating, function ($q) use ($rating) {
-                $q->where('rating', '>=', $rating);
-            })
-
-            // Filter by category (package's category)
-            ->when($categories, function ($q) use ($categories) {
-                $q->whereHas('packages.category', function ($q2) use ($categories) {
-                    $q2->whereIn('categoryName', (array) $categories);
-                });
-            })
-
-            // Filter by price range (any package price in range)
-            ->when($minPrice || $maxPrice, function ($q) use ($minPrice, $maxPrice) {
-                $q->whereHas('packages', function ($q2) use ($minPrice, $maxPrice) {
-                    $q2->where(function ($q3) use ($minPrice, $maxPrice) {
-                        if ($minPrice) {
-                            $q3->where(function ($q4) use ($minPrice) {
-                                $q4->where('breakfastPrice', '>=', $minPrice)
-                                    ->orWhere('lunchPrice', '>=', $minPrice)
-                                    ->orWhere('dinnerPrice', '>=', $minPrice);
-                            });
-                        }
-                        if ($maxPrice) {
-                            $q3->where(function ($q4) use ($maxPrice) {
-                                $q4->where('breakfastPrice', '<=', $maxPrice)
-                                    ->orWhere('lunchPrice', '<=', $maxPrice)
-                                    ->orWhere('dinnerPrice', '<=', $maxPrice);
-                            });
-                        }
-                    });
-                });
-            })
-
-            // Include relations
-            ->with(['packages.category', 'packages.cuisineTypes'])
-
-            // Avoid duplicate vendors due to joins
-            ->distinct()
-
-            // Paginate results and keep filters in URL
-            ->paginate(9)
-            ->appends($request->query());
-
-        Auth::check();
-        $user =  Auth::user();
-
-        $mainAddress = null;
-        $addressIdFromUrl = $request->query('address_id');
-
-        if ($addressIdFromUrl) {
-            // Coba temukan alamat berdasarkan ID dari URL
-            $mainAddress = Address::find($addressIdFromUrl);
-            // Validasi: pastikan alamat ini milik user yang sedang login
-            if ($mainAddress && $user && $mainAddress->userId !== $user->userId) {
-                $mainAddress = null; // Abaikan jika bukan milik user
-            }
-        }
-
-        // Fallback: Jika tidak ada address_id di URL atau tidak valid, gunakan alamat default user
-        if (!$mainAddress && $user) {
-            if (method_exists($user, 'defaultAddress')) { // Jika ada relasi defaultAddress di model User
-                $mainAddress = $user->defaultAddress;
-            } else {
-                // Alternatif jika tidak ada relasi defaultAddress (cari manual is_default = 1)
-                $mainAddress = Address::where('userId', $user->userId)
-                    ->where('is_default', 1)
-                    ->first();
-            }
-        }
-
-        // Pass paginated vendors to the view
-        logActivity('Successfully', 'Visited', "Vendor Search Page and Searched for: {$query}");
-        return view('customer.search', compact('vendors', 'all_categories', 'user', 'mainAddress'));
+        return view('ratingAndReviewVendor', compact('vendor', 'vendorReviews', 'numSold'));
     }
-
+    
     public function manageProfile()
     {
         $user = Auth::user();
@@ -329,8 +231,6 @@ VendorController extends Controller
             ? $request->startDinner . '-' . $request->closeDinner
             : null;
 
-        /** @var User|Authenticable $user */
-
         // Store the vendor
         $vendor->update([
             'name' => $request['name'],
@@ -341,7 +241,6 @@ VendorController extends Controller
             'dinner_delivery' => $dinner,
             'provinsi' => $request['provinsi'],
             'kota' => $request['kota'],
-            'kabupaten' => $request['kota'],
             'kecamatan' => $request['kecamatan'],
             'kelurahan' => $request['kelurahan'],
             'kode_pos' => $request['kode_pos'],

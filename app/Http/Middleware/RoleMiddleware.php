@@ -34,6 +34,7 @@ class RoleMiddleware
             };
         }
 
+        // dd($request);
         return $next($request);
     }
 }

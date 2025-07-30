@@ -1,7 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
     // --- Get DOM Elements ---
-    const qrisRadio = document.getElementById("qris");
+    const qrisRadio = document.getElementById("qr");
+    console.log(qrisRadio);
     const wellpayRadio = document.getElementById("wellpay");
+    console.log(wellpayRadio);
     const mainPayButton = document.getElementById("mainPayButton");
 
     // Popups elements
@@ -53,6 +55,34 @@ document.addEventListener("DOMContentLoaded", function () {
     let totalOrderPrice = parseFloat(hiddenCartTotalPrice?.value || 0);
     // Tambahkan variabel status untuk Wellpay popup
     let currentWellpayPopupStage = "initial_confirm"; // States: 'initial_confirm', 'password_input'
+
+    // Add a loading overlay element
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.id = 'loadingOverlay';
+    loadingOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        color: white;
+        font-size: 2em;
+        display: none; /* Hidden by default */
+    `;
+    document.body.appendChild(loadingOverlay);
+
+    function showLoading() {
+        loadingOverlay.style.display = 'flex';
+    }
+
+    function hideLoading() {
+        loadingOverlay.style.display = 'none';
+    }
 
     // --- Helper Functions for Popups and Messages ---
     function formatRupiah(number) {
@@ -336,6 +366,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 hideWellpayConfirmPopup(); // Close Wellpay popup
                 showMessage(errorMessage); // Also show in general message box
             }
+        } finally {
+            hideLoading(); // Hide loading after AJAX call completes (success or failure)
         }
     }
 
@@ -378,6 +410,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             showMessage(
                                 "Wellpay balance format error. Please contact support."
                             );
+                            hideLoading();
                             return;
                         }
 
@@ -408,8 +441,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     showMessage(
                         "Failed to retrieve Wellpay balance. Please check your internet connection."
                     );
+                } finally {
+                    hideLoading();
                 }
-            } else if (selectedMethod.id === "qris") {
+            } else if (selectedMethod.id === "qr") {
                 showQrisPopup();
             } else {
                 showGeneralConfirmPopup();
@@ -452,8 +487,19 @@ document.addEventListener("DOMContentLoaded", function () {
                     return; // Jangan lanjutkan jika password kosong
                 }
 
+                // Show loading directly on the button for the actual payment processing
+                wellpayConfirmBtn.innerHTML = `
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>Processing...</span>
+                `;
+                wellpayConfirmBtn.disabled = true;
+
                 // Panggil fungsi pembayaran dengan password
                 await processPaymentAjax(password);
+
+                // Revert button state after processPaymentAjax completes (handled by finally block there)
+                wellpayConfirmBtn.innerHTML = "Continue"; // Or "Confirm" if you want to reset fully
+                wellpayConfirmBtn.disabled = false;
             }
         });
     }

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateVendorPreviewRequest;
+use App\Http\Requests\UploadVendorPreviewRequest;
 use App\Models\Vendor;
 use App\Models\VendorPreview;
 use Illuminate\Http\Request;
@@ -39,12 +41,8 @@ class VendorPreviewController extends Controller
         return response()->json(['status' => 'success']);
     }
 
-    public function upload(Request $request)
+    public function upload(UploadVendorPreviewRequest $request)
     {
-        $request->validate([
-            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-            'vendorId' => 'required|exists:vendors,vendorId',
-        ]);
 
         $file = $request->file('image');
         $fileName = uniqid() . '.' . $file->getClientOriginalExtension();
@@ -76,13 +74,10 @@ class VendorPreviewController extends Controller
     }
 
 
-    public function update($id, Request $request)
+    public function update($id, UpdateVendorPreviewRequest $request)
     {
         $preview = VendorPreview::findOrFail($id);
 
-        $request->validate([
-            'image' => 'required|image|mimes:jpg,jpeg,png|max:2048',
-        ]);
 
         // Hapus file lama kalau ada
         if ($preview->previewPicturePath && file_exists(public_path($preview->previewPicturePath))) {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CustomerRatingStoreRequest;
 use App\Models\Order;
 use App\Models\VendorReview;
 use Carbon\Carbon;
@@ -10,16 +11,10 @@ use Illuminate\Support\Facades\Auth;
 
 class CustomerRatingController extends Controller
 {
-    public function store(Request $request, $orderId)
+    public function store(CustomerRatingStoreRequest $request, $orderId)
     {
-        $request->validate([
-            'rating' => 'required|integer|min:1|max:5',
-            'review' => 'nullable|string|max:1000',
-        ], [
-            'rating.min' => "The rating must be at least 1.",
-            'rating.max' => "The rating may not be greater than 5.",
-            
-        ]);
+
+        $validated = $request->validated();
 
         $order = Order::findOrFail($orderId);
 

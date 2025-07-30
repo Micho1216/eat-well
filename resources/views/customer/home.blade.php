@@ -145,6 +145,14 @@
                 <span class="material-symbols-outlined check-icon">check_circle</span>
                 <p id="successToastMessage" class="toast-message">Top-up {{ __('customer/home.success') }}!</p>
             </div>
+
+            <div id="loadingOverlay" class="custom-loading-overlay" style="display: none;">
+                <div class="loading-content text-center">
+                    <div class="spinner"></div>
+                    <p class="loading-text mt-3">Processing your top-up...</p>
+                </div>
+            </div>
+
             {{-- Active Subscription Card --}}
             <section class="container w-100 mt-3 h-auto mb-md-5 mb-4 subscription-card p-4">
                 @if ($order)
@@ -180,14 +188,14 @@
                     <x-order-slots :slotMap="$slotMap" />
                 @else
                     <div class="d-flex flex-column justify-content-center align-items-center gap-2">
-                        <h2 class="text-center fw-500 mb-0 mt-2">{{__('customer/home.no_order')}}</h2>
+                        <h2 class="text-center fw-500 mb-0 mt-2">{{ __('customer/home.no_order') }}</h2>
                         <a href="{{ route('search') }}" class="btn btn-warning">Order Now</a>
                     </div>
                 @endif
             </section>
             {{-- Popular Caterings --}}
             <section class="container mt-3 popular-catering-container w-100 h-auto mb-md-5 mb-4">
-                <div class="row title-1">{{__('customer/home.popular')}}</div>
+                <div class="row title-1">{{ __('customer/home.popular') }}</div>
                 <div class="row">
                     @foreach ($vendors as $vendor)
                         <div class="col-md-6 col-xl-4 p-2">

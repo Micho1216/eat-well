@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\AccountSetup\CustomerFirstPageController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AdminViewOrderController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
@@ -9,6 +11,7 @@ use App\Http\Controllers\PackageController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\SearchCateringController;
 use App\Http\Controllers\VendorController;
 use App\Http\Middleware\NoCateringDataMiddleware;
 use App\Models\Order;
@@ -17,11 +20,14 @@ use App\Http\Controllers\AuthManager;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\CustomerRatingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DeliveryStatusController;
+use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\ManageTwoFactorController;
 use App\Http\Controllers\OrderVendorController;
+use App\Http\Controllers\ProvinceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Socialite\ProviderCallbackController;
 use App\Http\Controllers\Socialite\ProviderRedirectController;
@@ -30,14 +36,19 @@ use App\Http\Middleware\EnsureVendor;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\VillageController;
 
 Route::post('/lang', LanguageController::class);
 
 use App\Http\Controllers\VerifyOtpController;
+use App\Http\Controllers\illageController;
+use App\Http\Middleware\AccountSetup\EnsureAddressExists;
+use App\Http\Middleware\AccountSetup\EnsureNoAddressExist;
 
 /* --------------------
      GUEST ROUTES
 -------------------- */
+
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/', function () {
@@ -79,8 +90,11 @@ Route::get('/about-us', function () {
 ---------------------*/
 
 Route::middleware(['auth'])->group(function () {
-    // Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
-    // Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
+    Route::post('api/fetch-provinces', [ProvinceController::class, 'fetchProvinces']);
+    Route::post('api/fetch-cities', [CityController::class, 'fetchCities']);
+    Route::post('api/fetch-districts', [DistrictController::class, 'fetchDistricts']);
+    Route::post('api/fetch-villages', [VillageController::class, 'fetchVillages']);
+    
     Route::post('/manage-profile', [SessionController::class, 'destroy'])->name('logout');
 
     // Route::get('/manage-profile', function () {
@@ -88,16 +102,20 @@ Route::middleware(['auth'])->group(function () {
     // })->name('manage-profile');
 
     Route::post('/manage-two-factor', [ManageTwoFactorController::class, 'index'])->name('manage-two-factor');
+
 });
 /* ---------------------
     CUSTOMER ROUTES
 ---------------------- */
 // Customer Account Setup
 
-Route::middleware(['role:customer'])->group(function () {
-    Route::get('/customer-first-page', function () {
-        return view('customer.customerFirstPage');
-    });
+Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
+    Route::get('/customer-first-page', [CustomerFirstPageController::class, 'index'])->middleware(EnsureNoAddressExist::class)
+            ->withoutMiddleware(['ensureAddress'])
+            ->name('account-setup.customer-view');
+    Route::post('/customer-first-page', [CustomerFirstPageController::class, 'store'])->middleware(EnsureNoAddressExist::class)
+            ->withoutMiddleware(['ensureAddress'])
+            ->name('account-setup.customer-store');
 
     Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
     Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
@@ -122,7 +140,8 @@ Route::middleware(['role:customer'])->group(function () {
     // Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
 
     // Search Caterings
-    Route::get('/caterings', [VendorController::class, 'search'])->name('search');
+    Route::get('/caterings', [SearchCateringController::class, 'search'])->name('search');
+    Route::post('/set-address', [SearchCateringController::class, 'setAddress'])->name('set.address');
 
     // Catering Details
     Route::get('/catering-detail/{vendor}/rating-and-review', [VendorController::class, 'review'])->name('rate-and-review');
@@ -197,6 +216,9 @@ Route::middleware(['role:customer'])->group(function () {
 /* ---------------------
      VENDOR ROUTES
 ---------------------- */
+/* ---------------------
+     VENDOR ROUTES
+---------------------- */
 Route::middleware(['role:vendor'])->group(function () {
     Route::middleware(NoCateringDataMiddleware::class)->group(function () {
         Route::get('/vendor-first-page', function () {
@@ -207,7 +229,8 @@ Route::middleware(['role:vendor'])->group(function () {
 
     Route::middleware(EnsureVendor::class)->group(function () {
         // Catering dashboard
-        Route::get('/cateringHomePage', [OrderVendorController::class, 'totalOrder']);
+        Route::get('/cateringHomePage', [OrderVendorController::class, 'totalOrder'])->name('vendor.home');
+        Route::get('/catering-detail', [VendorController::class, 'reviewVendor'])->name('vendor.review');
         // Route::get('/cateringHomePage', function () {
         //     // untuk yang log activity, kalau suatu saat buat controllernya mohon dimasukan
         //     // masukan sebelum returen view / return redirect
@@ -318,7 +341,7 @@ Route::middleware(['role:admin'])->group(function () {
 
     // Route::post('/admin-dashboard', [SessionController::class, 'destroy'])->name('logout.admin');
 
-    Route::get('/view-order-history', [AdminController::class, 'view_order_history'])
+    Route::get('/view-order-history', [AdminViewOrderController::class, 'index'])
         ->name('view-order-history');
 
     Route::fallback(function () {

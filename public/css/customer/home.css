@@ -16,6 +16,62 @@ body {
   color: var(--bg-secondary);
 }
 
+.custom-loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(255, 255, 255, 0.60);
+    backdrop-filter: blur(4px);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.loading-content {
+    text-align: center;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.spinner {
+    width: 60px;
+    height: 60px;
+    border: 6px solid #d3d3d3;
+    border-top: 6px solid var(--bg-primary, #007bff); /* fallback color */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: auto;
+}
+
+.loading-text {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+    font-family: 'Inter', sans-serif;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    } 
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 .lexend {
   font-family: 'Lexend', sans-serif;
   font-style: normal;

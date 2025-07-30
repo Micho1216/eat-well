@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CategoryStoreRequest;
 use App\Models\PackageCategory;
 use Illuminate\Http\Request;
 
@@ -18,21 +19,11 @@ class CategoryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CategoryStoreRequest $request)
     {
-        $validated = $request->validate([
-            'categoryName' => 'required|unique:package_categories,categoryName',
-        ]);
+        $validated = $request->validated();
 
         PackageCategory::create([
             'categoryName' => $validated['categoryName'],
@@ -40,31 +31,7 @@ class CategoryController extends Controller
             'updated_at' => now(),
         ]);
 
-        return redirect()->back()->with('success', 'Category added successfully!');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+        return redirect()->back()->with('success', __('category.store_success'));
     }
 
     /**
@@ -75,11 +42,11 @@ class CategoryController extends Controller
         $category = PackageCategory::findOrFail($id);
 
         if ($category->packages()->exists()) {
-            return redirect()->back()->with('error', 'Cannot delete category with associated packages.');
+            return redirect()->back()->with('error',  __('category.delete_failed'));
         }
 
         $category->delete(); // Soft delete
 
-        return redirect()->back()->with('success', 'Category deleted successfully.');
+        return redirect()->back()->with('success', __('category.delete_success'));
     }
 }
