@@ -95,7 +95,7 @@ VendorController extends Controller
             // return redirect()->route('search')->with('error', 'Please select a delivery address.');
         }
 
-        logActivity('Successfully', 'Visited', 'Catering Detail Page');
+        // logActivity('Successfully', 'Visited', 'Catering Detail Page');
         return view('cateringDetail', compact('vendor', 'packages', 'numSold', 'selectedAddress'));
     }
 
@@ -247,9 +247,9 @@ VendorController extends Controller
             [$dinner_start, $dinner_end] = explode('-', $vendor->dinner_delivery);
         }
 
-        logActivity('Successfully', 'Visited', 'Manage Profile Vendor Page');
+        // logActivity('Successfully', 'Visited', 'Manage Profile Vendor Page');
 
-        return view('manage-profile-vendor', compact(
+        return view('manage-profile-vendors', compact(
             'user',
             'vendor',
             'breakfast_start',
@@ -360,7 +360,7 @@ VendorController extends Controller
         $user = Auth::user();
 
 
-        logActivity('Successfully', 'Visited', 'Manage Profile Page');
+        // logActivity('Successfully', 'Visited', 'Manage Profile Page');
         return view('manageProfileVendorUser', compact('user'));
     }
 

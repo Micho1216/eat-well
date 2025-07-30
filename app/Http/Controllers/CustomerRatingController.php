@@ -18,6 +18,7 @@ class CustomerRatingController extends Controller
         ], [
             'rating.min' => "The rating must be at least 1.",
             'rating.max' => "The rating may not be greater than 5.",
+            
         ]);
 
         $order = Order::findOrFail($orderId);
@@ -45,6 +46,7 @@ class CustomerRatingController extends Controller
             'review' => $request->review,
         ]);
 
+        logActivity('Successfully', 'Upload', 'Review');
         return response()->json(['success' => true, 'review' => $review]);
     }
 }

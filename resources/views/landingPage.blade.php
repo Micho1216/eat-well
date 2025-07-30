@@ -7,73 +7,6 @@
 @endsection
 
 @section('content')
-    {{-- <div class="container mainPage">
-        <div class="landingPagesDesc">
-            <div class="landingpageText">
-                <h1>EAT WELL</h1>
-
-                <p>Eat Well is a platform that connects you with the best catering services in your area, offering a wide
-                    range of delicious and healthy meal options for any occasion.</p>
-
-                <button class="registerButtonLandingPage">
-                    <a href="/login" class="text-white textButtonLandingPage text-decoration-none">Register now</a>
-                    <div class="buttonpanah"><img src="{{ asset('asset/landing_page/panah.png') }}" alt="panah"
-                            width="80px"></div>
-                </button>
-            </div>
-
-            <div class="mealImageLandingPage">
-                <img src="{{ asset('asset/landing_page/gambarMakanan.png') }}" alt="Meal Image" width="500px">
-            </div>
-        </div>
-
-        <div class="ourClient">
-            <div class="backgrounBox">
-                <div class="titlebox">
-                    <div class="client1">
-                        <div class="clientBox">
-                            <div class="clientProfile">
-                                <img src="" alt="profile">
-                            </div>
-                            <div class="clientDesc">
-
-                            </div>
-                            <div class="clientName">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="client2">
-                        <div class="clientBox">
-                            <div class="clientProfile">
-
-                            </div>
-                            <div class="clientDesc">
-
-                            </div>
-                            <div class="clientName">
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="client3">
-                        <div class="clientBox">
-                            <div class="clientProfile">
-
-                            </div>
-                            <div class="clientDesc">
-
-                            </div>
-                            <div class="clientName">
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
-
     <div class="container">
         <div class="row landingpageText justify-content-between" style="margin-top: 20px">
             <div class="col-sm-5">
@@ -82,7 +15,7 @@
                 <p>{{ __('landing-page.eatwellis') }}</p>
 
                 <button type="button" class="btn btn-outline-warning registerButtonLandingPage" style="margin-top: 30px">
-                    <a href="/register"
+                    <a href="/register/customer"
                         class="text-white textButtonLandingPage text-decoration-none fw-bold">{{ __('landing-page.registernow') }}</a>
                     <div class="buttonpanah"><img src="{{ asset('asset/landing_page/panah.png') }}" alt="panah"
                             class="img-fluid" width="50px"></div>
@@ -93,23 +26,7 @@
             </div>
         </div>
 
-        {{-- <div class="row">
-        <div class="row kotakHijau">
-            <div class="col-sm-2 kotakPertama">
-                <img src="{{ asset('asset/landing_page/2.png') }}" alt="Our Client" class="img-fluid" width="130px">
-            </div>
-            <div class="col-sm-3 kotakKedua">
-                <img src="{{ asset('asset/landing_page/2.png') }}" alt="Our Client" class="img-fluid" width="130px">
-            </div>
-            <div class="col-sm-3 kotakKedua">
-                <img src="{{ asset('asset/landing_page/2.png') }}" alt="Our Client" class="img-fluid" width="130px">
-            </div>
-            <div class="col-sm-3 kotakKedua">
-                <img src="{{ asset('asset/landing_page/2.png') }}" alt="Our Client" class="img-fluid" width="130px">
-            </div>
-
-       </div> --}}
-
+        
         <div class="row info-section text-white rounded-4 overflow-hidden">
             <!-- Kotak Kuning -->
             <div class="col-2 d-flex align-items-center justify-content-center" style="background-color: #FDB935;">
@@ -143,22 +60,7 @@
             </div>
         </div>
 
-        {{-- <div class="h1Client">
-            <h1 class="text-center mt-5 fw-bold text-light">Our Clients</h1>
-        </div>
-        <div class="row clientList justify-content-center mt-4 text-center">
-            <div class="col-sm-2">
-                <div class="clientBox">
-
-                </div>
-            </div>
-            <div class="col-sm-2">
-                Client 2
-            </div>
-            <div class="col-sm-2">
-                Client 3
-            </div>
-        </div> --}}
+        
 
         <div class="container-fluid py-5"
             style="background: linear-gradient(to right, #2c5742, #9ccf9b); border-radius: 20px; margin-top: 50px;">

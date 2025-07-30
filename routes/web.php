@@ -44,12 +44,12 @@ Route::middleware(['guest'])->group(function () {
         return view('landingPage');
     })->name('landingPage');
 
-    Route::get('/about-us', function () {
-        if (Auth::check()) {
-            logActivity('Successfully', 'Visited', 'About Us Page');
-        }
-        return view('aboutUs');
-    });
+    // Route::get('/about-us', function () {
+    //     if (Auth::check()) {
+    //         logActivity('Successfully', 'Visited', 'About Us Page');
+    //     }
+    //     return view('aboutUs');
+    // });
 
     Route::get('/login', [SessionController::class, 'create'])->name('login');
     Route::post('/login', [SessionController::class, 'store']);
@@ -67,6 +67,10 @@ Route::middleware(['guest'])->group(function () {
     Route::fallback(function () {
         return redirect()->route('landingPage');
     });
+});
+
+Route::get('/about-us', function () {
+    return view('aboutUs');
 });
 
 
@@ -251,6 +255,7 @@ Route::middleware(['role:vendor'])->group(function () {
         // });
         Route::get('/manage-profile-vendor', [VendorController::class, 'manageProfile'])->name('manage-profile-vendor');
         Route::patch('/manage-profile-vendor', [VendorController::class, 'updateProfile'])->name('manage-profile-vendor.update');
+
 
         Route::get('/vendor-previews', [VendorPreviewController::class, 'index']);
 

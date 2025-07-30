@@ -74,7 +74,7 @@ class OrderController extends Controller
             ->get();
         // dd($orders);
 
-        logActivity('Successfully', 'Visited', 'Order History Page');
+        // logActivity('Successfully', 'Visited', 'Order History Page');
         return view('customer.orderHistory', compact('orders', 'status'));
     }
 
@@ -160,7 +160,7 @@ class OrderController extends Controller
             return redirect()->back()->with('error', 'Alamat pengiriman tidak valid atau tidak dipilih.');
         }
 
-        logActivity('Successfully', 'Visited', 'Vendor Payment Page');
+        // logActivity('Successfully', 'Visited', 'Vendor Payment Page');
         return view('payment', compact('vendor', 'cart', 'cartDetails', 'totalOrderPrice', 'startDate', 'endDate', 'selectedAddress'));
     }
 
@@ -170,7 +170,7 @@ class OrderController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User not authenticated.'], 401);
         }
-        logActivity('Successfully', 'Viewed', 'Wellpay Balance');
+        // logActivity('Successfully', 'Viewed', 'Wellpay Balance');
         return response()->json(['wellpay' => $user->wellpay]); // <-- Menggunakan 'wellpay'
     }
 
@@ -441,7 +441,7 @@ class OrderController extends Controller
             $status = 'active';
         }
 
-        logActivity('Successfully', 'Visited', "Order #{$order->orderId} Detail Page");
+        // logActivity('Successfully', 'Visited', "Order #{$order->orderId} Detail Page");
         return view('customer.orderDetail', compact('order', 'paymentMethod', 'slots', 'statusesBySlot', 'status'));
     }
 

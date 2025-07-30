@@ -18,7 +18,7 @@ class FavoriteController extends Controller
         $user = Auth::user();
         $vendors = $user->favoriteVendors()->paginate(21);
 
-        logActivity('Successfully', 'Visited', 'Favorite Page');
+        // logActivity('Successfully', 'Visited', 'Favorite Page');
 
         return view('favoritePage', compact('vendors'));
     }

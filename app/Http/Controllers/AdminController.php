@@ -25,7 +25,7 @@ class AdminController extends Controller
             ->groupBy('vendorId')
             ->pluck('totalSales', 'vendorId');
 
-        logActivity('Successfully', 'Visited', 'View All Vendor Page');
+        // logActivity('Successfully', 'Visited', 'View All Vendor Page');
         return view('viewAllVendor', compact('vendors', 'sales'));
     }
 
@@ -57,7 +57,7 @@ class AdminController extends Controller
     {
         $all_logs = UserActivity::orderBy('accessed_at', 'desc')->paginate(25);
 
-        logActivity('Successfully', 'Visited', 'View All Logs Page');
+        // logActivity('Successfully', 'Visited', 'View All Logs Page');
         return view('view-all-logs', compact('all_logs'));
     }
 
@@ -65,7 +65,7 @@ class AdminController extends Controller
     {
         $payments = PaymentMethod::all();
 
-        logActivity('Successfully', 'Visited', 'View All Payment Page');
+        // logActivity('Successfully', 'Visited', 'View All Payment Page');
         return view('view-all-payment', compact('payments'));
     }
 

@@ -99,7 +99,7 @@ class UserController extends Controller
         $user = Auth::user();
 
 
-        logActivity('Successfully', 'Visited', 'Manage Profile Page');
+        // logActivity('Successfully', 'Visited', 'Manage Profile Page');
         return view('manageProfile', compact('user'));
     }
 

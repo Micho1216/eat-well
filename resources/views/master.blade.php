@@ -72,10 +72,23 @@
                 </div>
                 <div class="offcanvas-body">
                     <ul class="navbar-nav flex-grow-1 pe-3">
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('home') ? 'active' : '' }}"
-                                href="/home">{{ __('navigation.home') }}</a>
-                        </li>
+
+
+                        @if (Auth::user())
+                            <li class="nav-item">
+                                <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('home') ? 'active' : '' }}"
+                                    href="/home">{{ __('navigation.home') }}</a>
+                            </li>
+                        @else
+
+                            <li class="nav-item">
+                                <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('landingPage') ? 'active' : '' }}"
+                                    href="/landingPage">Landing page</a>
+                            </li>
+
+                        @endif
+
+
 
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('caterings') ? 'active' : '' }}"
@@ -124,8 +137,14 @@
                 </div> --}}
                 <a href="/manage-profile">
                     <div class="imgstyle m-2" style="border-radius:100%; margin-right:20px">
-                        <img class="" src="{{ asset('asset/profile/' . Auth::user()->profilePath) }}"
-                            alt="Card image " width="50px" height="50px" style="border-radius: 100%">
+
+                        @if (!Auth::user()->profilePath)
+                            <img class="" src="{{ asset('asset/profile/no-profile.png') }}" alt="Card image "
+                                width="50px" height="50px" style="border-radius: 100%">
+                        @else
+                             <img src="{{ asset('asset/profile/' . Auth::user()->profilePath) }}" width="50px" height="50px" style="border-radius: 100%">
+                        @endif
+
                     </div>
                 </a>
             @else
