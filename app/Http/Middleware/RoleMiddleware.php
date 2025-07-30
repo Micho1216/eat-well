@@ -24,8 +24,8 @@ class RoleMiddleware
 
         $role = Str::ucfirst($role);
 
-        if($user->role->value != $role)
-        {
+        if ($user->role->value != $role) {
+            logActivity('Tried to', 'Visit', $request->route()->uri());
             return match ($user->role) {
                 UserRole::Admin => redirect('admin-dashboard'),
                 UserRole::Vendor => redirect('/cateringHomePage'),

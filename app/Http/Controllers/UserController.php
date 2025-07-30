@@ -122,7 +122,7 @@ class UserController extends Controller
             $file = $request->file('profilePicInput');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             $file->move(public_path('asset/profile'), $filename);
-            $updated_user->profilePath = 'asset/profile/' . $filename;
+            $updated_user->profilePath = $filename;
         }
 
         $updated_user->genderMale = ($request->gender === 'male') ? 1 : 0;
@@ -131,6 +131,6 @@ class UserController extends Controller
 
         logActivity('Successfully', 'Updated', "Profile to {$updated_user->name}");
 
-        return redirect()->route('manage-profile');
+        return redirect()->route('manage-profile')->with('success', 'Profile updated successfully!');
     }
 }

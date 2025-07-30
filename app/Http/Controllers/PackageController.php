@@ -135,4 +135,9 @@ class PackageController extends Controller
 
         return redirect()->back()->with('success', 'Packages imported successfully!');
     }
+
+    public function manage_profile()
+    {
+        
+    }
 }

@@ -147,7 +147,7 @@ body {
     width: 700px;
     height: 100%;
     border-radius: 20px;
-    border: 2px solid rgba(0, 0, 0, 0.5);
+    /* border: 2px solid rgba(0, 0, 0, 0.5); */
     display: flex;
     flex-direction: column;
     margin-top: 10px;
@@ -230,14 +230,16 @@ body {
 }
 
 /* Stick the logout button to the bottom left of the sidebar */
-.logout-form {
+/* .logout-form {
     position: absolute;
     left: 32px;
     bottom: 32px;
     width: calc(100% - 64px);
     display: flex;
     justify-content: flex-start;
-}
+} */
+
+
 
 .logout-btn {
     background: #e53935;
@@ -909,4 +911,82 @@ body {
 .time-select {
     padding: 0.4rem;
     font-size: 1rem;
+}
+
+@media screen and (max-width: 390px) {
+    .datafoto {
+        display: flex;
+        flex-direction: column-reverse;
+        gap: 1.5rem;
+    }
+
+    .data,
+    .photo-data {
+        width: 100%;
+    }
+
+    .profile-picture {
+        display: block;
+        margin: 0 auto;
+        max-width: 140px;
+    }
+
+    .edit-btn-group {
+        text-align: center;
+        margin-top: 0.75rem;
+        order: 2; /* pastikan edit ada di bawah gambar */
+    }
+
+    .change-image-label {
+        display: block;
+        margin-top: 0.5rem;
+        text-align: center;
+    }
+
+    .profile-image-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media screen and (min-width: 1000px) {
+    .logout
+    {
+        margin-top: -200px;
+        margin-bottom: 200px;
+        margin-left: 30px;
+    }
+    
+}
+
+
+@media screen and (min-width: 676px) {
+    .logout
+    {
+        margin-top: -200px;
+        margin-bottom: 200px;
+        /* margin-left: 30px; */
+    }
+    
+}
+
+@media screen and (max-width: 400px) {
+    .logout
+    {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-left: -30px;
+        margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .edit-btn-group
+    {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 }

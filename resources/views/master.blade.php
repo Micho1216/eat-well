@@ -21,6 +21,9 @@
 </head>
 
 <body class="d-flex flex-column min-vh-100">
+    {{-- @php
+        dd(__('navigation.home'));
+    @endphp --}}
     <nav class="navbar navbar-expand-md custNavigation">
         <div class="h-100 w-100 invisible position-absolute bg-black opacity-50 z-3 nav-visibility"></div>
         <div class="container-fluid">
@@ -52,7 +55,8 @@
             <form action="/lang" method="post">
                 @csrf
                 <div class="dropdown-wrapper">
-                    <select name="lang" id="languageSelector" style="text-align: center; margin-left: 30px;" onchange="this.form.submit()">
+                    <select name="lang" id="languageSelector" style="text-align: center; margin-left: 30px;"
+                        onchange="this.form.submit()">
                         <option value="en" @if (app()->getLocale() === 'en') selected @endif>EN</option>
                         <option value="id" @if (app()->getLocale() === 'id') selected @endif>ID</option>
                     </select>
@@ -75,23 +79,23 @@
 
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('caterings') ? 'active' : '' }}"
-                                href="{{ route('search') }}">Search Vendor</a>
+                                href="{{ route('search') }}">{{ __('navigation.search vendor') }}</a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('favorites') ? 'active' : '' }}"
-                                href="{{ route('favorite.show') }}">Favorited Catering</a>
+                                href="{{ route('favorite.show') }}">{{ __('navigation.favorited catering') }}</a>
                         </li>
 
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('orders') ? 'active' : '' }}"
-                                href="{{ route('order-history') }}">Orders</a>
+                                href="{{ route('order-history') }}">{{ __('navigation.orders') }}</a>
                         </li>
 
 
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('about-us') ? 'active' : '' }}"
-                                href="/about-us">About Us</a>
+                                href="/about-us">{{ __('navigation.aboutus') }}</a>
                         </li>
                         {{-- <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('') ? 'active' : '' }}"

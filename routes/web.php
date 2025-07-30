@@ -39,6 +39,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\VillageController;
 
 Route::post('/lang', LanguageController::class);
+
 use App\Http\Controllers\VerifyOtpController;
 use App\Http\Controllers\illageController;
 use App\Http\Middleware\AccountSetup\EnsureAddressExists;
@@ -92,9 +93,9 @@ Route::middleware(['auth'])->group(function () {
     
     Route::post('/manage-profile', [SessionController::class, 'destroy'])->name('logout');
 
-    Route::get('/manage-profile', function () {
-        return view('manageProfile');
-    })->name('manage-profile');
+    // Route::get('/manage-profile', function () {
+    //     return view('manageProfile');
+    // })->name('manage-profile');
 
     Route::post('/manage-two-factor', [ManageTwoFactorController::class, 'index'])->name('manage-two-factor');
 
@@ -111,6 +112,10 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
     Route::post('/customer-first-page', [CustomerFirstPageController::class, 'store'])->middleware(EnsureNoAddressExist::class)
             ->withoutMiddleware(['ensureAddress'])
             ->name('account-setup.customer-store');
+
+    Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
+    Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
+
     // Customer Home
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::post('/topup', [UserController::class, 'topUpWellPay'])->name('wellpay.topup');
@@ -125,8 +130,10 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
     // Route::get('/manage-profile', function () {
     //     return view('manageProfile');
     // })->name('manage-profile');
-    Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
-    Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
+
+    // dipindahkan kebawah
+    // Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
+    // Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
 
     // Search Caterings
     Route::get('/caterings', [SearchCateringController::class, 'search'])->name('search');
@@ -149,8 +156,7 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order-detail');
     Route::put('/orders/{id}/cancel', [OrderController::class, 'cancelOrder'])->name('order.cancel');
     // Route::get('/order-detail', [OrderController::class, 'show'])->name('order-detail');
-    Route::post('/orders/{order}/review', [CustomerRatingController::class, 'store'])->middleware('auth');
-    ;
+    Route::post('/orders/{order}/review', [CustomerRatingController::class, 'store'])->middleware('auth');;
 
     // Order Payment
     // Route::get('/payment', function () {
@@ -197,6 +203,12 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
     });
 });
 
+
+
+
+
+
+
 /* ---------------------
      VENDOR ROUTES
 ---------------------- */
@@ -229,6 +241,12 @@ Route::middleware(['role:vendor'])->group(function () {
         Route::put('/packages/{id}', [PackageController::class, 'update'])->name('packages.update');
         Route::delete('/packages/{id}', [PackageController::class, 'destroy'])->name('packages.destroy');
         Route::post('/packages/import', [PackageController::class, 'import'])->name('packages.import');
+
+        // Route::get('/manage-profile-2', [VendorController::class, 'manage_profile'])->name('manage-profile');
+        // Route::patch('/manage-profile-2', [VendorController::class, 'updateProfileUser'])->name('manage-profile.updateUser');
+        // // Route::post('/manage-profile-2', [SessionController::class, 'destroy'])->name('logout');
+
+
 
         // Manage Order
         Route::get('/manageOrder', [OrderVendorController::class, 'index'])
@@ -265,11 +283,17 @@ Route::middleware(['role:vendor'])->group(function () {
         Route::put('/vendor-previews/{id}', [VendorPreviewController::class, 'update']);
 
         Route::get('/vendor-manage', [VendorPreviewController::class, 'showVendorDetail']);
+
+        Route::get('/manage-profile-vendor-account', [VendorController::class, 'manage_profile'])->name('manage-profile-vendor-account');
+        Route::patch('/manage-profile-vendor-account', [VendorController::class, 'updateProfileUser'])->name('manage-profile-vendor-account.updateUser');
     });
 
     // Catering Sales
-    Route::get('/vendor/sales', [SalesController::class,'index'])->name('sales.show');
-    Route::get('/vendor/sales/export', [SalesController::class,'export_sales'])->name('sales.export');
+    Route::get('/vendor/sales', [SalesController::class, 'index'])->name('sales.show');
+    Route::get('/vendor/sales/export', [SalesController::class, 'export_sales'])->name('sales.export');
+
+    // Route::get('/manage-profile-catering', [VendorController::class, 'manageProfile'])->name('manage-profile-vendor');
+    // Route::patch('/manage-profile-catering', [VendorController::class, 'updateProfile'])->name('manage-profile-vendor.update');
 
     Route::fallback(function () {
         return redirect()->route('cateringHomePage');
@@ -284,13 +308,10 @@ Route::middleware(['role:admin'])->group(function () {
 
     Route::get('/admin-dashboard', [DashboardController::class, 'index'])->name('admin-dashboard');
 
-    Route::get('/view-all-orders', function () {
-        return view('view-all-orders');
-    });
+    Route::get('/view-all-transactions', [AdminController::class, 'view_all_transactions'])->name('view-all-transactions');
 
-    Route::get('/view-all-users', function () {
-        return view('view-all-users');
-    });
+    Route::get('/view-all-users', [AdminController::class, 'view_all_users'])->name('view-all-users');
+
 
     Route::get('/view-all-logs', [AdminController::class, 'view_all_logs'])
         ->name('view-all-logs');

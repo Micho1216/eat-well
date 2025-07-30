@@ -39,22 +39,18 @@
                 </ul>
             </div> --}}
 
-            {{-- <div class="dropdown-wrapper">
-                <select id="languageSelector" style="text-align: center; margin-left: 30px">
-                    <option value="en">EN</option>
-                    <option value="id">ID</option>
-                </select>
-            </div> --}}
-
-            <form action="/lang" method="post">
+            <form action="/lang" method="POST">
                 @csrf
                 <div class="dropdown-wrapper">
-                    <select name="lang" id="languageSelector" style="text-align: center; margin-left: 30px;" onchange="this.form.submit()">
+                    <select name="lang" id="languageSelector" style="text-align: center; margin-left: 30px;"
+                        onchange="this.form.submit()">
                         <option value="en" @if (app()->getLocale() === 'en') selected @endif>EN</option>
                         <option value="id" @if (app()->getLocale() === 'id') selected @endif>ID</option>
                     </select>
                 </div>
             </form>
+
+
 
             <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
                 aria-labelledby="offcanvasNavbarLabel">
@@ -67,25 +63,26 @@
                     <ul class="navbar-nav flex-grow-1 pe-3">
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('cateringHomePage') ? 'active' : '' }}"
-                                href="/cateringHomePage">{{ __('navigation.home') }}</a>
+                                href="/cateringHomePage">{{ __('vendor-nav.dashboard') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('manageCateringPackage') ? 'active' : '' }}"
-                                href="/manageCateringPackage">{{ __('navigation.my_packages') }}</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2 navigationcustlink {{ request()->routeIs('sales.show') ? 'active' : '' }}"
-                                href="{{route('sales.show')}}">Sales</a>
+                                href="/manageCateringPackage">{{ __('vendor-nav.my_packages') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('manageOrder') ? 'active' : '' }}"
-                                href="/manageOrder">{{ __('navigation.orders') }}</a>
+                                href="/manageOrder">{{ __('vendor-nav.orders') }}</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('search') ? 'active' : '' }}"
+                                href="/search">{{ __('vendor-nav.search') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('ratingAndReviewVendor') ? 'active' : '' }}"
                                 href="{{route('vendor.review')}}">{{ __('navigation.rating_and_review_vendor') }}</a>
                         </li>
                     </ul>
+
                 </div>
             </div>
 
@@ -96,16 +93,22 @@
             </div> --}}
 
 
-            @auth
-                <a href="/manage-profile-vendor">
+            {{-- @auth
+                <a href="/manage-profile">
                     <div class="imgstyle m-2" style="border-radius:100%; width:50px; height:50px; margin-right:20px;">
                         <img class="img-fluid"
-                            src="{{ $vendorLogo ?? asset('asset/catering/homepage/breakfastPreview.jpg') }}"
+                            src="{{ asset(Auth::user()->profilePath) ?? asset('asset/catering/homepage/breakfastPreview.jpg') }}"
                             alt="Vendor Logo" width="120px" style="border-radius: 100%">
                     </div>
                 </a>
-            @endauth
+            @endauth --}}
 
+            <a href="/manage-profile-vendor-account">
+                <div class="imgstyle m-2" style="border-radius:100%; margin-right:20px">
+                    <img class="" src="{{ asset('asset/profile/' . Auth::user()->profilePath) }}"
+                        alt="Card image " width="50px" height="50px" style="border-radius: 100%">
+                </div>
+            </a>
 
 
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
@@ -128,9 +131,9 @@
             </div>
 
             <div class="mb-0">
-                <a href="/home" class="text-white mx-4 text-decoration-none">{{ __('navigation.home') }}</a>
-                <a href="/about-us" class="text-white mx-4 text-decoration-none">{{ __('navigation.about_us') }}</a>
-                <a href="/contact" class="text-white mx-4 text-decoration-none">{{ __('navigation.contact') }}</a>
+                <a href="/home" class="text-white mx-4 text-decoration-none">{{ __('vendor-nav.home') }}</a>
+                <a href="/about-us" class="text-white mx-4 text-decoration-none">{{ __('vendor-nav.about_us') }}</a>
+                <a href="/contact" class="text-white mx-4 text-decoration-none">{{ __('vendor-nav.contact') }}</a>
             </div>
 
             <!-- Sosial Media -->
@@ -142,13 +145,14 @@
 
             <!-- Copyright -->
             <div class="mb-1">
-                <p class="text-white-50 mb-1">&copy; {{ date('Y') }} Eat Well. {{ __('navigation.footer_rights') }}.</p>
+                <p class="text-white-50 mb-1">&copy; {{ date('Y') }} Eat Well.
+                    {{ __('navigation.footer_rights') }}.</p>
             </div>
 
             <!-- Alamat -->
             <div>
                 <p class="text-white-50 small" style="margin-bottom: 0px">
-                   {{ __('navigation.footer_address') }}
+                    {{ __('vendor-nav.address') }}
                 </p>
             </div>
 

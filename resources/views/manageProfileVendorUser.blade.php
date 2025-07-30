@@ -1,4 +1,4 @@
-@extends('master')
+@extends('components.vendor-nav')
 
 @section('title', 'Manage Prodile')
 @section('css')
@@ -85,6 +85,8 @@
                     <hr
                         style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
 
+                    
+
                     @if (session('success'))
                         @if (session('success'))
                             <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
@@ -113,7 +115,7 @@
                         @endif
                     @endif
                     <div class="manage-profile-in">
-                        <form action="{{ route('manage-profile.update') }}" method="POST"
+                        <form action="{{ route('manage-profile-vendor-account.updateUser') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             @method('PATCH')
@@ -232,28 +234,12 @@
                                                 accept="image/*" style="display:none;" disabled>
                                         </label>
                                     </div>
-                                    <div class="edit-btn-group d-flex flex-column">
+                                    <div class="edit-btn-group d-flex flex-row">
                                         <button class="inter font-medium edit-data">Edit</button>
-                                        <p style="color: rgb(242, 185, 12)">{{ __('manage-profile.click_edit') }}</p>
                                     </div>
+                                    <p class="text-center" style="color: rgb(242, 185, 12)">{{ __('manage-profile.click_edit') }}</p>
 
-                                    <div class="modal fade" id="exampleModal" tabindex="-1"
-                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog modal-dialog-centered">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <h1 class="modal-title fs-5" id="exampleModalLabel"
-                                                        style="color: rgb(46, 173, 46)">
-                                                        {{ __('manage-profile.data_saved') }}</h1>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    {{ __('manage-profile.changes_saved') }}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+
                                 </div>
                             </div>
                         </form>

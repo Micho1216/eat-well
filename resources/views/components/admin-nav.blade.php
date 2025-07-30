@@ -28,12 +28,22 @@
                 <img src="/asset/navigation/eatwellLogo.png" alt="logo" style="width: 6vh;">
             </a>
 
-            <div class="dropdown-wrapper">
+            {{-- <div class="dropdown-wrapper">
                 <select id="languageSelector" style="text-align: center; margin-left: 15px">
                     <option value="en">EN</option>
                     <option value="id">ID</option>
                 </select>
-            </div>
+            </div> --}}
+
+            <form action="/lang" method="POST">
+                @csrf
+                <div class="dropdown-wrapper">
+                    <select name="lang" id="languageSelector" style="text-align: center; margin-left: 30px;" onchange="this.form.submit()">
+                        <option value="en" @if (app()->getLocale() === 'en') selected @endif>EN</option>
+                        <option value="id" @if (app()->getLocale() === 'id') selected @endif>ID</option>
+                    </select>
+                </div>
+            </form>
 
             <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar"
                 aria-labelledby="offcanvasNavbarLabel">
@@ -46,67 +56,61 @@
                     <ul class="navbar-nav pe-3">
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('admin-dashboard') ? 'active' : '' }}"
-                                href="/admin-dashboard">Dashboard</a>
+                                href="/admin-dashboard">{{ __('admin-nav.dashboard') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-all-orders') ? 'active' : '' }}"
-                                href="/view-all-orders">Transactions</a>
+                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-all-transactions') ? 'active' : '' }}"
+                                href="/view-all-transactions">{{ __('admin-nav.transactions') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('categories') ? 'active' : '' }}"
-                                href="{{route('categories.show')}}">Packages Category</a>
+                                href="{{route('categories.show')}}">{{ __('admin-nav.category') }}</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-all-packages-cuisine') ? 'active' : '' }}"
-                                href="/view-all-packages-cuisine">Cuisine</a>
-                        </li>
+                        {{-- <li class="nav-item">
+                            
+                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-all-packages-category') ? 'active' : '' }}"
+                                href="/view-all-packages-category">{{ __('admin-nav.category') }}</a>
+                        </li> --}}
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-all-vendors') ? 'active' : '' }}"
-                                href="/view-all-vendors">Vendors</a>
+                                href="/view-all-vendors">{{ __('admin-nav.vendors') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-all-users') ? 'active' : '' }}"
-                                href="/view-all-users">Users</a>
+                                href="/view-all-users">{{ __('admin-nav.users') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-all-logs') ? 'active' : '' }}"
-                                href="/view-all-logs">Logs</a>
+                                href="/view-all-logs">{{ __('admin-nav.logs') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-all-payment') ? 'active' : '' }}"
-                                href="/view-all-payment">Payments</a>
+                                href="/view-all-payment">{{ __('admin-nav.payments') }}</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-order-history') ? 'active' : '' }}"
-                                href="/view-order-history">Order History</a>
+                                href="/view-order-history">{{ __('admin-nav.order_history') }}</a>
                         </li>
-
-
                     </ul>
+
                 </div>
             </div>
 
-            @auth
-                {{-- <div style="padding: 0.5rem 1rem; border-radius: 0.25rem; margin-right: 2vw">
-                    <a class="login-button p-0" href="profile">
-                        <button type="button" class="login_button">
-                            <i class="bi bi-gear-fill"></i> Profile
-                        </button>
-                    </a>
-                </div> --}}
+            <!-- Tombol Auth -->
+            {{-- @auth
                 <a href="/manage-profile">
-                    <div class="imgstyle m-2" style="border-radius:100%; width:50px; height:50px margin-right:20px">
+                    <div class="imgstyle m-2" style="border-radius:100%; width:50px; height:50px; margin-right:20px">
                         <img class="img-fluid" src="{{ asset('asset/catering/homepage/breakfastPreview.jpg') }}"
-                            alt="Card image " width="120px" style="border-radius: 100%">
+                            alt="Card image" width="120px" style="border-radius: 100%">
                     </div>
                 </a>
             @else
                 <div style="padding: 0.5rem 1rem; border-radius: 0.25rem; margin-right: 2vw">
                     <a class="login-button p-0" href="login">
-                        <button type="button" class="login_button">Log In</button>
+                        <button type="button" class="login_button">{{ __('admin-nav.login') }}</button>
                     </a>
                 </div>
-            @endauth
+            @endauth --}}
 
             <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar"
                 aria-controls="offcanvasNavbar" aria-label="Toggle navigation">

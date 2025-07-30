@@ -6,6 +6,7 @@ use App\Models\Address;
 use App\Models\Order;
 use App\Models\Payment;
 use App\Models\PaymentMethod;
+use App\Models\User;
 use App\Models\UserActivity;
 use App\Models\Vendor;
 use Illuminate\Http\Request;
@@ -115,5 +116,22 @@ class AdminController extends Controller
         }
 
         // return redirect()->route('view-all-payment');
+    }
+
+    public function view_all_transactions()
+    {
+
+        // $payments = Payment::all()->paginate(10);
+        $payments = Payment::orderBy('paid_at', 'asc')->paginate(25);
+
+        logActivity('Successfully', 'Visited', 'View all transaction');
+        return view('view-all-transactions', compact('payments'));
+    }
+
+    public function view_all_users()
+    {
+        $users = User::orderBy('created_at', 'desc')->paginate(25);
+        logActivity('Successfully', 'Visited', 'View all users');
+        return view('view-all-users', compact('users'));
     }
 }

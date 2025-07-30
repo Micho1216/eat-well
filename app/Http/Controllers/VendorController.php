@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\VendorSearchRequest;
+use App\Http\Requests\ProfileRequest;
+use App\Http\Requests\UpdateProfileVendorRequest;
 use App\Models\Address;
 use App\Http\Requests\VendorStoreRequest;
 use App\Models\Cart;
@@ -162,67 +164,34 @@ class VendorController extends Controller
     }
 
 
-    public function updateProfile(Request $request)
+    public function updateProfile(UpdateProfileVendorRequest $request)
     {
-        try {
-            // dd($request);
-            $user = Auth::user();
-            $userId = $user->userId;
-            $vendor = Vendor::where('userId', $userId)->first();
 
-            $validator = Validator::make($request->all(), [
-                'nameInput' => [
-                    'bail',
-                    'required',
-                    'string',
-                    'max:255',
-                    'unique:vendors,name,' . $vendor->vendorId . ',vendorId',
-                    'not_regex:/<[^>]*script.*?>.*?<\/[^>]*script.*?>/i',
-                    'not_regex:/<[^>]+>/i',
-                ],
-                'telpInput' => 'bail|required|string|max:255|starts_with:08',
-                'profilePicInput' => 'nullable|image|mimes:jpg,jpeg,png',
-            ], [
-                'nameInput.required' => 'Vendor name must be filled !.',
-                'telpInput.required' => 'Telp number must be filled !',
-                'telpInput.starts_with' => 'Telp number must be start with 08',
-                'nameInput.unique' => 'Vendor name is already taken !',
-                'profilePicInput.image' => 'Profile picture must be an image.',
-                'profilePicInput.mimes' => 'Profile picture must be a file of type: jpg, jpeg, png.',
-                'nameInput.not_regex' => 'HTML or script tags are not allowed in the vendor name.',
-            ]);
+        // dd($request);
+        $user = Auth::user();
+        $userId = $user->userId;
+        $vendor = Vendor::where('userId', $userId)->first();
 
-            if ($validator->fails()) {
-                //  logActivity('Failed', 'Updated', 'Vendor Profile, Due to Validation Error: ' . $e->getMessage());
-                $errors = implode(', ', $validator->errors()->all());
-                logActivity('Failed', 'Updated', 'Vendor Profile, Validation Errors: ' . $errors);
-                return redirect()->back()->withErrors($validator)->withInput();
-            }
+        $vendor->name = $request->nameInput;
+        $vendor->phone_number = $request->telpInput;
 
-            $vendor->name = $request->nameInput;
-            $vendor->phone_number = $request->telpInput;
-
-            $vendor->breakfast_delivery = $request->breakfast_time_start . '-' . $request->breakfast_time_end;
-            $vendor->lunch_delivery = $request->lunch_time_start . '-' . $request->lunch_time_end;
-            $vendor->dinner_delivery = $request->dinner_time_start . '-' . $request->dinner_time_end;
+        $vendor->breakfast_delivery = $request->breakfast_time_start . '-' . $request->breakfast_time_end;
+        $vendor->lunch_delivery = $request->lunch_time_start . '-' . $request->lunch_time_end;
+        $vendor->dinner_delivery = $request->dinner_time_start . '-' . $request->dinner_time_end;
 
 
-            if ($request->hasFile('profilePicInput')) {
-                $file = $request->file('profilePicInput');
-                $filename = time() . '.' . $file->getClientOriginalExtension();
-                $file->move(public_path('asset/profile'), $filename);
-                $vendor->logo = 'asset/profile/' . $filename;
-                logActivity('Successfully', 'Added', 'Profile pict inManage Profile Vendor Page');
-            }
-
-            $vendor->save();
-
-            logActivity('Successfully', 'Updated', 'Manage Profile Vendor Page');
-            return redirect()->route('manage-profile-vendor')->with('success', 'Profile updated successfully!');
-        } catch (\Exception $e) {
-            logActivity('Failed', 'Updated', 'Vendor Profile, Due to Validation Error: ' . $e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'Failed to update profile.']);
+        if ($request->hasFile('profilePicInput')) {
+            $file = $request->file('profilePicInput');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('asset/vendorLogo'), $filename);
+            $vendor->logo = $filename;
+            logActivity('Successfully', 'Added', 'Profile pict inManage Profile Vendor Page');
         }
+
+        $vendor->save();
+
+        logActivity('Successfully', 'Updated', 'Manage Profile Vendor Page');
+        return redirect()->route('manage-profile-vendor')->with('success', 'Profile updated successfully!');
     }
 
     public function store(VendorStoreRequest $request)
@@ -262,8 +231,6 @@ class VendorController extends Controller
             ? $request->startDinner . '-' . $request->closeDinner
             : null;
 
-        /** @var User|Authenticable $user */
-
         // Store the vendor
         $vendor->update([
             'name' => $request['name'],
@@ -283,5 +250,46 @@ class VendorController extends Controller
         // ]);
 
         return redirect('cateringHomePage');
+    }
+
+    // utk akun user vendor
+    public function manage_profile()
+    {
+        // Mengambil user yang sedang login
+        $user = Auth::user();
+
+
+        logActivity('Successfully', 'Visited', 'Manage Profile Page');
+        return view('manageProfileVendorUser', compact('user'));
+    }
+
+
+    public function updateProfileUser(ProfileRequest $request)
+    {
+        $user = Auth::user();
+        $userId = $user->userId;
+
+        $updated_user = User::find($userId);
+
+        $updated_user->name = $request->nameInput;
+
+        if ($request->filled('dateOfBirth')) {
+            $updated_user->dateOfBirth = $request->input('dateOfBirth');
+        }
+
+        if ($request->hasFile('profilePicInput')) {
+            $file = $request->file('profilePicInput');
+            $filename = time() . '.' . $file->getClientOriginalExtension();
+            $file->move(public_path('asset/profile'), $filename);
+            $updated_user->profilePath = $filename;
+        }
+
+        $updated_user->genderMale = ($request->gender === 'male') ? 1 : 0;
+
+        $updated_user->save();
+
+        logActivity('Successfully', 'Updated', "Profile to {$updated_user->name}");
+
+        return redirect()->route('manage-profile-vendor-account')->with('success', 'Profile updated successfully!');
     }
 }
