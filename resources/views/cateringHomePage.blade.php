@@ -38,8 +38,8 @@
     <div class="container my-5">
         <div class="chart-container text-center">
             <h2 class="chart-title">{{ __('catering-home-page.income_statistics') }} {{ $salesMonth }} </h2>
-            <canvas id="salesChart"></canvas>
-            <button class="btn-download mt-4">{{ __('catering-home-page.download_report') }}</button>
+            <canvas id="salesChart" class="mb-4"></canvas>
+            <a href="{{route('sales.export', ['startDate' => $salesMonth, 'endDate' => $endMonth])}}" class="btn-download mt-4" style="text-decoration: none;">{{ __('catering-home-page.download_report') }}</a>
         </div>
     </div>
 

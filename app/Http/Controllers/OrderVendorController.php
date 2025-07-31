@@ -182,8 +182,9 @@ class OrderVendorController extends Controller
         }, range(1, 4));
 
         $salesMonth = $today->format('F Y');
+        $endMonth = $today->lastOfMonth();
 
-        return view('cateringHomePage', compact('slotCounts', 'vendor', 'salesData', 'salesMonth'));
+        return view('cateringHomePage', compact('slotCounts', 'vendor', 'salesData', 'salesMonth', 'endMonth'));
     }
 
 
