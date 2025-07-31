@@ -22,7 +22,8 @@
     </form>
     <div class="welcome-banner">
         <div class="logo-circle">
-            <img src="asset/catering/homePage/logoCatering.png" alt="Logo" />
+            <img src="{{ $vendor->logo ? asset('asset/vendorLogo/' . $vendor->logo) : asset('asset/profile/noPict.jpg') }}"
+                alt="Logo" />
         </div>
         <div class="welcome-text">
             <h2>{{ __('catering-home-page.welcome') }}, {{ $vendor->name }}!</h2>

@@ -56,23 +56,28 @@
 
     <script>
         window.orderData = {
-        orders: @json($orders),
-        isNextWeek: {{ request('week') === 'next' ? 'true' : 'false' }},
-        trans: {
-            are_you_sure: "{{ __('manage-order.are_you_sure') }}",
-            cancel_message: "{{ __('manage-order.cancel_message') }}",
-            yes_cancel: "{{ __('manage-order.yes_cancel') }}",
-            no: "{{ __('manage-order.no') }}",
-            prepared: "{{ __('manage-order.prepared') }}",
-            delivered: "{{ __('manage-order.delivered') }}",
-            arrived: "{{ __('manage-order.arrived') }}",
-            decline_order: "{{ __('manage-order.decline_order') }}",
-            invalid_delivery_date: "{{ __('manage-order.invalid_delivery_date') }}",
-            breakfast: "{{ __('manage-order.breakfast') }}",
-            lunch: "{{ __('manage-order.lunch') }}",
-            dinner: "{{ __('manage-order.dinner') }}"
-        }
-    };
+            orders: @json($orders),
+            isNextWeek: {{ request('week') === 'next' ? 'true' : 'false' }},
+            trans: {
+                are_you_sure: "{{ __('manage-order.are_you_sure') }}",
+                cancel_message: "{{ __('manage-order.cancel_message') }}",
+                yes_cancel: "{{ __('manage-order.yes_cancel') }}",
+                no: "{{ __('manage-order.no') }}",
+                prepared: "{{ __('manage-order.prepared') }}",
+                delivered: "{{ __('manage-order.delivered') }}",
+                arrived: "{{ __('manage-order.arrived') }}",
+                decline_order: "{{ __('manage-order.decline_order') }}",
+                invalid_delivery_date: "{{ __('manage-order.invalid_delivery_date') }}",
+                breakfast: "{{ __('manage-order.breakfast') }}",
+                lunch: "{{ __('manage-order.lunch') }}",
+                dinner: "{{ __('manage-order.dinner') }}",
+                processing: "{{ __('manage-order.processing') }}",
+                status_update_saved: "{{ __('manage-order.status_update_saved') }}",
+                status_updated_success: "{{ __('manage-order.status_updated_success') }}",
+                order_rejected_success: "{{ __('manage-order.order_rejected_success') }}",
+                rejected_success: "{{ __('manage-order.rejected_success') }}"
+            }
+        };
     </script>
     <script src="{{ asset('js/vendor/manageOrder.js') }}"></script>
 

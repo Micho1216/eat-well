@@ -61,4 +61,11 @@ return [
     'edit_package' => 'Edit Package',
     'dz_drop_files_here' => 'Drop files here to upload',
     'kcal' => 'kcal',
+    "confirm_delete"=> "Yes, delete!",
+    "cancel"=> "Cancel",
+    'package_saved_success' => 'Package saved successfully',
+    'preview_deleted_success' => 'Preview deleted successfully',
+    'preview_added_success' => 'Preview has been successfully added',
+    'preview_updated_success' => 'Preview has been successfully updated',
+
 ];
