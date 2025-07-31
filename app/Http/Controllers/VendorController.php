@@ -131,7 +131,7 @@ VendorController extends Controller
 
         $all_categories = PackageCategory::all();
 
-        $vendors = \App\Models\Vendor::query()
+        $vendors = Vendor::query()
             // Search by vendor name or related models — grouped properly
             ->when($query, function ($q) use ($query) {
                 $q->where(function ($q) use ($query) {
