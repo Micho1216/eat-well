@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateCartRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
 use App\Models\Package;
@@ -11,28 +12,26 @@ use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    public function updateOrderSummary(Request $request)
+    public function updateOrderSummary(UpdateCartRequest $request)
     {
         $selectedPackages = $request->input('packages', []);
-        // $userId = auth()->id();
-        $userId = Auth::id();
-        // $userId = 1;
+        $userId = $request->input('user_id');
         $vendorId = $request->input('vendor_id');
 
         Log::info('--- updateOrderSummary Dijalankan ---');
         Log::info('User ID: ' . $userId . ', Vendor ID: ' . $vendorId);
         Log::info('Selected Packages (Raw Input from Frontend):', $selectedPackages);
 
-        if (!$userId) {
-            Log::warning('User not authenticated, returning 401.');
-            // return response()->json(['message' => 'User not authenticated.'], 401);
-            return redirect()->route('landingPage');
-        }
-        if (!$vendorId) {
-            Log::warning('Vendor ID missing, returning 400.');
-            // return response()->json(['message' => 'Vendor ID is missing.'], 400);
-            return redirect()->route('landingPage');
-        }
+        // if (!$userId) {
+        //     Log::warning('User not authenticated, returning 401.');
+        //     // return response()->json(['message' => 'User not authenticated.'], 401);
+        //     return redirect()->route('landingPage');
+        // }
+        // if (!$vendorId) {
+        //     Log::warning('Vendor ID missing, returning 400.');
+        //     // return response()->json(['message' => 'Vendor ID is missing.'], 400);
+        //     return redirect()->route('landingPage');
+        // }
 
         $cart = Cart::firstOrCreate(
             ['userId' => $userId, 'vendorId' => $vendorId],
