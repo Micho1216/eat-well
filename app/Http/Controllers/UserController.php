@@ -11,22 +11,6 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    public function index(Request $request)
-    {
-        if (Auth::check()) {
-            // Mengambil user yang sedang login
-            $user = User::find(Auth::id());
-
-            $wellpay = $user->wellpay ?? 0; // Ambil saldo, default 0 jika kolom 'balance' null/tidak ada
-
-            // Meneruskan data saldo ke view 'dashboard'
-            return view('customer.home', compact('user', 'wellpay'));
-        }
-
-        // Jika user belum login, redirect ke halaman login
-        return redirect()->route('landingPage');
-    }
-
     public function topUpWellPay(Request $request)
     {
         if (!Auth::check()) {
