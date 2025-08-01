@@ -36,6 +36,6 @@ class OrderItem extends Model
 
     public function package()
     {
-        return $this->belongsTo(Package::class, 'packageId', 'packageId');
+        return $this->belongsTo(Package::class, 'packageId', 'packageId')->withTrashed();;
     }
 }

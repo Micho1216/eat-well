@@ -272,7 +272,12 @@
                                 </div>
                                 <div class="right-container">
                                     <div class="package-detail">
-                                        <div class="text-container detail-primary">{{ $item->package->name }}</div>
+                                        <div class="text-container detail-primary">
+                                            {{ $item->package->name }}
+                                            @if ($item->package->deleted_at)
+                                                {{ ' (' . __('customer/order.deleted_package') . ')' }}
+                                            @endif
+                                        </div>
                                         <div class="text-container d-flex flex-row flex-md-column column-gap-2">
                                             <div class="text-wrapper detail-secondary">
                                                 {{ __('customer/order.card_variant') }}:

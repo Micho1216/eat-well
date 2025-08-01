@@ -17,6 +17,7 @@ return [
     // Card Order
     'card_view' => 'View Catering',
     'card_variant' => 'Variant',
+    'deleted_package' => 'Archived',
     'Morning' => 'Breakfast',
     'Afternoon' => 'Lunch',
     'Evening' => 'Dinner',
