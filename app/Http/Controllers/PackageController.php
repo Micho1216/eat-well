@@ -25,7 +25,6 @@ class PackageController extends Controller
             ->get();
 
         $cuisines = CuisineType::all();
-        logActivity('Successfully', 'Visited', 'Manage Catering Package Page');
         return view('manageCateringPackage', compact('packages', 'cuisines', 'vendorId'));
     }
 
