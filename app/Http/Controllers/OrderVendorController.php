@@ -236,7 +236,7 @@ class OrderVendorController extends Controller
             $user->notify($toBeNotified);
         }
 
-        logActivity('Successfully', 'Updated', 'Order Delivery Status to ' . $ds->status, $request);
+        logActivity('Successfully', 'Updated', 'Order Delivery Status to ' . $ds->status->value, $request);
         return response()->json([
             'success' => true,
             'message' => 'Status updated successfully.',
