@@ -6,7 +6,7 @@ return
                     and subscribe to trusted catering providers based on your dietary needs and preferences—all in one
                     place.',
     'registernow' => 'Register now',
-    'kolongtext1' => 'Subscribe, pause, or switch plans with just a few taps—anytime, anywhere, hassle-free.',
+    'kolomtext1' => 'Subscribe, pause, or switch plans with just a few taps—anytime, anywhere, hassle-free.',
     'kolomtext2' => 'Browse and compare a variety of trusted healthy meal providers in your area.',
     'kolomtext3' => 'Enjoy balanced, portion-controlled meals every day.',
     'ourclient' => 'Our Client',
