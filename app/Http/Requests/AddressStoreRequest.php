@@ -2,7 +2,9 @@
 
 namespace App\Http\Requests;
 
+use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
 
 class AddressStoreRequest extends FormRequest
@@ -23,32 +25,20 @@ class AddressStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'provinsi_id' => [
-                'required',
-            ],
-            'provinsi_name' => [
+            'provinsi_name' => [ // Tetap validasi nama untuk konsistensi, meskipun tidak digunakan secara langsung untuk penyimpanan
                 'required',
                 'string',
                 'max:255',
-            ],
-            'kota_id' => [
-                'required',
             ],
             'kota_name' => [
                 'required',
                 'string',
                 'max:255',
             ],
-            'kecamatan_id' => [
-                'required',
-            ],
             'kecamatan_name' => [
                 'required',
                 'string',
                 'max:255',
-            ],
-            'kelurahan_id' => [
-                'required',
             ],
             'kelurahan_name' => [
                 'required',
