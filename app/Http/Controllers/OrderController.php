@@ -461,8 +461,13 @@ class OrderController extends Controller
      */
     public function show(string $id)
     {
+        $user = Auth::user();
         $order = Order::findOrFail($id)
             ->load(['payment', 'deliveryStatuses', 'orderItems.package', 'vendor', 'vendorReview']);
+
+        if($order->userId != $user->userId) {
+            return redirect()->route('order-history')->with('error', 'Invalid order!');
+        }
 
         $paymentMethod = $order->payment ? PaymentMethod::find($order->payment->methodId) : null;
 
