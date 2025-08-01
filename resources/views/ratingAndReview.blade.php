@@ -60,8 +60,8 @@
                     </div>
                 </div>
             @empty
-                <div class="text-center p-4">
-                    <p class="inter text-muted">{{ __('catering-detail.no_reviews') }}</p>
+                <div class="d-flex justify-content-center align-items-center text-center p-4 text-white fw-bold" style="min-height: 40vh;">
+                    <h3 class="lexend text-white">{{ __('catering-detail.no_reviews') }}</h3>
                 </div>
             @endforelse
         </div>
