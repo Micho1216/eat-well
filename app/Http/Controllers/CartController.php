@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoadCartRequest;
 use App\Http\Requests\UpdateCartRequest;
 use App\Models\Cart;
 use App\Models\CartItem;
@@ -133,11 +134,9 @@ class CartController extends Controller
         ]);
     }
 
-    public function loadCart(Request $request)
+    public function loadCart(LoadCartRequest $request)
     {
-        // $userId = auth()->id();
-        // $userId = 1;
-        $userId = Auth::id();
+        $userId = $request->input('user_id');
         $vendorId = $request->input('vendor_id');
 
         if (!$userId || !$vendorId) {

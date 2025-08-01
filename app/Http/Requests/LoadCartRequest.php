@@ -23,7 +23,7 @@ class LoadCartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'vendor_id' => 'required|integer|exists:vendors,vendorId', // Vendor ID wajib
+            'vendor_id' => 'required|integer|exists:vendors,vendorId',
         ];
     }
 
