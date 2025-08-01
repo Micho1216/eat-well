@@ -1,5 +1,6 @@
 <?php
 
 return [
-    'heading' => 'Catering Favorit Anda'
+    'heading' => 'Katering Favorit Anda',
+    'is_empty' => 'Belum ada katering favorit.',
 ];

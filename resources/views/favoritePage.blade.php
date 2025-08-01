@@ -24,8 +24,9 @@
     </section>
     <section class="container mb-3 fav-vendor-container">
         @if ($vendors->isEmpty())
-            <div class="d-flex flex-row justify-content-center">
+            <div class="d-flex flex-column justify-content-center align-items-center">
                 <img src="{{asset('asset/empty-favorites.png')}}" class="rounded-4" alt="No Favorite vendors" width="250px" height="250px">
+                <h3 class="mt-4">{{__('customer/favorites.is_empty')}}</h3>
             </div>
         @else
             <div class="row">
