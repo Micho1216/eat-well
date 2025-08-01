@@ -65,6 +65,7 @@ class VendorPreviewController extends Controller
 
         return response()->json([
             'status' => 'success',
+            'message' => 'Vendor preview berhasil ditambahkan.',
             'preview' => [
                 'id' => $vendorPreview->vendorPreviewId,
                 'previewPicturePath' => $vendorPreview->previewPicturePath,
@@ -102,6 +103,7 @@ class VendorPreviewController extends Controller
 
         return response()->json([
             'status' => 'success',
+            'message' => 'Vendor preview berhasil diperbarui.',
             'preview' => [
                 'id' => $preview->vendorPreviewId,
                 'previewPicturePath' => $relativePath,

@@ -3,7 +3,7 @@
 // Fungsi untuk mengunduh template CSV
 function downloadTemplateCSV() {
     const link = document.createElement("a");
-    link.href = "/asset/catering/homePage/template_package_import.csv";
+    link.href = "/asset/catering/homePage/template_package_import.xlsx";
     link.download = "template_package_import.csv";
     document.body.appendChild(link);
     link.click();
@@ -261,8 +261,8 @@ function showConfirm(message) {
         showCancelButton: true,
         confirmButtonColor: '#28a745',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Ya, hapus!',
-        cancelButtonText: 'Batal'
+        confirmButtonText: window.locale.confirm_delete,
+        cancelButtonText: window.locale.cancel,
     });
 }
 
@@ -389,13 +389,24 @@ document.getElementById("packageForm").addEventListener("submit", function (e) {
         })
         .then(response => {
             console.log("Sukses:", response);
-            window.location.href = "/manageCateringPackage";
+
+            // Tampilkan pesan sukses dulu, baru redirect
+            Swal.fire({
+                icon: 'success',
+                title: window.locale.success,
+                text: window.locale.package_saved_success,
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'OK'
+            }).then(() => {
+                window.location.href = "/manageCateringPackage";
+            });
         })
         .catch(err => {
             console.error("Gagal:", err);
             alert("Ada error waktu simpan paket");
         });
 });
+
 
 const VENDOR_ID = document.getElementById('vendorId').value;
 const carousel = document.getElementById("carousel-wrapper");
@@ -440,10 +451,33 @@ function createImageItem(src, previewId) {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
                     'Accept': 'application/json'
                 }
-            }).then(() => {
-                item.remove();
-                renderAddButton();
-            });
+            })
+                .then(res => {
+                    if (!res.ok) throw new Error('Gagal menghapus preview');
+                    return res.json();
+                })
+                .then(data => {
+                    item.remove();
+                    renderAddButton();
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: window.locale?.success || 'Sukses',
+                        text: data.message || window.locale.preview_deleted_success,
+                        confirmButtonColor: '#28a745',
+                        confirmButtonText: 'OK'
+                    });
+                })
+                .catch(err => {
+                    console.error('Error:', err);
+                    Swal.fire({
+                        icon: 'error',
+                        title: window.locale?.failed || 'Gagal',
+                        text: err.message || 'Gagal menghapus preview',
+                        confirmButtonColor: '#d33',
+                        confirmButtonText: 'OK'
+                    });
+                });
         }
     });
 
@@ -451,6 +485,7 @@ function createImageItem(src, previewId) {
     item.appendChild(button);
     return item;
 }
+
 
 function updateButtonText(button) {
     const total = carousel.querySelectorAll(".carousel-item").length;
@@ -509,6 +544,15 @@ imageInput.addEventListener("change", e => {
                         img.src = '/' + data.preview.previewPicturePath;
                     }
                 });
+
+                Swal.fire({
+                    icon: 'success',
+                    title: window.locale.success,
+                    text: window.locale.preview_updated_success,
+                    confirmButtonColor: '#28a745',
+                    confirmButtonText: 'OK'
+                });
+
                 delete imageInput.dataset.replaceTarget;
                 delete imageInput.dataset.replaceId;
                 imageInput.value = "";
@@ -531,6 +575,15 @@ imageInput.addEventListener("change", e => {
                 if (addButton) carousel.insertBefore(item, addButton);
                 else carousel.appendChild(item);
                 renderAddButton();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: window.locale.success,
+                    text: window.locale.preview_added_success,
+                    confirmButtonColor: '#28a745',
+                    confirmButtonText: 'OK'
+                });
+
                 imageInput.value = "";
             });
     }

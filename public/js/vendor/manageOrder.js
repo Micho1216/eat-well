@@ -1,19 +1,11 @@
 const { orders, isNextWeek, trans } = window.orderData;
 
 const mealTypes = [
-    {
-        key: 'Morning',
-        label: trans.breakfast
-    },
-    {
-        key: 'Afternoon',
-        label: trans.lunch
-    },
-    {
-        key: 'Evening',
-        label: trans.dinner
-    }
+    { key: 'Morning', label: trans.breakfast },
+    { key: 'Afternoon', label: trans.lunch },
+    { key: 'Evening', label: trans.dinner }
 ];
+
 const statusClassMap = {
     Prepared: 'preparing',
     Delivered: 'delivering',
@@ -26,50 +18,89 @@ const searchInput = document.getElementById('search-input');
 const emptyMsg = document.getElementById('empty-msg');
 const packageFilter = document.getElementById('package-filter');
 
-/* --------- SIMPAN PERUBAHAN STATUS (untuk This Week) --------- */
 function updateMealStatus(select, orderId, slot) {
     const status = select.value;
     select.classList.remove('preparing', 'delivering', 'received');
     select.classList.add(statusClassMap[status]);
-    let url = `/delivery-status/${orderId}/${slot}`;
 
-    fetch(url, {
+    // Tampilkan loading biar user tahu sedang diproses
+    Swal.fire({
+        title: trans.loading || trans.processing,
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+    });
+
+    fetch(`/delivery-status/${orderId}/${slot}`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'X-CSRF-TOKEN': csrf
         },
-        body: JSON.stringify({
-            status
-        })
+        body: JSON.stringify({ status })
     })
         .then(r => r.ok ? r.json() : Promise.reject(r))
         .then(res => {
             if (!res.success) throw 'fail';
-            location.reload();
+
+            // ✅ Update data array frontend biar re-render sesuai status baru
+            const order = orders.find(o => o.id === orderId);
+            if (order) {
+                const today = new Date().toISOString().split('T')[0];
+                const ds = order.delivery_statuses.find(d =>
+                    d.slot === slot.toLowerCase() &&
+                    d.delivery_date.split('T')[0] === today
+                );
+                if (ds) {
+                    ds.status = status;
+                }
+            }
+
+            Swal.fire({
+                icon: 'success',
+                title: trans.status_updated || trans.status_updated_success,
+                text: trans.status_change_success || trans.status_update_saved,
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#28a745',
+                position: 'center',
+                showConfirmButton: false,
+                timer: 1000
+            });
+
+            // ⏱️ Tambahan ini yang penting: render ulang setelah update!
+            setTimeout(() => renderOrders(), 100);
         })
-        .catch(() => alert('Save failed'));
+        .catch(() => {
+            Swal.fire({
+                icon: 'error',
+                title: trans.status_update_failed || 'Gagal memperbarui status',
+                text: trans.try_again || 'Silakan coba lagi nanti.',
+                confirmButtonText: 'OK',
+                confirmButtonColor: '#dc3545',
+                position: 'center'
+            });
+        });
 }
 
-/* --------- POP‑UP CANCEL --------- */
-function attachCancelHandlers() { // <<< NEW
+
+
+/* --------- POP-UP CANCEL --------- */
+function attachCancelHandlers() {
     document.querySelectorAll('.btn-cancel').forEach(btn => {
         btn.addEventListener('click', () => {
             const id = btn.dataset.id;
             Swal.fire({
-                title: window.orderData.trans.are_you_sure,
-                text: window.orderData.trans.cancel_message,
+                title: trans.are_you_sure,
+                text: trans.cancel_message,
                 icon: 'warning',
                 showCancelButton: true,
-                confirmButtonText: window.orderData.trans.yes_cancel,
-                cancelButtonText: window.orderData.trans.no,
+                confirmButtonText: trans.yes_cancel,
+                cancelButtonText: trans.no,
                 reverseButtons: true,
                 confirmButtonColor: '#28a745',
                 cancelButtonColor: '#d33',
             }).then(r => {
                 if (r.isConfirmed) {
-                    let url2 = `/orders/${id}/cancel`;
-                    fetch(url2, {
+                    fetch(`/orders/${id}/cancel`, {
                         method: 'POST',
                         headers: {
                             'X-CSRF-TOKEN': csrf,
@@ -77,7 +108,20 @@ function attachCancelHandlers() { // <<< NEW
                         }
                     })
                         .then(res => {
-                            if (res.ok) location.reload();
+                            if (res.ok) {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: trans.canceled || trans.rejected_success,
+                                    text: trans.cancel_success || trans.order_rejected_success,
+                                    confirmButtonText: 'OK',
+                                    confirmButtonColor: '#28a745',
+                                    position: 'center',
+                                    showConfirmButton: true
+                                }).then(() => location.reload());
+
+                            } else {
+                                Swal.fire('Gagal', 'Gagal membatalkan order.', 'error');
+                            }
                         })
                         .catch(() => Swal.fire('Error', 'Network error', 'error'));
                 }
@@ -86,9 +130,8 @@ function attachCancelHandlers() { // <<< NEW
     });
 }
 
-/* --------- RENDER KARTU --------- */
+/* --------- RENDER ORDER KARTU --------- */
 function renderOrders() {
-    console.log("panggil dalem");
     const term = searchInput.value.trim().toLowerCase();
     const selectedPackage = packageFilter.value;
 
@@ -115,11 +158,12 @@ function renderOrders() {
                     deliveryMap[ds.slot] = ds.status;
                 }
             } catch (e) {
-                console.warn(window.orderData.trans.invalid_delivery_date, ds.delivery_date);
+                console.warn(trans.invalid_delivery_date, ds.delivery_date);
             }
         });
 
         let mealSections = '';
+
         if (!isNextWeek) {
             mealTypes.forEach(meal => {
                 const items = order.order_items.filter(i => i.package_time_slot === meal.key);
@@ -132,41 +176,61 @@ function renderOrders() {
 
                 const status = deliveryMap[meal.key.toLowerCase()] || 'Prepared';
 
-                mealSections +=
-                    `<div class="meal-box">
-                        <div class="meal-box-header">
-                            <span>${meal.label}</span>
-                            <select class="form-select form-select-sm meal-select ${statusClassMap[status]}"
-                                    onchange="updateMealStatus(this, ${order.id}, '${meal.key}')">
-                                <option value="Prepared" ${status === 'Prepared' ? 'selected' : ''}>${window.orderData.trans.prepared}</option>
-                                <option value="Delivered" ${status === 'Delivered' ? 'selected' : ''}>${window.orderData.trans.delivered}</option>
-                                <option value="Arrived" ${status === 'Arrived' ? 'selected' : ''}>${window.orderData.trans.arrived}</option>
-                            </select>
-                        </div>
-                        <div class="meal-entries">${entries}</div>
-                    </div>`;
+
+                let options = '';
+                let selectElement = '';
+
+                if (status === 'Prepared') {
+                    options = `
+        <option value="Prepared" selected>${trans.prepared}</option>
+        <option value="Delivered">${trans.delivered}</option>
+    `;
+                } else if (status === 'Delivered') {
+                    options = `
+        <option value="Delivered" selected>${trans.delivered}</option>
+        <option value="Arrived">${trans.arrived}</option>
+    `;
+                }
+
+                if (status !== 'Arrived') {
+                    selectElement = `
+        <select class="form-select form-select-sm meal-select ${statusClassMap[status]}"
+                onchange="updateMealStatus(this, ${order.id}, '${meal.key}')">
+            ${options}
+        </select>
+    `;
+                } else {
+                    selectElement = `
+        <span class="meal-status-text ${statusClassMap[status]}">${trans.arrived}</span>
+    `;
+                }
+
+                mealSections += `
+    <div class="meal-box">
+        <div class="meal-box-header">
+            <span>${meal.label}</span>
+            ${selectElement}
+        </div>
+        <div class="meal-entries">${entries}</div>
+    </div>`;
+
             });
         } else {
             order.order_items.forEach(it => {
                 if (selectedPackage !== 'all' && it.package.name !== selectedPackage) return;
-                mealSections +=
-                    `<div class="meal-entry ms-1 mb-1">
+                mealSections += `
+                    <div class="meal-entry ms-1 mb-1">
                         • ${it.package.name} (${it.quantity}x) — ${it.package_time_slot}
                     </div>`;
             });
         }
 
-        let cancelBtn = '';
-        if (isNextWeek) {
-            cancelBtn =
-                `<button class="btn btn-danger w-100 mt-3 btn-cancel"
-                    data-id="${order.id}">
-                    ${window.orderData.trans.decline_order}
-                </button>`;
-        }
+        const cancelBtn = isNextWeek
+            ? `<button class="btn btn-danger w-100 mt-3 btn-cancel" data-id="${order.id}">${trans.decline_order}</button>`
+            : '';
 
-        orderContainer.innerHTML +=
-            `<div class="col-12 col-md-6 col-lg-4 d-flex">
+        orderContainer.innerHTML += `
+            <div class="col-12 col-md-6 col-lg-4 d-flex">
                 <div class="card w-100">
                     <div class="card-body">
                         <div class="order-header">Order #INV${String(order.id).padStart(3, '0')}</div>
@@ -185,7 +249,7 @@ function renderOrders() {
     attachCancelHandlers();
 }
 
+/* --------- EVENT LISTENER --------- */
 searchInput.addEventListener('input', renderOrders);
 packageFilter.addEventListener('change', renderOrders);
-console.log("masuk");
 renderOrders();

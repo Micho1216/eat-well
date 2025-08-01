@@ -205,13 +205,20 @@
                                     step="0.01" min="0">
                             </div>
                         </div>
+                        <div class="mt-3">
+                            <label for="menuPDFPath" class="form-label">Upload PDF Menu</label>
+                            <div class="dropzone" id="menuDropzone">
+                                <input type="file" name="menuPDFPath" id="menuPDFPath">
+                            </div>
+                        </div>
 
-                        <div class="dropzone" id="menuDropzone">
-                            <input type="file" name="menuPDFPath" id="menuPDFPath">
+                        <div class="mt-3">
+                            <label for="imgPath" class="form-label">Upload Package Image</label>
+                            <div class="dropzone" id="imageDropzone">
+                                <input type="file" name="imgPath" id="imgPath">
+                            </div>
                         </div>
-                        <div class="dropzone" id="imageDropzone">
-                            <input type="file" name="imgPath" id="imgPath">
-                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary"
@@ -262,6 +269,12 @@
             dz_change_image: "{{ __('manage-catering-package.dz_change_image') }}",
             dz_drop_image: "{{ __('manage-catering-package.dz_drop_image') }}",
             dz_drop_files_here: "{{ __('manage-catering-package.dz_drop_files_here') }}",
+            confirm_delete: "{{ __('manage-catering-package.confirm_delete') }}",
+            cancel: "{{ __('manage-catering-package.cancel') }}",
+            package_saved_success: "{{ __('manage-catering-package.package_saved_success') }}",
+            preview_deleted_success: "{{ __('manage-catering-package.preview_deleted_success') }}",
+            preview_added_success: "{{ __('manage-catering-package.preview_added_success') }}",
+            preview_updated_success: "{{ __('manage-catering-package.preview_updated_success') }}"
         };
     </script>
 
