@@ -1,6 +1,7 @@
 body
 {
     background-color: rgb(199, 235, 183);
+    overflow-x: hidden;
 }
 
 .lexend {
