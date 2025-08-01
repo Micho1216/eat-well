@@ -98,8 +98,8 @@ class UserController extends Controller
         if ($request->hasFile('profilePicInput')) {
             $file = $request->file('profilePicInput');
             $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('asset/profile'), $filename);
-            $updated_user->profilePath = $filename;
+            $file->move(public_path('storage/profiles'), $filename);
+            $updated_user->profilePath = 'storage/profiles/'.$filename;
             logActivity('Successfully', 'Updated', "Profile picture {$updated_user->name}");
         }
 

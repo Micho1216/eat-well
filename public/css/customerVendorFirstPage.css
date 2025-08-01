@@ -7,18 +7,21 @@
 .content{
   margin-top: -28px;
 }
-.fix-margin {
-  margin-top: 0px;
-  top: 0;
-  left: 0;
-  width: 100vw !important;
-  height: 100vh !important;
+.content-2{
+  margin-top: -50px;
 }
 .content-1{
   background-image: url(../../asset/customer/customer-first-page/fruitVegs.png);
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+}
+.fix-margin {
+  margin-top: 0px;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
 }
 .account-setup-title
 {
@@ -41,8 +44,6 @@
   width: 100%;
   background-color: #1D3A2E;
 }
-
-
 .vendor-input-logo{
   font-size: 28px; 
   padding-left: 20px;

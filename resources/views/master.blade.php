@@ -140,7 +140,7 @@
                             $profilePath = Auth::user()->profilePath;
                         @endphp
 
-                        <img src="{{ $profilePath ? asset('asset/profile/' . basename($profilePath)) : asset('profile/no-profile.png') }}"
+                        <img src="{{ asset(Auth::user()->profilePath) }}"
                             alt="Profile Image" width="50" height="50" style="border-radius: 100%">
 
 

@@ -200,13 +200,10 @@
                                 @enderror
                             </div>
                         </div>
+                        <div class="col-12 col-md-8 align-self-center mx-auto mt-5">
+                            <button type="submit" class="btn btn-success" id='submit-button'>{{ __('vendor-first-page.continue') }}</button>
+                        </div>
                 </div>
-
-                <div class="col-12 col-md-8 align-self-center mx-auto mt-5">
-                    <button type="submit" class="btn btn-success" id='submit-button'>{{ __('vendor-first-page.continue') }}</button>
-                </div>
-
-
                 </form>
             </div>
         </div>

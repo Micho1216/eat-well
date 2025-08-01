@@ -20,7 +20,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /* ------------ Cascading selects ------------- */
+    const translationDataElement = document.getElementById("translation-data");
+    const provinceText = translationDataElement.dataset.provinceText;
+    const cityText = translationDataElement.dataset.cityText;
+    const districtText = translationDataElement.dataset.districtText;
+    const villageText = translationDataElement.dataset.villageText;
 
     const provinceSelect = document.getElementById('provinceSelect');
     const citySelect = document.getElementById('citySelect');
@@ -45,10 +49,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     (async () => {        
-        resetSelect(provinceSelect, 'Provinsi');
-        resetSelect(citySelect, 'Kota/Kabupaten');
-        resetSelect(districtSelect, 'Kecamatan');
-        resetSelect(villageSelect, 'Desa/Kelurahan');
+        resetSelect(provinceSelect, provinceText);
+        resetSelect(citySelect, cityText);
+        resetSelect(districtSelect, districtText);
+        resetSelect(villageSelect, villageText);
 
         $.ajax({
             url: "api/fetch-provinces",
@@ -56,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dataType: 'JSON',
             success: function (result) {
                 openSelect(provinceSelect);
-                provinceSelect.innerHTML = '<option value="" selected>Provinsi</option>';
+                provinceSelect.innerHTML = '<option value="" selected>'+provinceText+'</option>';
                 $.each(result, function(key, value){
                     provinceSelect.insertAdjacentHTML('beforeend', '<option value="' + value.id + '">' + value.name + '</option>');
                 })
@@ -68,9 +72,9 @@ document.addEventListener('DOMContentLoaded', () => {
     provinceSelect.addEventListener('change', async () => {
         var provinceId = provinceSelect.value;
 
-        resetSelect(citySelect, 'Kota/Kabupaten');
-        resetSelect(districtSelect, 'Kecamatan');
-        resetSelect(villageSelect, 'Desa/Kelurahan');
+        resetSelect(citySelect, cityText);
+        resetSelect(districtSelect, districtText);
+        resetSelect(villageSelect, villageText);
         $.ajax({
             url: "api/fetch-cities",
             type: "POST",
@@ -80,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dataType: 'JSON',
             success: function (result) {
                 openSelect(citySelect);
-                citySelect.innerHTML = '<option value="" selected>Kota/Kabupaten</option>';
+                citySelect.innerHTML = '<option value="" selected>'+cityText+'</option>';
                 $.each(result, function(key, value){
                     citySelect.insertAdjacentHTML('beforeend','<option value="'+ value.id + '">' + value.name +  '</option>');
                 });
@@ -91,8 +95,8 @@ document.addEventListener('DOMContentLoaded', () => {
     citySelect.addEventListener('change', async () => {
         var cityId = citySelect.value;
 
-        resetSelect(districtSelect, 'Kecamatan');
-        resetSelect(villageSelect, 'Desa/Kelurahan');
+        resetSelect(districtSelect, districtText);
+        resetSelect(villageSelect, villageText);
 
         $.ajax({
             url: "api/fetch-districts",
@@ -103,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dataType: 'JSON',
             success: function (result) {
                 openSelect(districtSelect);
-                districtSelect.innerHTML = '<option value"" selected>Kecamatan</option>';
+                districtSelect.innerHTML = '<option value"" selected>'+districtText+'</option>';
                 $.each(result, function(key, value){
                     districtSelect.insertAdjacentHTML('beforeend',
                         '<option value="' + value.id + '">' + value.name + '</option>'
@@ -116,7 +120,7 @@ document.addEventListener('DOMContentLoaded', () => {
     districtSelect.addEventListener('change', async() => {
         var districtId = districtSelect.value; 
 
-        resetSelect(villageSelect, 'Desa/Kelurahan');
+        resetSelect(villageSelect, villageText);
 
         $.ajax({
             url: "api/fetch-villages",
@@ -127,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dataType: 'JSON',
             success: function (result) {
                 openSelect(villageSelect);
-                villageSelect.innerHTML = '<option value="" selected>Desa/Kelurahan</option>';
+                villageSelect.innerHTML = '<option value="" selected>'+villageText+'</option>';
                 $.each(result, function(key, value){
                     villageSelect.insertAdjacentHTML('beforeend',
                         '<option value="' + value.id + '">' + value.name + '</option>'
