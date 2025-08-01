@@ -57,14 +57,14 @@
                     </div>
 
                     <div class="rating-and-number-sold-wrapper">
-                        <a href="{{ route('rate-and-review', $vendor->vendorId) }}" class="rate-review-button">
-                            <div class="rating-container">
-                                <span class="material-symbols-outlined star-icon">star</span>
-                                @if ($vendor->rating > 0)
+                        @if ($vendor->rating > 0)
+                            <a href="{{ route('rate-and-review', $vendor->vendorId) }}" class="rate-review-button">
+                                <div class="rating-container">
+                                    <span class="material-symbols-outlined star-icon">star</span>
                                     <span class="inter rating-and-sold">{{ $vendor->rating }}</span>
-                                @endif
-                            </div>
-                        </a>
+                                </div>
+                            </a>
+                        @endif
                         <div class="number-sold-container">
                             {{-- <span class="inter rating-and-sold">10k+</span>
                             <span class="inter sold-text">sold</span> --}}
@@ -337,8 +337,7 @@
             <p>Debug: Selected Address Jalan = {{ $selectedAddress->jalan ?? 'N/A' }}</p>
         </div> --}}
 
-        <a href="{{ route('payment.show') }}"
-            class="button-order inter" id="proceedToPaymentLink"
+        <a href="{{ route('payment.show') }}" class="button-order inter" id="proceedToPaymentLink"
             style="cursor: default; pointer-events: none; text-decoration: none;">
             <span class="order-message">{{ __('catering-detail.no_package_selected_yet') }}</span>
             <span class="package-count" style="display:none;"></span>

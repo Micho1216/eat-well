@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 
-class LoadCartRequest extends FormRequest
+class SetAddressRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,18 +23,11 @@ class LoadCartRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'vendor_id' => 'required|integer|exists:vendors,vendorId',
+            'address_id' => [
+                'required',
+                'integer',
+                'exists:addresses,addressId',
+            ],
         ];
-    }
-
-    /**
-     * Prepare the data for validation.
-     */
-    protected function prepareForValidation()
-    {
-        $this->merge([
-            'user_id' => Auth::id(),
-            'session_id' => session()->getId(),
-        ]);
     }
 }

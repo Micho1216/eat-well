@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileRequest;
+use App\Http\Requests\TopUpWellPayRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
-    public function topUpWellPay(Request $request)
+    public function topUpWellPay(TopUpWellPayRequest $request)
     {
         if (!Auth::check()) {
             return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
@@ -20,18 +21,6 @@ class UserController extends Controller
         $user = User::find(Auth::id());
 
         try {
-            // Validasi input dari request
-            $request->validate([
-                'amount' => 'required|integer|min:1000|max:20000000',
-                'password' => 'required|string',
-            ], [
-                'amount.required' => 'Top-up amount is required.',
-                'amount.integer' => 'Top-up amount must be a number.',
-                'amount.min' => 'The minimum top-up amount is Rp 1.000.',
-                'amount.max' => 'The maximum top-up amount is Rp 20.000.000.',
-                'password.required' => 'Please enter your password.',
-            ]);
-
             $amount = $request->input('amount');
             $password = $request->input('password');
 
