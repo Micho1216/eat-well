@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ImportPackageRequest;
 use App\Http\Requests\StorePackageRequest;
 use App\Http\Requests\UpdatePackageRequest;
 use Illuminate\Http\Request;
@@ -126,12 +127,8 @@ class PackageController extends Controller
         return redirect()->back()->with('success', 'Berhasil mengubah paket!');
     }
 
-    public function import(Request $request)
+    public function import(ImportPackageRequest $request)
     {
-        $request->validate([
-            'excel_file' => 'required|file|mimes:xlsx,csv'
-        ]);
-
         Excel::import(new PackagesImport, $request->file('excel_file'));
 
         return redirect()->back()->with('success', 'Packages imported successfully!');
@@ -139,6 +136,6 @@ class PackageController extends Controller
 
     public function manage_profile()
     {
-        
+
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\UpdateVendorPreviewRequest;
 use App\Http\Requests\UploadVendorPreviewRequest;
+use App\Http\Requests\VendorPreviewIndexRequest;
 use App\Models\Vendor;
 use App\Models\VendorPreview;
 use Illuminate\Http\Request;
@@ -11,7 +12,7 @@ use Illuminate\Support\Facades\Storage;
 
 class VendorPreviewController extends Controller
 {
-    public function index(Request $request)
+    public function index(VendorPreviewIndexRequest $request)
     {
         $vendorId = $request->query('vendorId');
         if (!$vendorId) {
