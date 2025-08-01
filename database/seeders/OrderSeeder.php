@@ -37,7 +37,7 @@ class OrderSeeder extends Seeder
 
                 $order = Order::factory()->create([
                     'vendorId' => $vendor->vendorId,
-                    'userId' => User::inRandomOrder()->first()->userId,
+                    'userId' => User::where('role', 'Customer')->inRandomOrder()->first()->userId,
                     'startDate' => $dates['start'],
                     'endDate' => $dates['end'],
                     'isCancelled' => $isCancelled,

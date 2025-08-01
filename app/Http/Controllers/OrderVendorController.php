@@ -43,7 +43,7 @@ class OrderVendorController extends Controller
         $order->save();
 
         // $order->orderItems()->delete();
-        $order->deliveryStatuses()->delete();
+        // $order->deliveryStatuses()->delete();
 
         return response()->json(['success' => true], 200);
     }
