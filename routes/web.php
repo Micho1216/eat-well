@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccountSetup\CustomerFirstPageController;
+use App\Http\Controllers\AddPasswordController;
 use App\Http\Controllers\AddressController;
 use App\Http\Controllers\AdminViewOrderController;
 use App\Http\Controllers\FavoriteController;
@@ -37,6 +38,7 @@ use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\VillageController;
+use App\Http\Middleware\CheckNoPasswordExist;
 
 Route::post('/lang', LanguageController::class);
 
@@ -44,6 +46,8 @@ use App\Http\Controllers\VerifyOtpController;
 use App\Http\Controllers\illageController;
 use App\Http\Middleware\AccountSetup\EnsureAddressExists;
 use App\Http\Middleware\AccountSetup\EnsureNoAddressExist;
+use App\Http\Middleware\EnsureNoPasswordExist;
+use App\Http\Middleware\EnsurePasswordExists;
 
 /* --------------------
      GUEST ROUTES
@@ -103,6 +107,8 @@ Route::middleware(['auth'])->group(function () {
 
     Route::post('/manage-two-factor', [ManageTwoFactorController::class, 'index'])->name('manage-two-factor');
 
+    Route::get('/add-password', [AddPasswordController::class, 'index'])->name('view-add-password')->middleware(EnsureNoPasswordExist::class);
+    Route::post('/add-password', [AddPasswordController::class, 'store'])->name('store-password')->middleware(EnsureNoPasswordExist::class);
 });
 /* ---------------------
     CUSTOMER ROUTES
@@ -122,7 +128,7 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
 
     // Customer Home
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::post('/topup', [UserController::class, 'topUpWellPay'])->name('wellpay.topup');
+    Route::post('/topup', [UserController::class, 'topUpWellPay'])->middleware(EnsurePasswordExists::class)->name('wellpay.topup');
 
     // Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
 
