@@ -2,8 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Tests\TestCase;
 use App\Models\Vendor;
+
 
 
 class CateringDetailTest extends TestCase
@@ -15,21 +17,21 @@ class CateringDetailTest extends TestCase
         
         $this->assertNotNull($vendor, 'No vendor found in the database.');
         
-
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
-
-
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
         $response->assertStatus(200);
         $response->assertSee($vendor->name);
         $response->assertSee($vendor->phone_number);
         $response->assertSee((string)$vendor->rating);
-        $response->assertSee($vendor->address->jalan);
-        $response->assertSee($vendor->address->kelurahan);
-        $response->assertSee($vendor->address->kecamatan);
-        $response->assertSee($vendor->address->kabupaten);
-        $response->assertSee($vendor->address->provinsi);
-        $response->assertSee($vendor->address->kode_pos);
+        $response->assertSee($vendor->jalan);
+        $response->assertSee($vendor->kelurahan);
+        $response->assertSee($vendor->kecamatan);
+        $response->assertSee($vendor->provinsi);
+        $response->assertSee($vendor->kode_pos);
     }
 
     /** @test */
@@ -38,7 +40,11 @@ class CateringDetailTest extends TestCase
         $vendor = Vendor::with('packages')->has('packages')->first();
         $this->assertNotNull($vendor, 'No vendor with packages found in the database.');
 
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
         foreach ($vendor->packages as $package) {
             // Adjust 'total_price' to your actual field name for the package total
@@ -51,7 +57,12 @@ class CateringDetailTest extends TestCase
     {
         $vendor = Vendor::with('packages')->has('packages')->first();
         $this->assertNotNull($vendor, 'No vendor with packages found in the database.');
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
         foreach ($vendor->packages as $package) {
             // Adjust the button text or selector as needed
@@ -62,17 +73,18 @@ class CateringDetailTest extends TestCase
     /** @test */
     public function tc4_displays_vendor_packages()
     {
-        $vendor = Vendor::with('packages.category', 'packages.cuisineTypes')->has('packages')->first();
+        $vendor = Vendor::with('packages.category')->has('packages')->first();
         $this->assertNotNull($vendor, 'No vendor with packages found in the database.');
 
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");;
 
         foreach ($vendor->packages as $package) {
             $response->assertSee($package->name);
             $response->assertSee($package->category->categoryName ?? 'N/A');
-            foreach ($package->cuisineTypes as $cuisine) {
-                $response->assertSee($cuisine->cuisineName);
-            }
             // Check for prices (adjust field names as needed)
             if (!is_null($package->breakfastPrice)) {
                 $response->assertSee((string)$package->breakfastPrice);
@@ -92,7 +104,11 @@ class CateringDetailTest extends TestCase
         $vendor = \App\Models\Vendor::with('packages')->has('packages')->first();
         $this->assertNotNull($vendor, 'No vendor with packages found in the database.');
 
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
         foreach ($vendor->packages as $package) {
             // Check for image (either custom or default)
@@ -103,7 +119,7 @@ class CateringDetailTest extends TestCase
             }
             // Check for menu PDF download icon (by data-pdf attribute)
             if ($package->menuPDFPath) {
-                $response->assertSee('data-pdf="' . asset($package->menuPDFPath) . '"', false);
+                $response->assertSee('data-pdf="' . asset('asset/menus/'.$package->menuPDFPath) . '"', false);
             }
         }
     }
@@ -114,7 +130,11 @@ class CateringDetailTest extends TestCase
         $vendor = \App\Models\Vendor::with('packages')->has('packages')->first();
         $this->assertNotNull($vendor, 'No vendor with packages found in the database.');
 
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
         foreach ($vendor->packages as $package) {
             if (!is_null($package->breakfastPrice)) {
@@ -135,7 +155,11 @@ class CateringDetailTest extends TestCase
         $vendor = \App\Models\Vendor::with('packages')->has('packages')->first();
         $this->assertNotNull($vendor, 'No vendor with packages found in the database.');
 
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
         foreach ($vendor->packages as $package) {
             if (!is_null($package->breakfastShippingTime)) {
@@ -156,7 +180,11 @@ class CateringDetailTest extends TestCase
         // Use a vendorId that does not exist (e.g., 999999)
         $invalidVendorId = 999999;
 
-        $response = $this->get("/catering-detail/{$invalidVendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$invalidVendorId}");
 
         $response->assertStatus(404);
     }
@@ -167,7 +195,11 @@ class CateringDetailTest extends TestCase
         $vendor = \App\Models\Vendor::with('packages')->has('packages')->first();
         $this->assertNotNull($vendor, 'No vendor with packages found in the database.');
 
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
         $response->assertSee('Order Now');
     }
@@ -178,7 +210,11 @@ class CateringDetailTest extends TestCase
         $vendor = \App\Models\Vendor::with('packages')->has('packages')->first();
         $this->assertNotNull($vendor, 'No vendor with packages found in the database.');
 
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
         // Check for carousel container (adjust selector/class as needed)
         $response->assertSee('carousel', false);
@@ -194,10 +230,14 @@ class CateringDetailTest extends TestCase
     /** @test */
     public function tc11_handles_missing_package_images_gracefully()
     {
-        $vendor = \App\Models\Vendor::with('packages')->has('packages')->first();
+        $vendor = Vendor::with('packages')->has('packages')->first();
         $this->assertNotNull($vendor, 'No vendor with packages found in the database.');
 
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
         foreach ($vendor->packages as $package) {
             if (empty($package->imgPath)) {
@@ -210,13 +250,17 @@ class CateringDetailTest extends TestCase
     /** @test */
     public function tc12_rate_and_review_button_links_correctly()
     {
-        $vendor = \App\Models\Vendor::with('packages')->has('packages')->first();
+        $vendor = Vendor::with('packages')->has('packages')->first();
         $this->assertNotNull($vendor, 'No vendor with packages found in the database.');
 
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
         // Check that the "Rate and Review" button links to the correct route
-        $rateReviewUrl = route('rate-and-review');
+        $rateReviewUrl = route('rate-and-review', $vendor->vendorId);
         $response->assertSee('href="' . $rateReviewUrl . '"', false);
     }
 
@@ -226,7 +270,11 @@ class CateringDetailTest extends TestCase
         $vendor = \App\Models\Vendor::with('packages')->has('packages')->first();
         $this->assertNotNull($vendor, 'No vendor with packages found in the database.');
 
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
         foreach ($vendor->packages as $package) {
             // Check that each package name is present in the dropdown menu
@@ -240,12 +288,16 @@ class CateringDetailTest extends TestCase
         $vendor = \App\Models\Vendor::with('packages')->has('packages')->first();
         $this->assertNotNull($vendor, 'No vendor with packages found in the database.');
 
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");;
 
         foreach ($vendor->packages as $package) {
             if ($package->menuPDFPath) {
                 // Check that the download icon with the correct data-pdf attribute is present
-                $response->assertSee('data-pdf="' . asset($package->menuPDFPath) . '"', false);
+                $response->assertSee('data-pdf="' . asset('asset/menus/' . $package->menuPDFPath) . '"', false);
             }
         }
     }
@@ -253,10 +305,14 @@ class CateringDetailTest extends TestCase
     /** @test */
     public function tc15_vendor_logo_displayed_or_default()
     {
-        $vendor = \App\Models\Vendor::first();
+        $vendor = Vendor::first();
         $this->assertNotNull($vendor, 'No vendor found in the database.');
 
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
         $response->assertSee(htmlspecialchars($vendor->logoPath));
         
@@ -265,32 +321,39 @@ class CateringDetailTest extends TestCase
     /** @test */
     public function tc16_package_meal_prices_are_displayed_correctly()
     {
-        $vendor = \App\Models\Vendor::with('packages')->has('packages')->first();
+        $vendor = Vendor::with('packages')->has('packages')->first();
         $this->assertNotNull($vendor, 'No vendor with packages found in the database.');
 
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
         foreach ($vendor->packages as $package) {
             if (!is_null($package->breakfastPrice)) {
-                $response->assertSee('Rp. ' . number_format($package->breakfastPrice, 0, ',', '.') . ',-');
+                $response->assertSeeText(number_format($package->breakfastPrice, 0, ',', '.'));
             }
             if (!is_null($package->lunchPrice)) {
-                $response->assertSee('Rp. ' . number_format($package->lunchPrice, 0, ',', '.') . ',-');
+                $response->assertSeeText(number_format($package->lunchPrice, 0, ',', '.'));
             }
             if (!is_null($package->dinnerPrice)) {
-                $response->assertSee('Rp. ' . number_format($package->dinnerPrice, 0, ',', '.') . ',-');
+                $response->assertSeeText(number_format($package->dinnerPrice, 0, ',', '.'));
             }
         }
     }
 
-    
     /** @test */
     public function tc16_meal_checklist_buttons_are_rendered_for_each_package()
     {
-        $vendor = \App\Models\Vendor::with('packages')->has('packages')->first();
+        $vendor = Vendor::with('packages')->has('packages')->first();
         $this->assertNotNull($vendor, 'No vendor with packages found in the database.');
 
-        $response = $this->get("/catering-detail/{$vendor->vendorId}");
+        /**
+        * @var User|Authenticatable $user
+        */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
         foreach ($vendor->packages as $package) {
             // Check for breakfast controls

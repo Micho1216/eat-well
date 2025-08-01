@@ -9,6 +9,15 @@
 @endsection
 
 @section('content')
+    <div id="translation-data"
+        data-save-text = "{{ __('customer/manage-profile.save') }}"
+        data-cancel-text = "{{ __('customer/manage-profile.cancel') }}"
+        data-edit-text = "{{ __('customer/manage-profile.edit') }}"
+        data-pass-fill-all-text= "{{ __('customer/manage-profile.pass_fill_all') }}"
+        data-pass-no-match-text= "{{ __('customer/manage-profile.pass_no_match') }}"
+        data-pass-cha-text= "{{ __('customer/manage-profile.pass_cha') }}"
+        data-but-cha-text= "{{ __('customer/manage-profile.but_cha') }}">
+    </div>  
     <div class="container container-custom">
         <div class="left-panel outer-panel">
             <div class="lexend font-medium manage-profile">
@@ -71,7 +80,6 @@
                     </li>
                 @endif
             </ul>
-
         </div>
 
 
@@ -208,7 +216,6 @@
                                             <label for="female"
                                                 class="gender-label lexend font-medium text-black">{{ __('manage-profile.female') }}</label>
                                         @endif
-
                                     </div>
 
 
@@ -262,7 +269,6 @@
 
                 <hr class="section-divider">
                 <div id="management-security" class="management-section mt-4">
-
                     <div class="security-manage">
                         <p class="lexend font-medium text-black title">{{ __('manage-profile.security_management') }}</p>
                         <p class="inter font-regular text-black description">{{ __('manage-profile.subtitle') }}</p>

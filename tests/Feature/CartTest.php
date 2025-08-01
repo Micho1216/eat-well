@@ -737,7 +737,8 @@ class CartTest extends TestCase
                 ],
             ],
         ])->assertStatus(200);
-
+        
+        $address = Address::query()->where('userId', $user->userId)->where('is_default', 1)->first();
         // Checkout with correct password but not enough balance
         $payload = [
             'vendor_id' => $package->vendorId,
@@ -745,6 +746,15 @@ class CartTest extends TestCase
             'start_date' => now()->addWeek()->startOfWeek()->format('Y-m-d'),
             'end_date' => now()->addWeek()->startOfWeek()->addDays(6)->format('Y-m-d'),
             'password' => 'password',
+            'provinsi' => $address->provinsi,
+            'kota' => $address->kota,
+            'kabupaten' => $address->kota, // Assuming 'kota' maps to 'kabupaten' in your validation
+            'kecamatan' => $address->kecamatan,
+            'kelurahan' => $address->kelurahan,
+            'kode_pos' => $address->kode_pos,
+            'jalan' => $address->jalan,
+            'recipient_name' => $address->recipient_name,
+            'recipient_phone' => $address->phone_number,
         ];
 
         $response = $this->post('/checkout', $payload);

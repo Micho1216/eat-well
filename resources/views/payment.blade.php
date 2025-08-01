@@ -8,9 +8,34 @@
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@1" rel="stylesheet" />
 @endsection
 
+@php
+    use Carbon\Carbon;
+    Carbon::setLocale(app()->getLocale());
+@endphp
+
 @section('content')
+    <div id="translation-data"
+        data-wellpay-balance-text="{{ __('customer/payment.wellpay_balance') }}"
+        data-wellpay-confirm-btn="{{ __('customer/payment.confirm') }}"
+        data-select-paymeth-text="{{ __('customer/payment.select_paymeth') }}"
+        data-no-paymeth-text="{{ __('customer/payment.no_paymeth') }}"
+        data-missing-order-text="{{ __('customer/payment.missing_order') }}"
+        data-unknown-error-text="{{ __('customer/payment.unknown_error') }}"
+        data-checkout-failed-text="{{ __('customer/payment.checkout_failed') }}"
+        data-wellpay-insufficient-text="{{ __('customer/payment.wellpay_insufficient') }}"
+        data-wellpay-format-error-text="{{ __('customer/payment.wellpay_format_error') }}"
+        data-insufficient-wellpay-balance-text="{{ __('customer/payment.insufficient_wellpay_balance') }}"
+        data-your-balance-text="{{ __('customer/payment.your_balance')}}"
+        data-amount-pay-text="{{ __('customer/payment.amount_pay') }}"
+        data-retrieve-wellpay-balance-text="{{ __('customer/payment.retrieve_wellpay_balance') }}"
+        data-retrieve-check-connection-text="{{ __('customer/payment.retrieve_check_connection') }}"
+        data-enter-pass-text="{{ __('customer/payment.enter_pass')}}"
+        data-wellpay-cancel-text="{{ __('customer/payment.wellpay_cancel') }}"
+        data-continue-text="{{ __('customer/payment.continue')}}"
+        >
+    </div>
     <div class="container">
-        <h1 class="lexend font-semi-bold text-white your-order mt-3">Your Order</h1>
+        <h1 class="lexend font-semi-bold text-white your-order mt-3">{{ __('customer/payment.your_order') }}</h1>
         <h4 class= "jalan mb-1">
             <span class="material-symbols-outlined location-icon">pin_drop</span>
             <span class="lexend font-regular text-white">{{ $selectedAddress->jalan }}, {{ $selectedAddress->kelurahan }}, {{ $selectedAddress->kecamatan }}, {{ $selectedAddress->kota }}, {{ $selectedAddress->provinsi }}, {{ $selectedAddress->kode_pos }}</span>
@@ -40,15 +65,16 @@
             <meta name="csrf-token" content="{{ csrf_token() }}">
 
             <div class="orderdet">
-                <p class="lexend font-semibold text-white judul">Order Detail</p>
+                <p class="lexend font-semibold text-white judul">{{ __('customer/payment.order_detail') }}</p>
             </div>
             <div class="detail">
-                <p class="lexend font-medium text-black que">Active Period:</p>
-                <p class="lexend font-bold text-black ans">{{ $startDate }} until {{ $endDate }}</p>
+                <p class="lexend font-medium text-black que">{{ __('customer/payment.active_period') }}:</p>
+                <p class="lexend font-bold text-black ans">{{ $startDate }} {{ __('customer/payment.until') }} {{ $endDate }}</p>
             </div>
             {{-- <div class="detail">
-                <p class="lexend font-medium text-black que">Order Date & Time:</p>
-                <p class="lexend font-bold text-black ans">{{ \Carbon\Carbon::now()->format('h:i A || D, d M Y') }}</p>
+                <p class="lexend font-medium text-black que">{{ __('customer/payment.order_date_time') }}:</p>
+                {{-- <p class="lexend font-bold text-black ans">06:00 AM Sat, 01 May 2025</p> --}}
+                <p class="lexend font-bold text-black ans">{{ Carbon::now()->translatedFormat('H:i || D, d M Y') }}</p>
             </div> --}}
             <hr
                 style="height: 1.5px; background-color:black; opacity:100%; border: none; margin-left: 20px; margin-right: 20px;">
@@ -60,13 +86,13 @@
                         <div class="row align-items-start">
                             <div class="col text-left pack-list">
                                 @if ($packageDetail['breakfast_qty'] > 0)
-                                    <p>{{ $packageDetail['breakfast_qty'] }}<span>x </span>Breakfast</p>
+                                    <p>{{ $packageDetail['breakfast_qty'] }}<span>x </span>{{ __('customer/payment.breakfast') }}</p>
                                 @endif
                                 @if ($packageDetail['lunch_qty'] > 0)
-                                    <p>{{ $packageDetail['lunch_qty'] }}<span>x </span>Lunch</p>
+                                    <p>{{ $packageDetail['lunch_qty'] }}<span>x </span>{{ __('customer/payment.lunch') }}</p>
                                 @endif
                                 @if ($packageDetail['dinner_qty'] > 0)
-                                    <p>{{ $packageDetail['dinner_qty'] }}<span>x </span>Dinner</p>
+                                    <p>{{ $packageDetail['dinner_qty'] }}<span>x </span>{{ __('customer/payment.dinner') }}</p>
                                 @endif
                             </div>
                             <div class="col pack-price text-right">
@@ -88,7 +114,7 @@
             <hr
                 style="height: 1.5px; background-color:black; opacity:100%; border: none; margin-left: 20px; margin-right: 20px;">
             <div class="payment-meth">
-                <p class="inter font-semibold text-black detail pack-name mb-0">Payment Method</p>
+                <p class="inter font-semibold text-black detail pack-name mb-0">{{ __('customer/payment.payment_method') }}</p>
                 <div class="button-payment lexend font-medium text-black">
                     @foreach ($paymentMethod as $payment)
                         <div class="form-check m-0">
@@ -103,7 +129,7 @@
                         <input class="form-check-input radio-custom" type="radio" name="payment-button" id="wellpay"
                             value="1">
                         <label class="form-check-label" for="wellpay">
-                            Wellpay
+                            WellPay
                         </label>
                     </div>
                     <div class="form-check m-0">
@@ -130,33 +156,42 @@
             </div>
         </div>
         <div class="pay-button">
-            <button type="button" class="inter font-semibold text-white pay-btn" id="mainPayButton">Pay</button>
+            <button type="button" class="inter font-semibold text-white pay-btn" id="mainPayButton">{{ __('customer/payment.pay_btn') }}</button>
         </div>
     </div>
 
     <div id="qrisPopup" class="popup-overlay">
         <div class="popup-content" style="width: fit-content;">
-            <h2>Pay Now</h2>
+            <h2>{{ __('customer/payment.pay_now') }}</h2>
             <div class="qr-code-container">
                 <img src="" alt="QR Code" id="qrCodeImage">
             </div>
-            <p class="timer">Expires in <span id="countdownTimer">00:59</span></p>
+            <p class="timer" ><span id="expiresInMess">{{ __('customer/payment.expires_in') }}</span><span id="countdownTimer">00:59</span></p>
             <div class="d-flex">
-                <button class="popup-button download-qris me-3" id="downloadQrisBtn">Download QRIS</button>
-                <button class="popup-button done" id="doneBtn">Done</button>
+                <button class="popup-button download-qris me-3" id="downloadQrisBtn">{{ __('customer/payment.download') }} QRIS</button>
+                <button class="popup-button done" id="doneBtn">{{ __('customer/payment.done') }}</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="qrisPopupCancelled" class="popup-overlay">
+        <div class="popup-content" style="width: fit-content;">
+            <h6>{{ __('customer/payment.expired_qris') }}<h6>
+            <div class="d-flex">
+                <button class="popup-button download-qris me-3" id="closeBtn">{{ __('customer/payment.close') }}</button>
             </div>
         </div>
     </div>
 
     <div id="confirmationPopup" class="popup-overlay">
         <div class="popup-content" style="width: fit-content;">
-            <p class="inter font-semibold", style="color: red; font-size:20px">Warning</p>
+            <p class="inter font-semibold", style="color: red; font-size:20px">{{ __('customer/payment.warning') }}</p>
             <p style="font-weight:600; color:#222; text-align:center; margin-bottom:24px;">
-                Are you sure you want to proceed with this payment?
+                {{ __('customer/payment.warning_content') }}
             </p>
             <button id="confirmBtn" class="popup-button"
                 style="background:#E77133; color:white; border:none; border-radius:24px; padding:12px 32px; font-size:18px; font-weight:500; box-shadow:0 2px 6px #0001;">
-                Confirm Payment
+                {{ __('customer/payment.confirm_va') }}
             </button>
         </div>
     </div>
@@ -165,24 +200,24 @@
         <div class="popup-content" style="width: fit-content">
             {{-- Stage 1: Initial Confirmation --}}
             <div id="wellpayStage1" class="text-center">
-                <p class="inter font-semibold" style="color: green; font-size:20px">Confirm Wellpay Payment</p>
+                <p class="inter font-semibold" style="color: green; font-size:20px">{{ __('customer/payment.confirm_wellpay') }}</p>
                 <p id="wellpayBalanceText" style="font-weight:400; color:#222; text-align:center; margin-bottom:12px;">
-                    Your current Wellpay balance is: Rp X.XXX.XXX,-
+                    {{ __('customer/payment.wellpay_balance') }}: Rp X.XXX.XXX,-
                 </p>
                 <p style="font-weight:400; color:#222; text-align:center; margin-bottom:24px;">
-                    Are you sure you want to pay with Wellpay?
+                    {{ __('customer/payment.wellpay_yousure') }}
                 </p>
             </div>
 
             {{-- Stage 2: Password Input (Hidden by default) --}}
             <div id="wellpayStage2" style="display: none;">
-                <p class="inter font-semibold" style="color: green; font-size:20px">Enter Your Password</p>
+                <p class="inter font-semibold" style="color: green; font-size:20px">{{ __('customer/payment.enter_pass') }}</p>
                 <p id="wellpayAmountToPay" style="font-weight:400; color:#222; text-align:center; margin-bottom:12px;">
-                    Total to pay: Rp {{ number_format($totalOrderPrice, 0, ',', '.') }}
+                    {{ __('customer/payment.amount_pay') }}: Rp {{ number_format($totalOrderPrice, 0, ',', '.') }}
                 </p>
                 <div class="mb-3">
-                    <label for="wellpayPasswordInput" class="form-label visually-hidden">Password</label>
-                    <input type="password" class="form-control" id="wellpayPasswordInput" placeholder="Enter your account's password">
+                    <label for="wellpayPasswordInput" class="form-label visually-hidden">{{ __('customer/payment.pass_label') }}</label>
+                    <input type="password" class="form-control" id="wellpayPasswordInput" placeholder= "{{ __('customer/payment.acc_pass') }}">
                     <div id="wellpayPasswordError" class="text-danger mt-1" style="display: none;"></div>
                 </div>
             </div>
@@ -192,11 +227,11 @@
             <div class="d-flex justify-content-center">
                 <button id="wellpayCancelBtn" class="popup-button me-3 mt-0"
                     style="background:#f44336; color:white; border:none; border-radius:10px; padding:5px 32px; font-size:18px; font-weight:500; box-shadow:0 2px 6px #0001;">
-                    Cancel
+                    {{ __('customer/payment.cancel') }}
                 </button>
                 <button id="wellpayConfirmBtn" class="popup-button mt-0 d-flex align-items-center justify-content-center"
                     style="background:#4CAF50; color:white; border:none; border-radius:10px; padding:5px 32px; font-size:18px; font-weight:500; box-shadow:0 2px 6px #0001;">
-                    Confirm
+                    {{ __('customer/payment.confirm') }}
                 </button>
             </div>
         </div>
@@ -205,18 +240,25 @@
     <div id="successPopup" class="popup-overlay">
         <div class="popup-content" style="width: fit-content">
             <p style="font-weight:600; color:#222; text-align:center; margin-bottom:24px;">
-                Successfully added to your subscription. Thank you for your purchase.
+                {{ __('customer/payment.success_desc') }}
             </p>
+<<<<<<< HEAD
             <a href={{route('order-history')}} id="backHomeBtn" class="popup-button"
                 style="background:#E77133; color:white; border:none; border-radius:24px; padding:12px 32px; font-size:18px; font-weight:500; box-shadow:0 2px 6px #0001; text-decoration: none;">
                 See my order
             </a>
+=======
+            <button id="backHomeBtn" class="popup-button"
+                style="background:#E77133; color:white; border:none; border-radius:24px; padding:12px 32px; font-size:18px; font-weight:500; box-shadow:0 2px 6px #0001;">
+                {{ __('customer/payment.back_btn') }}
+            </button>
+>>>>>>> ab5c247a20e2ee4830ca9f06fb9390418523c08c
         </div>
     </div>
 
     <div id="customMessageBox" class="message-box-overlay">
         <div class="message-box-content">
-            <p id="messageBoxText">Please select a payment method.</p>
+            <p id="messageBoxText">{{ __('customer/payment.select_payment') }}</p>
             <button id="messageBoxOkBtn">OK</button>
         </div>
     </div>
