@@ -364,6 +364,21 @@ document.getElementById("packageForm").addEventListener("submit", function (e) {
     const form = e.target;
     const formData = new FormData(form);
 
+    const breakfast = parseFloat(form.elements['breakfastPrice'].value) || 0;
+    const lunch = parseFloat(form.elements['lunchPrice'].value) || 0;
+    const dinner = parseFloat(form.elements['dinnerPrice'].value) || 0;
+
+    if (breakfast <= 0 && lunch <= 0 && dinner <= 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: window.locale?.failed,
+            text: window.locale?.missing_price_warning,
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
+
     if (menuDropzone.getAcceptedFiles().length > 0) {
         formData.append("menuPDFPath", menuDropzone.getAcceptedFiles()[0]);
     }
@@ -403,7 +418,12 @@ document.getElementById("packageForm").addEventListener("submit", function (e) {
         })
         .catch(err => {
             console.error("Gagal:", err);
-            alert("Ada error waktu simpan paket");
+            Swal.fire({
+                icon: 'error',
+                title: window.locale?.failed,
+                text: window.locale?.general_error,
+                confirmButtonColor: '#d33'
+            });
         });
 });
 

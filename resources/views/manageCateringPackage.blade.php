@@ -201,8 +201,7 @@
                             <div class="col">
                                 <label for="averageCalories"
                                     class="form-label">{{ __('manage-catering-package.average_calory') }}</label>
-                                <input type="number" name="averageCalories" id="averageCalories" class="form-control"
-                                    step="0.01" min="0">
+                                <input type="number" name="averageCalories" id="averageCalories" class="form-control" step="0.01" min="1" required>
                             </div>
                         </div>
                         <div class="mt-3">
@@ -274,7 +273,10 @@
             package_saved_success: "{{ __('manage-catering-package.package_saved_success') }}",
             preview_deleted_success: "{{ __('manage-catering-package.preview_deleted_success') }}",
             preview_added_success: "{{ __('manage-catering-package.preview_added_success') }}",
-            preview_updated_success: "{{ __('manage-catering-package.preview_updated_success') }}"
+            preview_updated_success: "{{ __('manage-catering-package.preview_updated_success') }}",
+            failed: "{{ __('manage-catering-package.failed') }}",
+            general_error: "{{ __('manage-catering-package.general_error') }}",
+            missing_price_warning: "{{ __('manage-catering-package.missing_price_warning') }}"
         };
     </script>
 

@@ -71,4 +71,8 @@ return [
 
     'preview_added_success' => 'Pratinjau berhasil ditambahkan',
     'preview_updated_success' => 'Pratinjau berhasil diperbarui',
+
+    'failed' => 'Gagal',
+    'general_error' => 'Terjadi kesalahan saat menyimpan data. Coba lagi nanti.',
+    'missing_price_warning' => 'Minimal salah satu harga (sarapan, makan siang, atau makan malam) harus diisi.'
 ];

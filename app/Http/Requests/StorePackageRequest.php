@@ -21,7 +21,16 @@ class StorePackageRequest extends FormRequest
             'categoryId' => 'required|integer|exists:package_categories,categoryId',
             'name' => 'required|string|max:255',
 
-            'averageCalories' => 'nullable|numeric|gt:0',
+            'averageCalories' => [
+                'required',
+                'filled',
+                'numeric',
+                function ($attribute, $value, $fail) {
+                    if ((float) $value < 1) {
+                        $fail('Average Calories harus minimal 1.');
+                    }
+                }
+            ],
             'breakfastPrice' => 'nullable|numeric|gt:0',
             'lunchPrice' => 'nullable|numeric|gt:0',
             'dinnerPrice' => 'nullable|numeric|gt:0',

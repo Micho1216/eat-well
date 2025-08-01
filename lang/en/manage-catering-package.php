@@ -67,5 +67,8 @@ return [
     'preview_deleted_success' => 'Preview deleted successfully',
     'preview_added_success' => 'Preview has been successfully added',
     'preview_updated_success' => 'Preview has been successfully updated',
+    'failed' => 'Failed',
+    'general_error' => 'An error occurred while saving the data. Please try again later.',
+    'missing_price_warning' => 'At least one price (breakfast, lunch, or dinner) must be filled in.'
 
 ];
