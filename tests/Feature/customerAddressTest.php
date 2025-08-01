@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
-class AddressManagementTest extends TestCase
+class CustomerAddressTest extends TestCase
 {
     use RefreshDatabase;
 
