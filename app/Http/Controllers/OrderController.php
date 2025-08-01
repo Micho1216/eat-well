@@ -41,7 +41,7 @@ class OrderController extends Controller
 
         $orders = Order::with(['orderItems.package', 'vendor', 'vendorReview'])
             ->where('userId', $userId)
-            ->latest('endDate')
+            // ->latest('endDate')
             ->latest()
             ->get();
 

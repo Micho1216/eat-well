@@ -73,7 +73,7 @@
             </div>
             {{-- <div class="detail">
                 <p class="lexend font-medium text-black que">{{ __('customer/payment.order_date_time') }}:</p>
-                {{-- <p class="lexend font-bold text-black ans">06:00 AM Sat, 01 May 2025</p> --}}
+                <p class="lexend font-bold text-black ans">06:00 AM Sat, 01 May 2025</p>
                 <p class="lexend font-bold text-black ans">{{ Carbon::now()->translatedFormat('H:i || D, d M Y') }}</p>
             </div> --}}
             <hr
@@ -242,17 +242,10 @@
             <p style="font-weight:600; color:#222; text-align:center; margin-bottom:24px;">
                 {{ __('customer/payment.success_desc') }}
             </p>
-<<<<<<< HEAD
             <a href={{route('order-history')}} id="backHomeBtn" class="popup-button"
                 style="background:#E77133; color:white; border:none; border-radius:24px; padding:12px 32px; font-size:18px; font-weight:500; box-shadow:0 2px 6px #0001; text-decoration: none;">
                 See my order
             </a>
-=======
-            <button id="backHomeBtn" class="popup-button"
-                style="background:#E77133; color:white; border:none; border-radius:24px; padding:12px 32px; font-size:18px; font-weight:500; box-shadow:0 2px 6px #0001;">
-                {{ __('customer/payment.back_btn') }}
-            </button>
->>>>>>> ab5c247a20e2ee4830ca9f06fb9390418523c08c
         </div>
     </div>
 
