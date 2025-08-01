@@ -60,6 +60,7 @@ return [
     'Prepared' => 'Prepared',
     'Delivered' => 'Deliverd',
     'Arrived' => 'Arrived',
+    'Cancelled' => 'Cancelled',
 
     // detail item card
     'total_order' => 'Total order',

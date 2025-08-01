@@ -60,6 +60,7 @@ return [
     'Prepared' => 'Disiapkan',
     'Delivered' => 'Dikirim',
     'Arrived' => 'Tiba',
+    'Cancelled' => 'Dibatalkan',
 
     // detail item card
     'total_order' => 'Total pesanan',
