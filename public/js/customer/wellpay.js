@@ -143,7 +143,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Event listener to open Custom Modal 1
     if (openCustomModal1Btn) {
-        openCustomModal1Btn.addEventListener("click", function () {
+
+        var hasPassword = document.querySelector('meta[name="has-password"]')?.content;
+        var pressedTopup = document.querySelector('meta[name="pressed-topup"]')?.content;
+
+        if(pressedTopup == 1){
             showModal(customModal1);
             if (topupInput) {
                 topupInput.value = "";
@@ -153,6 +157,26 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             if (currentBalanceModal1) {
                 currentBalanceModal1.textContent = `Rp ${currentBalance.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            }
+        }
+
+        openCustomModal1Btn.addEventListener("click", function () {
+            if(hasPassword != 1)
+            {
+                let url = "/add-password"
+                document.location.href = url;
+            }
+            else{
+                showModal(customModal1);
+                if (topupInput) {
+                    topupInput.value = "";
+                }
+                if (topupError) {
+                    topupError.style.display = "none";
+                }
+                if (currentBalanceModal1) {
+                    currentBalanceModal1.textContent = `Rp ${currentBalance.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                }
             }
         });
     }
@@ -251,6 +275,8 @@ document.addEventListener("DOMContentLoaded", function () {
             loadingOverlay.style.display = "flex";
 
             try {
+                console.log(finalAmount);
+                console.log(password);
                 const response = await fetch('/topup', { // Pastikan URL ini sesuai dengan route Laravel Anda
                     method: 'POST',
                     headers: {

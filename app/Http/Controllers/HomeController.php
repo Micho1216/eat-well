@@ -6,16 +6,12 @@ use App\Models\Address;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Vendor;
-use Carbon\Carbon;
-use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-use function PHPUnit\Framework\isEmpty;
-
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         /** @var User|null $user */
         $user = Auth::user();
@@ -35,8 +31,23 @@ class HomeController extends Controller
         $slotMap = $this->getOrderSlotMap($order);
         $wellpay = $user->wellpay ?? 0;
 
+        if($user->password)
+        {
+            $hasPassword = true;
+        }
+        else{
+            $hasPassword = false;
+        }
+        
+        if($request->session()->has('pressedTopup'))
+        {
+            $pressedTopup = true;
+        }
+        else{
+            $pressedTopup = false;
+        }
 
-        return view('customer.home', compact('vendors', 'favVendors', 'order', 'slotMap', 'wellpay'));
+        return view('customer.home', compact('vendors', 'favVendors', 'order', 'slotMap', 'wellpay', 'hasPassword', 'pressedTopup'));
     }
 
     private function getDefaultAddress(User $user): ?Address

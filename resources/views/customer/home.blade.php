@@ -4,6 +4,9 @@
 
 @section('css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="has-password" content="{{ $hasPassword }}">
+    <meta name="pressed-topup" content="{{ $pressedTopup }}">
+
     @vite(['resources/js/app.js', 'resources/sass/app.scss'])
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
@@ -128,7 +131,6 @@
                             </div>
                         </div>
                     </div>
-
 
                     <button class="btn d-flex justify-content-center align-items-center m-0" id="openCustomModal1"
                         style="width: 107px; background-color: var(--bg-contrast); padding: 5px; border-radius: 100px; color: #fff; cursor: pointer;">
