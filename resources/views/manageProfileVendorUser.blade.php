@@ -1,16 +1,23 @@
-@extends('components.vendor-nav')
+@extends('master')
 
 @section('title', 'Manage Prodile')
 @section('css')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/manageProfile.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous">
-    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
 @endsection
 
 @section('content')
+    <div id="translation-data"
+        data-save-text = "{{ __('customer/manage-profile.save') }}"
+        data-cancel-text = "{{ __('customer/manage-profile.cancel') }}"
+        data-edit-text = "{{ __('customer/manage-profile.edit') }}"
+        data-pass-fill-all-text= "{{ __('customer/manage-profile.pass_fill_all') }}"
+        data-pass-no-match-text= "{{ __('customer/manage-profile.pass_no_match') }}"
+        data-pass-cha-text= "{{ __('customer/manage-profile.pass_cha') }}"
+        data-but-cha-text= "{{ __('customer/manage-profile.but_cha') }}">
+    </div>  
     <div class="container container-custom">
         <div class="left-panel outer-panel">
             <div class="lexend font-medium manage-profile">
@@ -73,7 +80,6 @@
                     </li>
                 @endif
             </ul>
-
         </div>
 
 
@@ -87,8 +93,6 @@
                     <hr
                         style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
 
-
-
                     @if (session('success'))
                         @if (session('success'))
                             <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
@@ -96,7 +100,7 @@
                                     role="alert" aria-live="assertive" aria-atomic="true">
                                     <div class="d-flex">
                                         <div class="toast-body">
-                                            {{ session('success') }}
+                                            {{ __('manage-profile.success_msg')}}
                                         </div>
                                         <button type="button" class="btn-close btn-close-white me-2 m-auto"
                                             data-bs-dismiss="toast" aria-label="Close"></button>
@@ -117,7 +121,7 @@
                         @endif
                     @endif
                     <div class="manage-profile-in">
-                        <form action="{{ route('manage-profile-vendor-account.updateUser') }}" method="POST"
+                        <form action="{{ route('manage-profile.update') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             @method('PATCH')
@@ -212,7 +216,6 @@
                                             <label for="female"
                                                 class="gender-label lexend font-medium text-black">{{ __('manage-profile.female') }}</label>
                                         @endif
-
                                     </div>
 
 
@@ -226,25 +229,39 @@
                                 </div>
                                 <div class="photo-data">
                                     <div class="profile-image-wrapper">
-                                        <img src="{{ $user->profilePath ? asset('asset/profile/' . basename($user->profilePath)) : asset('profile/no-profile.png') }}"
+                                        <img src="{{ asset('asset/profile/' . $user->profilePath) }}"
                                             alt="Profile Picture" class="profile-picture" id="profilePicPreview">
-
                                         <label for="profilePicInput" class="change-image-label">
                                             <span class="material-symbols-outlined change-image-icon">
                                                 add_photo_alternate
                                             </span>
                                             <input type="file" id="profilePicInput" name="profilePicInput"
-                                                accept="image/*" style="display: none;" disabled>
+                                                accept="image/*" style="display:none;" disabled>
                                         </label>
                                     </div>
-
                                     <div class="edit-btn-group d-flex flex-row">
                                         <button class="inter font-medium edit-data">Edit</button>
+                                        
                                     </div>
-                                    <p class="text-center" style="color: rgb(242, 185, 12)">
-                                        {{ __('manage-profile.click_edit') }}</p>
+                                    <p style="color: rgb(242, 185, 12)">{{ __('manage-profile.click_edit') }}</p>
 
-
+                                    <div class="modal fade" id="exampleModal" tabindex="-1"
+                                        aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h1 class="modal-title fs-5" id="exampleModalLabel"
+                                                        style="color: rgb(46, 173, 46)">
+                                                        {{ __('manage-profile.data_saved') }}</h1>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    {{ __('manage-profile.changes_saved') }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -253,7 +270,6 @@
 
                 <hr class="section-divider">
                 <div id="management-security" class="management-section mt-4">
-
                     <div class="security-manage">
                         <p class="lexend font-medium text-black title">{{ __('manage-profile.security_management') }}</p>
                         <p class="inter font-regular text-black description">{{ __('manage-profile.subtitle') }}</p>

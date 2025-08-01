@@ -85,7 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
             editBtn.addEventListener('click', function() {
                 setProfileEditMode(true);
                 editBtnGroup.innerHTML = `
-                    <button class="inter font-medium save-profile-btn" type="submit">${saveTextTranslate}</button>
+                    <button class="inter font-medium save-profile-btn" type="submit" style="margin-right: 10px">${saveTextTranslate}</button>
                     <button class="inter font-medium cancel-profile-btn">${cancelTextTranslate}</button>
                 `;
                 editBtnGroup.querySelector('.cancel-profile-btn').addEventListener('click', function() {

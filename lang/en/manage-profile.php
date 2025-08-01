@@ -31,4 +31,5 @@ return [
     'verify_password' => 'New Password Verification',
     'change' => 'Change',
     'logout' => 'Log out',
+    'success_msg' => 'Success to update profile !',
 ];

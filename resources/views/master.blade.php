@@ -81,27 +81,33 @@
                             </li>
                         @else
                             <li class="nav-item">
-                                <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('landingPage') ? 'active' : '' }}"
-                                    href="/landingPage">Landing page</a>
+                                <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('/') ? 'active' : '' }}"
+                                    href="/">{{ __('navigation.Landing_page') }}</a>
                             </li>
                         @endif
 
 
+                        @auth
+                            <li class="nav-item">
+                                <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('caterings') ? 'active' : '' }}"
+                                    href="{{ route('search') }}">{{ __('navigation.search vendor') }}</a>
+                            </li>
+                        @endauth
 
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('caterings') ? 'active' : '' }}"
-                                href="{{ route('search') }}">{{ __('navigation.search vendor') }}</a>
-                        </li>
+                        @auth
+                            <li class="nav-item">
+                                <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('favorites') ? 'active' : '' }}"
+                                    href="{{ route('favorite.show') }}">{{ __('navigation.favorited catering') }}</a>
+                            </li>
+                        @endauth
 
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('favorites') ? 'active' : '' }}"
-                                href="{{ route('favorite.show') }}">{{ __('navigation.favorited catering') }}</a>
-                        </li>
+                        @auth
+                            <li class="nav-item">
+                                <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('orders') ? 'active' : '' }}"
+                                    href="{{ route('order-history') }}">{{ __('navigation.orders') }}</a>
+                            </li>
+                        @endauth
 
-                        <li class="nav-item">
-                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('orders') ? 'active' : '' }}"
-                                href="{{ route('order-history') }}">{{ __('navigation.orders') }}</a>
-                        </li>
 
 
                         <li class="nav-item">
@@ -148,11 +154,19 @@
                 </a>
             @else
                 <!-- Jika belum login -->
-                <div style="padding: 0.5rem 1rem; border-radius: 0.25rem; margin-right: 2vw">
+                {{-- <div style="padding: 0.5rem 1rem; border-radius: 0.25rem; margin-right: 2vw">
                     <a class="login-button p-0" href="/login">
-                        <button type="button" class="login_button">Log In</button>
+                        <button type="button" class="login_button">{{ __('navigation.login') }}</button>
                     </a>
-                </div>
+                </div> --}}
+                @unless (request()->is('login'))
+                    <div style="padding: 0.5rem 1rem; border-radius: 0.25rem; margin-right: 2vw">
+                        <a class="login-button p-0" href="/login">
+                            <button type="button" class="login_button">{{ __('navigation.login') }}</button>
+                        </a>
+                    </div>
+                @endunless
+
             @endauth
 
 
@@ -215,18 +229,18 @@
 
             <!-- Navigation Links -->
             <div class="footer-links d-flex justify-content-center mb-3">
-                <a href="/home" class="text-white text-decoration-none">Home</a>
-                <a href="/about-us" class="text-white text-decoration-none">About Us</a>
-                <a href="/contact" class="text-white text-decoration-none">Contact</a>
+                <a href="/home" class="text-white text-decoration-none">{{ __('navigation.home')}}</a>
+                <a href="/about-us" class="text-white text-decoration-none">{{ __('navigation.aboutus') }}</a>
+                <a href="/contact" class="text-white text-decoration-none">{{ __('navigation.contact') }}</a>
             </div>
 
             <!-- Sosial Media -->
             <div class="d-flex justify-content-center gap-4 mb-2">
-                <a href="#" class="text-white fs-4"><img src="{{ asset('asset/footer/1.png') }}"
+                <a href="https://www.facebook.com/" class="text-white fs-4"><img src="{{ asset('asset/footer/1.png') }}"
                         width="30px"></a>
-                <a href="#" class="text-white fs-4"><img src="{{ asset('asset/footer/2.png') }}"
+                <a href="https://www.instagram.com/" class="text-white fs-4"><img src="{{ asset('asset/footer/2.png') }}"
                         width="30px"></a>
-                <a href="#" class="text-white fs-4"><img src="{{ asset('asset/footer/3.png') }}"
+                <a href="https://www.whatsapp.com/" class="text-white fs-4"><img src="{{ asset('asset/footer/3.png') }}"
                         width="30px"></i></a>
             </div>
 

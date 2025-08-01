@@ -19,4 +19,5 @@ return [
     'confirm_delete' => 'Confirm Delete',
     'confirm_delete_text' => 'Are you sure you want to delete this address?',
     'cancel' => 'Cancel',
+    'delete_success' => 'Address deleted successfully.',
 ];

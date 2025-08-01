@@ -13,6 +13,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('css/admin/adminlogout.css') }}">
+    
     @yield('css')
 
 
@@ -38,7 +40,8 @@
             <form action="/lang" method="POST">
                 @csrf
                 <div class="dropdown-wrapper">
-                    <select name="lang" id="languageSelector" style="text-align: center; margin-left: 30px;" onchange="this.form.submit()">
+                    <select name="lang" id="languageSelector" style="text-align: center; margin-left: 30px;"
+                        onchange="this.form.submit()">
                         <option value="en" @if (app()->getLocale() === 'en') selected @endif>EN</option>
                         <option value="id" @if (app()->getLocale() === 'id') selected @endif>ID</option>
                     </select>
@@ -64,7 +67,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('categories') ? 'active' : '' }}"
-                                href="{{route('categories.show')}}">{{ __('admin-nav.category') }}</a>
+                                href="{{ route('categories.show') }}">{{ __('admin-nav.category') }}</a>
                         </li>
                         {{-- <li class="nav-item">
                             
@@ -83,14 +86,20 @@
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-all-logs') ? 'active' : '' }}"
                                 href="/view-all-logs">{{ __('admin-nav.logs') }}</a>
                         </li>
-                        <li class="nav-item">
+                        {{-- <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-all-payment') ? 'active' : '' }}"
                                 href="/view-all-payment">{{ __('admin-nav.payments') }}</a>
-                        </li>
+                        </li> --}}
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('view-order-history') ? 'active' : '' }}"
                                 href="/view-order-history">{{ __('admin-nav.order_history') }}</a>
                         </li>
+                        <form method="POST" action="{{ route('logout') }}" class="logout-form">
+                            @csrf
+                            <button type="submit" class="logout-btn inter font-regular">
+                                {{ __('manage-profile.logout') }}
+                            </button>
+                        </form>
                     </ul>
 
                 </div>

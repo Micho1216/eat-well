@@ -978,6 +978,10 @@ body {
         margin-bottom: 200px;
         /* margin-left: 30px; */
     }
+    .gender-group
+    {
+        gap: 20px
+    }
     
 }
 
@@ -998,5 +1002,13 @@ body {
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+    .gender-group
+    {
+        gap: 20px
+    }
+    .pilihan_provinsi_dll
+    {
+        margin-bottom: 10px;
     }
 }

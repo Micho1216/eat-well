@@ -63,7 +63,7 @@
                     </div>
                     <hr
                         style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
-                    
+
                     @if (session('success'))
                         @if (session('success'))
                             <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
@@ -71,7 +71,7 @@
                                     role="alert" aria-live="assertive" aria-atomic="true">
                                     <div class="d-flex">
                                         <div class="toast-body">
-                                            {{ session('success') }}
+                                            {{ __('manage-profile.success_msg') }}
                                         </div>
                                         <button type="button" class="btn-close btn-close-white me-2 m-auto"
                                             data-bs-dismiss="toast" aria-label="Close"></button>
@@ -102,6 +102,10 @@
                                 <div class="data">
                                     <div class="alert alert-secondary" role="alert" style="width: 60%;">
                                         {{ __('manage-profile-vendor.email') }} : {{ $user->email }}
+                                    </div>
+
+                                     <div class="alert alert-secondary" role="alert" style="width: 60%;">
+                                        {{ __('manage-profile-vendor.address') }} : {{ $user->address }}
                                     </div>
                                     <label
                                         class="inter font-bold text-black data-title">{{ __('manage-profile-vendor.name') }}</label>

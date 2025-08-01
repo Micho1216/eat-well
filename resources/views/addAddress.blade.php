@@ -23,29 +23,29 @@
 
         <form action="{{ route('store-address') }}" method="POST" id="addressForm" novalidate>
             @csrf
-            <div class="row justify-content-center mb-4">
-                <div class="col-sm-3">
+            <div class="row justify-content-center mb-4 Provinsi_Dll">
+                <div class="col-sm-3 pilihan_provinsi_dll mb-2">
                     <select id="provinsi" class="form-select form-select-sm" name="provinsi_id" required>
                         <option value="">{{ __('add-address.select_province') }}</option>
                     </select>
                     <input type="hidden" name="provinsi_name" id="provinsi_name">
                     <div class="invalid-feedback" data-message-required="{{ __('add-address.required.province') }}"></div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-3 pilihan_provinsi_dll mb-2">
                     <select id="kota" class="form-select form-select-sm" name="kota_id" required disabled>
                         <option value="">{{ __('add-address.select_city') }}</option>
                     </select>
                     <input type="hidden" name="kota_name" id="kota_name">
                     <div class="invalid-feedback" data-message-required="{{ __('add-address.required.city') }}"></div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-3 pilihan_provinsi_dll mb-2">
                     <select id="kecamatan" class="form-select form-select-sm" name="kecamatan_id" required disabled>
                         <option value="">{{ __('add-address.select_district') }}</option>
                     </select>
                     <input type="hidden" name="kecamatan_name" id="kecamatan_name">
                     <div class="invalid-feedback" data-message-required="{{ __('add-address.required.district') }}"></div>
                 </div>
-                <div class="col-sm-3">
+                <div class="col-sm-3 pilihan_provinsi_dll mb-2">
                     <select id="kelurahan" class="form-select form-select-sm" name="kelurahan_id" required disabled>
                         <option value="">{{ __('add-address.select_subdistrict') }}</option>
                     </select>

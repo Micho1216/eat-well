@@ -3,7 +3,7 @@
 return [
     'title' => 'Kelola Profil Vendor',
     'manage_profile' => 'Kelola Profil',
-    'edit' => 'Ubah',
+    'edit' => 'Ubah Foto',
     'email' => 'Email',
     'name' => 'Nama',
     'telephone' => 'Nomor Telepon',
@@ -11,4 +11,5 @@ return [
     'lunch_delivery' => 'Waktu Pengantaran Makan Siang',
     'dinner_delivery' => 'Waktu Pengantaran Makan Malam',
     'save' => 'Simpan',
+    'address' => 'Alamat',
 ];
