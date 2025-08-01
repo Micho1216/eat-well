@@ -35,27 +35,49 @@ document.addEventListener('DOMContentLoaded', function() {
     const dobMonth = document.getElementById('dob_month');
     const dobDay = document.getElementById('dob_day');
     const dobYear = document.getElementById('dob_year');
+    const dateOfBirthInput = document.getElementById('dateOfBirth');
     const genderRadios = document.querySelectorAll('.gender-radio');
 
     let originalProfile = {};
 
-    function setProfileEditMode(on) {
-        nameInput.readOnly = !on;
-        dobMonth.disabled = !on;
-        dobDay.disabled = !on;
-        dobYear.disabled = !on;
-        genderRadios.forEach(radio => radio.disabled = !on);
+    // function setProfileEditMode(on) {
+    //     nameInput.readOnly = !on;
+    //     dobMonth.disabled = !on;
+    //     dobDay.disabled = !on;
+    //     dobYear.disabled = !on;
+    //     genderRadios.forEach(radio => radio.disabled = !on);
 
-        if (on) {
-            originalProfile = {
-                name: nameInput.value,
-                dobMonth: dobMonth.value,
-                dobDay: dobDay.value,
-                dobYear: dobYear.value,
-                gender: Array.from(genderRadios).find(r => r.checked)?.value
-            };
-        }    
+    //     if (on) {
+    //         originalProfile = {
+    //             name: nameInput.value,
+    //             dobMonth: dobMonth.value,
+    //             dobDay: dobDay.value,
+    //             dobYear: dobYear.value,
+    //             gender: Array.from(genderRadios).find(r => r.checked)?.value
+    //         };
+    //     }    
+    // }
+
+    function setProfileEditMode(on) {
+    nameInput.readOnly = !on;
+    dobMonth.disabled = !on;
+    dobDay.disabled = !on;
+    dobYear.disabled = !on;
+    genderRadios.forEach(radio => radio.disabled = !on);
+    profilePicInput.disabled = !on;
+    dateOfBirthInput.disabled = !on; 
+    if (on) {
+        originalProfile = {
+            name: nameInput.value,
+            dobMonth: dobMonth.value,
+            dobDay: dobDay.value,
+            dobYear: dobYear.value,
+            gender: Array.from(genderRadios).find(r => r.checked)?.value,
+            dateOfBirth: dateOfBirthInput.value
+        };
     }
+}
+
 
     function attachEditBtnListener() {
         const editBtn = editBtnGroup.querySelector('.edit-data');

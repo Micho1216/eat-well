@@ -19,4 +19,11 @@ return [
     'delivered' => 'Terkirim',
     'arrived' => 'Tiba',
     'search_by_order' => 'Cari berdasarkan Nomor Pesanan',
+    'decline_order' => 'Tolak Pesanan',
+    'processing' => 'Memproses...',
+    'status_update_saved' => 'Perubahan status berhasil disimpan.',
+    'status_updated_success' => 'Status berhasil diperbarui',
+    'order_rejected_success' => 'Pesanan berhasil ditolak',
+    'rejected_success' => 'Berhasil ditolak',
+
 ];

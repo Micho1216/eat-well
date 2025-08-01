@@ -13,12 +13,13 @@ use App\Models\User;
 use App\Models\Vendor;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\App;
 
 class RegisteredUserController extends Controller
 {
     public function create(String $role)
     {
-        if($role == "customer") return view('auth.register');
+        if($role == "customer") return view('auth.customerRegister');
         else if($role == "vendor") return view('auth.vendorRegister');
         else return redirect('/');
     }
@@ -35,12 +36,9 @@ class RegisteredUserController extends Controller
         $attrs['role'] = Str::ucfirst($role);
         $user = User::create($attrs);
 
-        // if($role == 'vendor')
-        // {
-        //     Vendor::create([
-        //         'userId' => $user->userId,
-        //     ]);
-        // }
+        $user->locale = App::currentLocale();
+        $user->save();
+
 
         $otp = rand(100000, 999999);
         $email = $attrs['email'];

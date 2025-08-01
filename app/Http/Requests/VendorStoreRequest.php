@@ -5,13 +5,12 @@ namespace App\Http\Requests;
 use Carbon\Carbon;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Validation\Rule;
 
 class VendorStoreRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         return Auth::check();
@@ -263,5 +262,45 @@ class VendorStoreRequest extends FormRequest
             'logo' => __('vendor-first-page.attributes.logo'),
             'name' => __('vendor-first-page.attributes.name'),
         ];
+    }
+
+    protected function withValidator(\Illuminate\Validation\Validator $validator)
+    {
+        $validator->after(function ($validator) {
+            // Validasi waktu breakfast
+            if ($this->startBreakfast && ($this->startBreakfast < '07:00' || $this->startBreakfast > '10:00')) {
+                $validator->errors()->add('startBreakfast', 'Breakfast start time must be between 07:00 and 10:00.');
+            }
+            if ($this->closeBreakfast && ($this->closeBreakfast < '07:00' || $this->closeBreakfast > '10:00')) {
+                $validator->errors()->add('closeBreakfast', 'Breakfast end time must be between 07:00 and 10:00.');
+            }
+
+            // Validasi waktu lunch
+            if ($this->startLunch && ($this->startLunch < '10:00' || $this->startLunch > '13:00')) {
+                $validator->errors()->add('startLunch', 'Lunch start time must be between 10:00 and 13:00.');
+            }
+            if ($this->closeLunch && ($this->closeLunch < '10:00' || $this->closeLunch > '13:00')) {
+                $validator->errors()->add('closeLunch', 'Lunch end time must be between 10:00 and 13:00.');
+            }
+
+            // Validasi waktu dinner
+            if ($this->startDinner && ($this->startDinner < '14:00' || $this->startDinner > '21:00')) {
+                $validator->errors()->add('startDinner', 'Dinner start time must be between 14:00 and 21:00.');
+            }
+            if ($this->closeDinner && ($this->closeDinner < '14:00' || $this->closeDinner > '21:00')) {
+                $validator->errors()->add('closeDinner', 'Dinner end time must be between 14:00 and 21:00.');
+            }
+        });
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        logActivity('Failed', 'Updated', "Profile due to validation errors : " . implode($validator->errors()->all()));
+
+        throw new HttpResponseException(
+            redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+        );
     }
 }

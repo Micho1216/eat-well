@@ -19,15 +19,7 @@ class CardOrder extends Component
     {
         $this->order = $order;
         
-        if($order->isCancelled == 1) {
-            $this->status = 'cancelled';
-        } else if (Carbon::now()->greaterThan($order->endDate)){
-            $this->status = 'finished';
-        } else if (Carbon::now()->lessThan($order->startDate)){
-            $this->status = 'upcoming';
-        } else {
-            $this->status = 'active';
-        }
+        $this->status = $this->order->getOrderStatus();
     }
 
     /**

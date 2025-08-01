@@ -14,8 +14,8 @@
             <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-4 my-5">
                 <div class="card text-bg-light rounded-5 d-block" id="login-card">
                     <div class="card-body p-5 p-sm-5">
-                        <div class="h5 card-title text-center mb-5">Sign in to EatWell</div>
-                        <form action="/register/customer" method="post" novalidate>
+                        <div class="h5 card-title text-center mb-5">Customer Registration</div>
+                        <form action="{{ route('register', ['role' => 'customer']) }}" method="post" novalidate>
                             @csrf
 
                             <div class="form-floating mb-3">
@@ -51,7 +51,7 @@
                             </button>
                         </form>
 
-                        <a href="{{ route('auth.redirect', ['provider'=>'google']) }}">
+                        <a href="{{ route('auth.redirect', ['provider'=>'google', 'role' => 'customer']) }}">
                             <button class="gsi-material-button w-100">
                                 <div class="gsi-material-button-state"></div>
                                 <div class="gsi-material-button-content-wrapper">

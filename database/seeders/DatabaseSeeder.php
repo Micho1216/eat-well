@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\CuisineType;
+use App\Models\District;
 use App\Models\Package;
 use App\Models\PackageCategory;
 use App\Models\PackageCuisine;
@@ -18,14 +19,12 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
 
         $this->call([
+            ProvinceSeeder::class, // Provinsi sedang dibatasi jadi max 15 provinsi utk keperluan pengembangan
+            CitySeeder::class, // City seeder sedang dibatasi jadi max 5 kabkot per provinsi untuk mempercepat seeding
+            DistrictSeeder::class, //District seeder sedang dibatasi jadi max 7 kecamatan per kab/kot utk mempercepat seeding
+            VillageSeeder::class,
             UserSeeder::class,
             AddressSeeder::class,
             PackageCategorySeeder::class,
@@ -39,6 +38,5 @@ class DatabaseSeeder extends Seeder
             VendorPreviewSeeder::class,
             VendorReviewSeeder::class,          
         ]);
-
     }
 }

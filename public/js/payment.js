@@ -20,8 +20,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
     // --- Get DOM Elements ---
-    const qrisRadio = document.getElementById("qris");
+    const qrisRadio = document.getElementById("qr");
+    console.log(qrisRadio);
     const wellpayRadio = document.getElementById("wellpay");
+    console.log(wellpayRadio);
     const mainPayButton = document.getElementById("mainPayButton");
 
     // Popups elements
@@ -76,6 +78,34 @@ document.addEventListener("DOMContentLoaded", function () {
     let totalOrderPrice = parseFloat(hiddenCartTotalPrice?.value || 0);
     // Tambahkan variabel status untuk Wellpay popup
     let currentWellpayPopupStage = "initial_confirm"; // States: 'initial_confirm', 'password_input'
+
+    // Add a loading overlay element
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.id = 'loadingOverlay';
+    loadingOverlay.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        color: white;
+        font-size: 2em;
+        display: none; /* Hidden by default */
+    `;
+    document.body.appendChild(loadingOverlay);
+
+    function showLoading() {
+        loadingOverlay.style.display = 'flex';
+    }
+
+    function hideLoading() {
+        loadingOverlay.style.display = 'none';
+    }
 
     // --- Helper Functions for Popups and Messages ---
     function formatRupiah(number) {
@@ -271,19 +301,19 @@ document.addEventListener("DOMContentLoaded", function () {
         const postData = {
             _token: $('meta[name="csrf-token"]').attr("content"),
             payment_method_id: methodId,
-            vendor_id: vendorId,
+            // vendor_id: vendorId,
             start_date: startDate,
             end_date: endDate,
-            provinsi: provinsi,
-            kota: kota,
-            kabupaten: kabupaten,
-            kecamatan: kecamatan,
-            kelurahan: kelurahan,
-            kode_pos: kode_pos,
-            jalan: jalan,
-            recipient_name: recipient_name,
-            recipient_phone: recipient_phone,
-            notes: notes,
+            // provinsi: provinsi,
+            // kota: kota,
+            // kabupaten: kabupaten,
+            // kecamatan: kecamatan,
+            // kelurahan: kelurahan,
+            // kode_pos: kode_pos,
+            // jalan: jalan,
+            // recipient_name: recipient_name,
+            // recipient_phone: recipient_phone,
+            // notes: notes,
         };
 
         // Add password if payment method is Wellpay
@@ -356,6 +386,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 hideWellpayConfirmPopup(); // Close Wellpay popup
                 showMessage(errorMessage); // Also show in general message box
             }
+        } finally {
+            hideLoading(); // Hide loading after AJAX call completes (success or failure)
         }
     }
 
@@ -398,6 +430,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             showMessage(
                                 `${wellpayFormatErrorTextTranslate}`
                             );
+                            hideLoading();
                             return;
                         }
 
@@ -428,8 +461,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     showMessage(
                         `${retrieveCheckConnectionTextTranslate}`
                     );
+                } finally {
+                    hideLoading();
                 }
-            } else if (selectedMethod.id === "qris") {
+            } else if (selectedMethod.id === "qr") {
                 showQrisPopup();
             } else {
                 showGeneralConfirmPopup();
@@ -472,8 +507,19 @@ document.addEventListener("DOMContentLoaded", function () {
                     return; // Jangan lanjutkan jika password kosong
                 }
 
+                // Show loading directly on the button for the actual payment processing
+                wellpayConfirmBtn.innerHTML = `
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    <span>Processing...</span>
+                `;
+                wellpayConfirmBtn.disabled = true;
+
                 // Panggil fungsi pembayaran dengan password
                 await processPaymentAjax(password);
+
+                // Revert button state after processPaymentAjax completes (handled by finally block there)
+                wellpayConfirmBtn.innerHTML = "Continue"; // Or "Confirm" if you want to reset fully
+                wellpayConfirmBtn.disabled = false;
             }
         });
     }
@@ -507,11 +553,11 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     // Success Popup buttons
-    if (backHomeBtn) {
-        backHomeBtn.addEventListener("click", function () {
-            window.location.href = "/home"; // Adjust to your actual homepage route
-        });
-    }
+    // if (backHomeBtn) {
+    //     backHomeBtn.addEventListener("click", function () {
+    //         window.location.href = "/home"; // Adjust to your actual homepage route
+    //     });
+    // }
 
     // QRIS Popup buttons
     if (doneBtn) {

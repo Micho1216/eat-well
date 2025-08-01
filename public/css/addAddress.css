@@ -1,5 +1,6 @@
 body {
     background-color: #0d3f30;
+    overflow-x: hidden;
 }
 
 .address-container {

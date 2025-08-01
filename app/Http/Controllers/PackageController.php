@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StorePackageRequest;
+use App\Http\Requests\UpdatePackageRequest;
 use Illuminate\Http\Request;
 use App\Models\Package;
 use App\Models\CuisineType;
@@ -28,28 +30,9 @@ class PackageController extends Controller
     }
 
     // Menyimpan data package baru
-    // use Illuminate\Validation\ValidationException;
-
-    public function store(Request $request)
+    public function store(StorePackageRequest $request)
     {
-        // dd($request);
-        try {
-        $validated = $request->validate([
-            'categoryId' => 'required|integer|exists:package_categories,categoryId',
-            'name' => 'required|string|max:255',
-
-            'averageCalories' => 'nullable|numeric|gt:0',
-            'breakfastPrice' => 'nullable|numeric|gt:0',
-            'lunchPrice' => 'nullable|numeric|gt:0',
-            'dinnerPrice' => 'nullable|numeric|gt:0',
-
-            'menuPDFPath' => 'nullable|file|mimes:pdf',
-            'imgPath' => 'nullable|image|mimes:jpeg,png,jpg',
-        ], [
-            'categoryId.required' => 'Package category is required',
-            'categoryId.exists' => 'Selected category does not exist in the database',
-            'name.required' => 'Package name required',
-        ]);
+        $validated = $request->validated();
 
         $venAcc = Auth::user();
         $validated['vendorId'] = $venAcc->vendor->vendorId;
@@ -77,21 +60,14 @@ class PackageController extends Controller
         // unset($validated['cuisine_types']);
 
         // Simpan ke database (tanpa cuisine_types)
+        logActivity('Successfully', 'Added', 'Catering Package with Name : ' . $validated['name']);
         $newpackage = Package::create($validated);
 
         // if (!empty($cuisineTypes)) {
         //     $newpackage->cuisineTypes()->sync($cuisineTypes);
         // }
-        
-            logActivity('Successfully', 'Added', 'Catering Package');
-            return redirect(route('manageCateringPackage'));
-        } catch (ValidationException $e) {
-            logActivity('Failed', 'Validation Error', 'Catering Package, Error : ' . $e->getMessage());
 
-            return redirect()->back()
-                ->withErrors($e->validator)
-                ->withInput();
-        }
+        return redirect(route('manageCateringPackage'));
     }
 
     // Menghapus package berdasarkan ID
@@ -107,7 +83,7 @@ class PackageController extends Controller
 
         $package->delete();
 
-        logActivity('Successfully', 'Deleted', 'Catering Package');
+        logActivity('Successfully', 'Deleted', 'Package : ' . $package->name);
 
         return response()->json([
             'success' => true,
@@ -116,7 +92,7 @@ class PackageController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    public function update(UpdatePackageRequest $request, $id)
     {
         $user = Auth::user();
         $vendorId = $user->vendor->vendorId;
@@ -127,37 +103,8 @@ class PackageController extends Controller
             abort(403, 'Unauthorized. You cannot edit a package that is not yours.');
         }
 
+        $validated = $request->validated();
 
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'categoryId' => 'required|integer|exists:package_categories,categoryId',
-
-            'breakfastPrice' => 'nullable|decimal:0,2|gte:0',
-            'lunchPrice' => 'nullable|decimal:0,2|gte:0',
-            'dinnerPrice' => 'nullable|decimal:0,2|gte:0',
-            'averageCalories' => 'nullable|decimal:0,2|gte:0',
-
-            'menuPDFPath' => 'nullable|file|mimes:pdf',
-            'imgPath' => 'nullable|image|mimes:jpeg,png,jpg',
-
-            'cuisine_types' => 'nullable|array',
-            'cuisine_types.*' => 'exists:cuisine_types,cuisineId',
-        ], [
-            'categoryId.required' => 'Package category is required',
-            'categoryId.exists' => 'Selected category is invalid or not found',
-
-            'name.required' => 'Package name required',
-            'name.max' => 'Package name maximal 255 characters',
-
-            'breakfastPrice.decimal' => 'Breakfast price must be numeric',
-            'breakfastPrice.gte' => 'Breakfast price must be greater than or equal to 0',
-
-            'lunchPrice.decimal' => 'Lunch price must be numeric',
-            'lunchPrice.gte' => 'Lunch price must be greater than or equal to 0',
-
-            'dinnerPrice.decimal' => 'Dinner price must be numeric',
-            'dinnerPrice.gte' => 'Dinner price must be greater than or equal to 0',
-        ]);
         // Upload file PDF ke public/asset/menus
         if ($request->hasFile('menuPDFPath')) {
             $menuFile = $request->file('menuPDFPath');
@@ -188,5 +135,10 @@ class PackageController extends Controller
         Excel::import(new PackagesImport, $request->file('excel_file'));
 
         return redirect()->back()->with('success', 'Packages imported successfully!');
+    }
+
+    public function manage_profile()
+    {
+        
     }
 }

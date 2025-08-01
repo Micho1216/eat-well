@@ -50,6 +50,7 @@ class CartController extends Controller
         if (empty($selectedPackages)) {
             // Jika frontend mengirim objek 'packages' kosong, hapus semua cart items
             $deletedAllCount = $cart->cartItems()->delete();
+
             Log::info('Frontend sent empty packages. All CartItems deleted: ' . $deletedAllCount);
             $totalItems = 0; // Setel ulang total karena semua dihapus
             $totalPrice = 0; // Setel ulang total karena semua dihapus

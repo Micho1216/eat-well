@@ -1,0 +1,104 @@
+body {
+    background: #0b3d2e !important;
+    color: #fff !important;
+}
+
+h1 {
+    font-weight: 700 !important;
+}
+
+.tab-btn {
+    color: #fff !important;
+    border-color: #fff !important;
+}
+
+.tab-btn.active {
+    background: #fff !important;
+    color: #14532d !important;
+    font-weight: 700 !important;
+}
+
+/* ----------- KARTU & SLOT MAKANAN ----------- */
+.card {
+    background: #fff !important;
+    color: #000 !important;
+    border-radius: .75rem !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, .1) !important;
+    height: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.card-body {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.order-header {
+    display: flex !important;
+    justify-content: flex-end !important;
+    font-weight: 600 !important;
+    font-size: .95rem !important;
+    margin-bottom: .5rem !important;
+    color: #14532d !important;
+}
+
+.meal-box {
+    border-radius: .5rem !important;
+    padding: .8rem 1rem !important;
+    margin-bottom: 1rem !important;
+    background: #ebf5ee !important;
+    color: #14532d !important;
+}
+
+.meal-box-header {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    font-weight: 700 !important;
+    font-size: 1.1rem !important;
+    margin-bottom: .5rem !important;
+}
+
+.meal-entry {
+    font-weight: 600 !important;
+    font-size: .95rem !important;
+    margin-bottom: .3rem !important;
+}
+
+.meal-select {
+    width: 140px !important;
+    height: 32px !important;
+    padding: 4px 12px !important;
+    font-size: .9rem !important;
+    font-weight: 700 !important;
+    border-radius: .5rem !important;
+    border: 1.5px solid transparent !important;
+    cursor: pointer !important;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, .1) !important;
+    appearance: none !important;
+    text-align-last: center !important;
+    transition: .3s !important;
+}
+
+.meal-select.preparing {
+    background: #fff7e6 !important;
+    color: #8a6d0b !important;
+    border-color: #f9d71c !important;
+    box-shadow: 0 0 6px #f9d71c88 !important;
+}
+
+.meal-select.delivering {
+    background: #dbefff !important;
+    color: #0b3d91 !important;
+    border-color: #4a90e2 !important;
+    box-shadow: 0 0 6px #4a90e288 !important;
+}
+
+.meal-select.received {
+    background: #d9f7e4 !important;
+    color: #1f6f3a !important;
+    border-color: #44bb44 !important;
+    box-shadow: 0 0 6px #44bb4488 !important;
+}

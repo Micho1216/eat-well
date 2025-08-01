@@ -7,7 +7,7 @@
         <thead>
             <tr>
                 <th class="d-flex flex-row justify-content-between">
-                    <span>From</span>
+                    <span>{{__('catering/sales.from')}}</span>
                     <span>:</span>
                 </th>
                 <th>
@@ -18,7 +18,7 @@
                     @endif
                 </th>
                 <th class="d-flex flex-row justify-content-between">
-                    <span>Until</span>
+                    <span>{{__('catering/sales.until')}}</span>
                     <span>:</span>
                 </th>
                 <th>
@@ -30,13 +30,13 @@
                 </th>
             </tr>
             <tr class="order-tr">
-                <th class="order-th">Order ID</th>
-                <th class="order-th">Customer</th>
-                <th class="order-th">Order Period</th>
-                <th class="order-th">Paid At</th>
-                <th class="order-th">Payment Method</th>
-                <th class="order-th">Package Ordered</th>
-                <th class="order-th">Sales</th>
+                <th class="order-th">{{__('catering/sales.th_id')}}</th>
+                <th class="order-th">{{__('catering/sales.th_cust')}}</th>
+                <th class="order-th">{{__('catering/sales.th_period')}}</th>
+                <th class="order-th">{{__('catering/sales.th_paidat')}}</th>
+                <th class="order-th">{{__('catering/sales.th_method')}}</th>
+                <th class="order-th">{{__('catering/sales.th_pkg')}}</th>
+                <th class="order-th">{{__('catering/sales.th_sales')}}</th>
             </tr>
         </thead>
         <tbody>
@@ -49,7 +49,7 @@
                     <td class="order-td">{{ $order->payment->paymentMethod->name}}</td>
                     <td class="order-td">
                         @foreach ($order->groupedPackages as $pkg)
-                            {{ $pkg['packageName'] }} ({{ $pkg['timeSlots'] . ' ' . $pkg['quantity'] . 'x' }}){{ !$loop->last? ', ' : ''}} <br>
+                            {{ $pkg['packageName'] }} ({{__('catering/sales.' . $pkg['timeSlots'])}} {{$pkg['quantity'] . 'x' }}){{ !$loop->last? ', ' : ''}} <br>
                         @endforeach
                     </td>
                     <td class="order-td">Rp {{ number_format($order->totalPrice, 2, ',', '.') }}</td>
@@ -58,7 +58,7 @@
         </tbody>
         <tfoot>
             <tr>
-                <td colspan="6" class="text-end fw-bold">Total Sales</td>
+                <td colspan="6" class="text-end fw-bold">{{__('catering/sales.total')}}</td>
                 <td class="fw-bold">Rp{{ number_format($totalSales, 2, ',', '.') }}</td>
             </tr>
         </tfoot>

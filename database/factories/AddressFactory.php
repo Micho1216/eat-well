@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Models\Address;
+use App\Models\Province;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -24,7 +25,6 @@ class AddressFactory extends Factory
         return [
             'provinsi' => fake()->state(),
             'kota' => fake()->city(),
-            'kabupaten' => fake()->city(),
             'kecamatan' => fake()->streetName(),
             'kelurahan' => fake()->streetName(),
             'kode_pos' => fake()->numerify('#####'),

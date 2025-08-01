@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory; // Opsional tapi sangat direkomendasikan
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -69,5 +70,18 @@ class Order extends Model
     public function vendorReview()
     {
         return $this->hasOne(VendorReview::class, 'orderId', 'orderId');
+    }
+
+    public function getOrderStatus()
+    {
+        if($this->isCancelled == 1) {
+            return 'cancelled';
+        } else if (Carbon::now()->greaterThan($this->endDate)){
+            return 'finished';
+        } else if (Carbon::now()->lessThan($this->startDate)){
+            return 'upcoming';
+        } else {
+            return 'active';
+        }
     }
 }

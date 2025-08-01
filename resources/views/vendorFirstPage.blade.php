@@ -219,7 +219,6 @@
         integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous">
     </script>
     <script src="{{ asset('js/vendorFirstPage.js') }}"></script>
-    <script src="{{ asset('js/customer/customerFirstPage.js') }}"></script>
 
     <script>
         const oldProv = "{{ old('provinsi') }}";

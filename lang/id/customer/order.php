@@ -17,6 +17,7 @@ return [
     // Card Order
     'card_view' => 'Lihat Catering',
     'card_variant' => 'Variasi',
+    'deleted_package' => 'Diarsipkan',
     'Morning' => 'Sarapan',
     'Afternoon' => 'Makan Siang',
     'Evening' => 'Makan Malam',
@@ -60,6 +61,7 @@ return [
     'Prepared' => 'Disiapkan',
     'Delivered' => 'Dikirim',
     'Arrived' => 'Tiba',
+    'Cancelled' => 'Dibatalkan',
 
     // detail item card
     'total_order' => 'Total pesanan',

@@ -1,0 +1,185 @@
+:root {
+  --bg-primary: #13392A;
+  --bg-secondary: #CFE6B0;
+  --bg-tertiary: #185640;
+  --bg-contrast: #E77133;
+  --box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+* {
+    box-sizing: border-box;
+    padding: 0px;
+    margin: 0px;
+}
+
+body {
+    background-color: var(--bg-primary) !important;
+    width: 100%;
+}
+
+.inter {
+  font-family: "Inter", sans-serif;
+  font-style: normal;
+}
+
+.all-container{
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.back-and-cate-name-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.back-icon{
+    color: white;
+    font-size: 40px !important;
+    margin-right: 10px;
+    cursor: pointer;
+    margin-top: 5px;
+}
+
+.title-and-num-sold{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.judul-gede{
+    color: white;
+    margin: 0px !important;
+}
+
+.num-sold{
+    color: white;
+    background-color: var(--bg-contrast);
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.review-card-container{
+    margin-top: 20px;
+}
+
+.review-card-wrapper{
+    background-color: #E9EBEA;
+    width: 100%;
+    padding: 15px;
+    height: auto;
+    border-radius: 15px;
+    box-shadow: var(--box-shadow);
+    margin-bottom: 20px;
+}
+
+.profile-rating-wrapper{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.profile-wrapper{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile{
+    width: 35px;
+    height: 35px;
+    border-radius: 1000px;
+    background-color: gray;
+    margin-right: 10px;
+}
+
+.username{
+    margin-bottom: 0px;
+    color: var(--bg-tertiary);
+}
+
+.profile-user{
+    width: 35px;
+    height: 35px;
+    border-radius: 1000px;
+}
+
+.rating-wrapper{
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-contrast);
+    border-radius: 100px;
+}
+
+.star-icon{
+    color: yellow;
+    font-size: 20px !important;
+    margin-right: 3px;
+}
+
+.rating{
+    color: white;
+    font-weight: bold;
+}
+
+.review-wrapper{
+    width: 100%;
+    height: auto;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 10px;
+    background-color: #d5d5d5;
+}
+
+.review-wrapper p{
+    margin-bottom: 0px;
+}
+
+.order-label{
+    width: fit-content;
+    height: auto;
+    padding: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+    background-color: var(--bg-contrast);
+    border-radius: 5px;
+    text-align: center;
+    margin-top: 10px;
+}
+
+.order-label p{
+    margin-bottom: 0px;
+    color: white;
+    font-size: 12px;
+}
+
+@media screen and (max-width: 426px) {
+    .back-icon{
+        margin-right: 3px;
+    }
+
+    .rating-wrapper{
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .title-and-num-sold{
+        align-items: end;
+    }
+
+    .back-and-cate-name-wrapper{
+        flex-direction: column;
+        align-items: start;
+    }
+}

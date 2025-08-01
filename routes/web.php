@@ -1,6 +1,9 @@
 <?php
 
+use App\Http\Controllers\AccountSetup\CustomerFirstPageController;
+use App\Http\Controllers\AddPasswordController;
 use App\Http\Controllers\AddressController;
+use App\Http\Controllers\AdminViewOrderController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
@@ -9,6 +12,7 @@ use App\Http\Controllers\PackageController;
 use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\SearchCateringController;
 use App\Http\Controllers\VendorController;
 use App\Http\Middleware\NoCateringDataMiddleware;
 use App\Models\Order;
@@ -17,11 +21,14 @@ use App\Http\Controllers\AuthManager;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\CityController;
 use App\Http\Controllers\CustomerRatingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DeliveryStatusController;
+use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\ManageTwoFactorController;
 use App\Http\Controllers\OrderVendorController;
+use App\Http\Controllers\ProvinceController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Socialite\ProviderCallbackController;
 use App\Http\Controllers\Socialite\ProviderRedirectController;
@@ -30,25 +37,34 @@ use App\Http\Middleware\EnsureVendor;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\VillageController;
+use App\Http\Middleware\CheckNoPasswordExist;
 
 Route::post('/lang', LanguageController::class);
+
 use App\Http\Controllers\VerifyOtpController;
+use App\Http\Controllers\illageController;
+use App\Http\Middleware\AccountSetup\EnsureAddressExists;
+use App\Http\Middleware\AccountSetup\EnsureNoAddressExist;
+use App\Http\Middleware\EnsureNoPasswordExist;
+use App\Http\Middleware\EnsurePasswordExists;
 
 /* --------------------
      GUEST ROUTES
 -------------------- */
+
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/', function () {
         return view('landingPage');
     })->name('landingPage');
 
-    Route::get('/about-us', function () {
-        if (Auth::check()) {
-            logActivity('Successfully', 'Visited', 'About Us Page');
-        }
-        return view('aboutUs');
-    });
+    // Route::get('/about-us', function () {
+    //     if (Auth::check()) {
+    //         logActivity('Successfully', 'Visited', 'About Us Page');
+    //     }
+    //     return view('aboutUs');
+    // });
 
     Route::get('/login', [SessionController::class, 'create'])->name('login');
     Route::post('/login', [SessionController::class, 'store']);
@@ -68,33 +84,51 @@ Route::middleware(['guest'])->group(function () {
     });
 });
 
+Route::get('/about-us', function () {
+    return view('aboutUs');
+});
+
 
 /* --------------------
  NORMAL USERS ROUTES
 ---------------------*/
 
 Route::middleware(['auth'])->group(function () {
+    Route::post('api/fetch-provinces', [ProvinceController::class, 'fetchProvinces']);
+    Route::post('api/fetch-cities', [CityController::class, 'fetchCities']);
+    Route::post('api/fetch-districts', [DistrictController::class, 'fetchDistricts']);
+    Route::post('api/fetch-villages', [VillageController::class, 'fetchVillages']);
+    
     Route::post('/manage-profile', [SessionController::class, 'destroy'])->name('logout');
 
-    Route::get('/manage-profile', function () {
-        return view('manageProfile');
-    })->name('manage-profile');
+    // Route::get('/manage-profile', function () {
+    //     return view('manageProfile');
+    // })->name('manage-profile');
 
     Route::post('/manage-two-factor', [ManageTwoFactorController::class, 'index'])->name('manage-two-factor');
+
+    Route::get('/add-password', [AddPasswordController::class, 'index'])->name('view-add-password')->middleware(EnsureNoPasswordExist::class);
+    Route::post('/add-password', [AddPasswordController::class, 'store'])->name('store-password')->middleware(EnsureNoPasswordExist::class);
 });
 /* ---------------------
     CUSTOMER ROUTES
 ---------------------- */
 // Customer Account Setup
 
-Route::middleware(['role:customer'])->group(function () {
-    Route::get('/customer-first-page', function () {
-        return view('customer.customerFirstPage');
-    });
+Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
+    Route::get('/customer-first-page', [CustomerFirstPageController::class, 'index'])->middleware(EnsureNoAddressExist::class)
+            ->withoutMiddleware(['ensureAddress'])
+            ->name('account-setup.customer-view');
+    Route::post('/customer-first-page', [CustomerFirstPageController::class, 'store'])->middleware(EnsureNoAddressExist::class)
+            ->withoutMiddleware(['ensureAddress'])
+            ->name('account-setup.customer-store');
+
+    Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
+    Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
 
     // Customer Home
     Route::get('/home', [HomeController::class, 'index'])->name('home');
-    Route::post('/topup', [UserController::class, 'topUpWellPay'])->name('wellpay.topup');
+    Route::post('/topup', [UserController::class, 'topUpWellPay'])->middleware(EnsurePasswordExists::class)->name('wellpay.topup');
 
     // Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
 
@@ -106,11 +140,14 @@ Route::middleware(['role:customer'])->group(function () {
     // Route::get('/manage-profile', function () {
     //     return view('manageProfile');
     // })->name('manage-profile');
-    Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
-    Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
+
+    // dipindahkan kebawah
+    // Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
+    // Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
 
     // Search Caterings
-    Route::get('/caterings', [VendorController::class, 'search'])->name('search');
+    Route::get('/caterings', [SearchCateringController::class, 'search'])->name('search');
+    Route::post('/set-address', [SearchCateringController::class, 'setAddress'])->name('set.address');
 
     // Catering Details
     Route::get('/catering-detail/{vendor}/rating-and-review', [VendorController::class, 'review'])->name('rate-and-review');
@@ -129,8 +166,7 @@ Route::middleware(['role:customer'])->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order-detail');
     Route::put('/orders/{id}/cancel', [OrderController::class, 'cancelOrder'])->name('order.cancel');
     // Route::get('/order-detail', [OrderController::class, 'show'])->name('order-detail');
-    Route::post('/orders/{order}/review', [CustomerRatingController::class, 'store'])->middleware('auth');
-    ;
+    Route::post('/orders/{order}/review', [CustomerRatingController::class, 'store'])->middleware('auth');;
 
     // Order Payment
     // Route::get('/payment', function () {
@@ -144,7 +180,7 @@ Route::middleware(['role:customer'])->group(function () {
     // Route::get('/vendor/{vendor}/payment', [OrderController::class, 'showPaymentPage'])->name('payment.show');
     // Route::post('/checkout', [OrderController::class, 'processCheckout'])->name('checkout.process');
 
-    Route::get('/vendor/{vendor}/payment', [OrderController::class, 'showPaymentPage'])->name('payment.show');
+    Route::get('/payment', [OrderController::class, 'showPaymentPage'])->name('payment.show');
     Route::post('/checkout', [OrderController::class, 'processCheckout'])->name('checkout.process');
     Route::get('/user/wellpay-balance', [OrderController::class, 'getUserWellpayBalance'])->name('user.wellpay.balance');
 
@@ -177,6 +213,15 @@ Route::middleware(['role:customer'])->group(function () {
     });
 });
 
+
+
+
+
+
+
+/* ---------------------
+     VENDOR ROUTES
+---------------------- */
 /* ---------------------
      VENDOR ROUTES
 ---------------------- */
@@ -190,7 +235,8 @@ Route::middleware(['role:vendor'])->group(function () {
 
     Route::middleware(EnsureVendor::class)->group(function () {
         // Catering dashboard
-        Route::get('/cateringHomePage', [OrderVendorController::class, 'totalOrder']);
+        Route::get('/cateringHomePage', [OrderVendorController::class, 'totalOrder'])->name('vendor.home');
+        Route::get('/catering-detail', [VendorController::class, 'reviewVendor'])->name('vendor.review');
         // Route::get('/cateringHomePage', function () {
         //     // untuk yang log activity, kalau suatu saat buat controllernya mohon dimasukan
         //     // masukan sebelum returen view / return redirect
@@ -205,6 +251,12 @@ Route::middleware(['role:vendor'])->group(function () {
         Route::put('/packages/{id}', [PackageController::class, 'update'])->name('packages.update');
         Route::delete('/packages/{id}', [PackageController::class, 'destroy'])->name('packages.destroy');
         Route::post('/packages/import', [PackageController::class, 'import'])->name('packages.import');
+
+        // Route::get('/manage-profile-2', [VendorController::class, 'manage_profile'])->name('manage-profile');
+        // Route::patch('/manage-profile-2', [VendorController::class, 'updateProfileUser'])->name('manage-profile.updateUser');
+        // // Route::post('/manage-profile-2', [SessionController::class, 'destroy'])->name('logout');
+
+
 
         // Manage Order
         Route::get('/manageOrder', [OrderVendorController::class, 'index'])
@@ -233,6 +285,7 @@ Route::middleware(['role:vendor'])->group(function () {
         Route::get('/manage-profile-vendor', [VendorController::class, 'manageProfile'])->name('manage-profile-vendor');
         Route::patch('/manage-profile-vendor', [VendorController::class, 'updateProfile'])->name('manage-profile-vendor.update');
 
+
         Route::get('/vendor-previews', [VendorPreviewController::class, 'index']);
 
         Route::delete('/vendor-previews/{id}', [VendorPreviewController::class, 'destroy']);
@@ -241,11 +294,17 @@ Route::middleware(['role:vendor'])->group(function () {
         Route::put('/vendor-previews/{id}', [VendorPreviewController::class, 'update']);
 
         Route::get('/vendor-manage', [VendorPreviewController::class, 'showVendorDetail']);
+
+        Route::get('/manage-profile-vendor-account', [VendorController::class, 'manage_profile'])->name('manage-profile-vendor-account');
+        Route::patch('/manage-profile-vendor-account', [VendorController::class, 'updateProfileUser'])->name('manage-profile-vendor-account.updateUser');
     });
 
     // Catering Sales
-    Route::get('/vendor/sales', [SalesController::class,'index'])->name('sales.show');
-    Route::get('/vendor/sales/export', [SalesController::class,'export_sales'])->name('sales.export');
+    Route::get('/vendor/sales', [SalesController::class, 'index'])->name('sales.show');
+    Route::get('/vendor/sales/export', [SalesController::class, 'export_sales'])->name('sales.export');
+
+    // Route::get('/manage-profile-catering', [VendorController::class, 'manageProfile'])->name('manage-profile-vendor');
+    // Route::patch('/manage-profile-catering', [VendorController::class, 'updateProfile'])->name('manage-profile-vendor.update');
 
     Route::fallback(function () {
         return redirect()->route('cateringHomePage');
@@ -260,13 +319,10 @@ Route::middleware(['role:admin'])->group(function () {
 
     Route::get('/admin-dashboard', [DashboardController::class, 'index'])->name('admin-dashboard');
 
-    Route::get('/view-all-orders', function () {
-        return view('view-all-orders');
-    });
+    Route::get('/view-all-transactions', [AdminController::class, 'view_all_transactions'])->name('view-all-transactions');
 
-    Route::get('/view-all-users', function () {
-        return view('view-all-users');
-    });
+    Route::get('/view-all-users', [AdminController::class, 'view_all_users'])->name('view-all-users');
+
 
     Route::get('/view-all-logs', [AdminController::class, 'view_all_logs'])
         ->name('view-all-logs');
@@ -291,7 +347,7 @@ Route::middleware(['role:admin'])->group(function () {
 
     // Route::post('/admin-dashboard', [SessionController::class, 'destroy'])->name('logout.admin');
 
-    Route::get('/view-order-history', [AdminController::class, 'view_order_history'])
+    Route::get('/view-order-history', [AdminViewOrderController::class, 'index'])
         ->name('view-order-history');
 
     Route::fallback(function () {

@@ -10,8 +10,8 @@
 <section class="about-us py-5">
     <div class="container">
         <div class="text-center mb-5">
-            <h2 class="section-title text-uppercase">About Us</h2>
-            <p class="text-light">Your trusted partner for healthy, delicious meals</p>
+            <h2 class="section-title text-uppercase">{{ __('about-us.about_us') }}</h2>
+            <p class="text-light">{{ __('about-us.tagline') }}</p>
         </div>
 
         <div class="row align-items-center mb-5">
@@ -19,36 +19,29 @@
                 <img src="{{ asset('asset/landing_page/2.png') }}" alt="About Eat Well" class="img-fluid rounded shadow" style="background-color: #185640">
             </div>
             <div class="col-lg-6" style="background-color: #185640; border-radius: 20px; padding: 2rem;">
-                <h3 class="mb-3 text-light">Our Mission</h3>
-                <p>
-                    At Eat Well, we believe that eating healthy should be easy, enjoyable, and accessible. Our mission is to help people
-                    build lasting healthy habits by offering convenient and nourishing meal options tailored to modern lifestyles.
-                </p>
-                <p>
-                    Whether you're a busy professional, a fitness enthusiast, or just want to eat better, we're here to support your journey.
-                    From locally sourced ingredients to perfectly portioned meals, every detail matters.
-                </p>
+                <h3 class="mb-3 text-light">{{ __('about-us.our_mission_title') }}</h3>
+                <p>{{ __('about-us.our_mission_p1') }}</p>
+                <p>{{ __('about-us.our_mission_p2') }}</p>
             </div>
         </div>
 
         <div class="row align-items-center flex-lg-row-reverse">
             <div class="col-lg-6 mb-4 mb-lg-0">
-                <h1>Eat Well Team</h1>
+                <h1>{{ __('about-us.team_title') }}</h1>
                 <img src="{{ asset('asset/aboutUs/ewt.png') }}" alt="Team" class="img-fluid shadow" style="background-color: #CFE6B0; border-radius: 30px;">
             </div>
             <div class="col-lg-6">
-                <h3 class="mb-3 text-warning">Why Choose Eat Well?</h3>
+                <h3 class="mb-3 text-warning">{{ __('about-us.why_choose_title') }}</h3>
                 <ul class="list-unstyled">
-                    <li class="mb-2">Fresh & 100% natural ingredients</li>
-                    <li class="mb-2">Easy-to-use platform</li>
-                    <li class="mb-2">Trusted meal providers</li>
-                    <li class="mb-2">Portion-controlled, balanced meals</li>
+                    <li class="mb-2">{{ __('about-us.reason1') }}</li>
+                    <li class="mb-2">{{ __('about-us.reason2') }}</li>
+                    <li class="mb-2">{{ __('about-us.reason3') }}</li>
+                    <li class="mb-2">{{ __('about-us.reason4') }}</li>
                 </ul>
             </div>
         </div>
     </div>
 </section>
-
 @endsection
 
 @section('scripts')

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
-use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
 
 class SessionController extends Controller
 {
@@ -16,25 +17,30 @@ class SessionController extends Controller
         return view('auth.login');
     }
 
-    public function store(Request $request)
+    public function store(LoginRequest $request)
     {
-        $attrs = $request->validate([
-            'email' => 'required|email|max:255',
-            'password' => 'required',
-        ]);
+        $attrs = $request->validated();
 
         $remember = request()->has('remember');
         $user = User::where('email', $attrs['email'])->first();
         Session(['remember' => $remember]);
         Session(['email' => $attrs['email']]);
         if(!$user){
+            loginLog($request->email, ' Login Failed : Error, user not found');
+            throw ValidationException::withMessages([
+                'email' => 'Credentials do not match',
+                'password' => 'Credentials do not match'
+            ]);
+        }
+
+        if(!($user->email === $attrs['email'] && Hash::check($attrs['password'], $user->password))){
             loginLog($request->email, ' Login Failed : Error, credentials do not match');
             throw ValidationException::withMessages([
                 'email' => 'Credentials do not match',
                 'password' => 'Credentials do not match'
             ]);
         }
-        
+
         if(!$user->email_verified_at || $user->enabled_2fa){
             $otp = rand(100000, 999999);
             $user->update([
@@ -49,7 +55,7 @@ class SessionController extends Controller
 
             return redirect()->route('auth.verify');
         }
-        
+
         Auth::login($user, $remember);
         loginLog($request->email, 'Successfully');
         return redirect()->route('home');

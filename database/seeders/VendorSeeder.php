@@ -2,8 +2,12 @@
 
 namespace Database\Seeders;
 
+use App\Models\City;
+use App\Models\District;
+use App\Models\Province;
 use App\Models\User;
 use App\Models\Vendor;
+use App\Models\Village;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
@@ -15,53 +19,17 @@ class VendorSeeder extends Seeder
      */
     public function run(): void
     {
-        // $vendors = [
-        //     [
-        //         'userId' => 1,
-        //         'addressId' => 1,
-        //         'name' => 'Nusantara Delights',
-        //         'breakfast_delivery' => '06:30-09:30',
-        //         'lunch_delivery' => '11:00-14:00',
-        //         'dinner_delivery' => '17:30-20:00',
-        //         'logo' => 'nusantara-delights-logo.png',
-        //         'phone_number' => '081234567890',
-        //         'rating' => 4.7,
-        //     ],
-        //     [
-        //         'userId' => 2,
-        //         'addressId' => 2,
-        //         'name' => 'Tropical Bites',
-        //         'breakfast_delivery' => '07:00-10:00',
-        //         'lunch_delivery' => '12:00-15:00',
-        //         'dinner_delivery' => '18:00-21:00',
-        //         'logo' => 'tropical-bites-logo.png',
-        //         'phone_number' => '089876543210',
-        //         'rating' => 4.3,
-        //     ],
-        //     [
-        //         'userId' => 3,
-        //         'addressId' => 3,
-        //         'name' => 'Sari Rasa Kitchen',
-        //         'breakfast_delivery' => '06:00-08:30',
-        //         'lunch_delivery' => '11:30-14:30',
-        //         'dinner_delivery' => '17:00-19:30',
-        //         'logo' => 'sari-rasa-kitchen-logo.png',
-        //         'phone_number' => '082112345678',
-        //         'rating' => 4.5,
-        //     ],
-        // ];
+        $provinces = Province::all();
+        $cities = City::all()->groupBy('province_id');
+        $districts = District::all()->groupBy('city_id');
+        $villages = Village::all()->groupBy('district_id');
 
-        // foreach($vendors as $vendor) {
-        //    Vendor::firstOrCreate(['name' => $vendor['name']], $vendor);
-        // }
-
-        // foreach($vendors as $vendor) {
-        //    Vendor::firstOrCreate(['name' => $vendor['name']], $vendor);
-        // }
         $vendors = [
             [
                 'userId' => User::factory()->create([
-                    'email' => 'vendor1@mail.com', 'role' => "Vendor", 'password' => Hash::make('password')
+                    'email' => 'vendor1@mail.com',
+                    'role' => "Vendor",
+                    'password' => Hash::make('password')
                 ])->userId,
                 'name' => 'Nusantara Delights',
                 'breakfast_delivery' => '06:30-09:30',
@@ -73,7 +41,9 @@ class VendorSeeder extends Seeder
             ],
             [
                 'userId' => User::factory()->create([
-                    'email' => 'vendor2@mail.com', 'role' => "Vendor", 'password' => Hash::make('password')
+                    'email' => 'vendor2@mail.com',
+                    'role' => "Vendor",
+                    'password' => Hash::make('password')
                 ])->userId,
                 'name' => 'Tropical Bites',
                 'breakfast_delivery' => '07:00-10:00',
@@ -85,7 +55,9 @@ class VendorSeeder extends Seeder
             ],
             [
                 'userId' => User::factory()->create([
-                    'email' => 'vendor3@mail.com', 'role' => "Vendor", 'password' => Hash::make('password')
+                    'email' => 'vendor3@mail.com',
+                    'role' => "Vendor",
+                    'password' => Hash::make('password')
                 ])->userId,
                 'name' => 'Sari Rasa Kitchen',
                 'breakfast_delivery' => '06:00-08:30',
@@ -98,9 +70,69 @@ class VendorSeeder extends Seeder
         ];
 
         foreach ($vendors as $vendor) {
-            Vendor::factory()->create($vendor);
+            $address = $this->getRandomAddress($provinces, $cities, $districts, $villages);
+            Vendor::factory()->create(array_merge($vendor, $address));
         }
 
-        Vendor::factory()->count(10)->create();
+        foreach ($provinces as $province) {
+            $provinceCities = $cities->get($province->id);
+            if (!$provinceCities || $provinceCities->isEmpty())
+                continue;
+
+            $vendorCount = rand(1, 5);
+            for ($i = 0; $i < $vendorCount; $i++) {
+                $city = $provinceCities->random();
+                $cityDistricts = $districts->get($city->id);
+                if (!$cityDistricts || $cityDistricts->isEmpty())
+                    continue;
+
+                $district = $cityDistricts->random();
+                $districtVillages = $villages->get($district->id);
+                if (!$districtVillages || $districtVillages->isEmpty())
+                    continue;
+
+                $village = $districtVillages->random();
+
+                $address = [
+                    'provinsi' => $province->name,
+                    'kota' => $city->name,
+                    'kecamatan' => $district->name,
+                    'kelurahan' => $village->name,
+                    'kode_pos' => fake()->postcode(),
+                    'jalan' => fake()->streetAddress(),
+                ];
+
+                Vendor::factory()->create($address);
+            }
+        }
+    }
+
+    private function getRandomAddress($provinces, $cities, $districts, $villages): array
+    {
+        $province = $provinces->random();
+        $provinceCities = $cities->get($province->id);
+        if (!$provinceCities || $provinceCities->isEmpty())
+            return [];
+
+        $city = $provinceCities->random();
+        $cityDistricts = $districts->get($city->id);
+        if (!$cityDistricts || $cityDistricts->isEmpty())
+            return [];
+
+        $district = $cityDistricts->random();
+        $districtVillages = $villages->get($district->id);
+        if (!$districtVillages || $districtVillages->isEmpty())
+            return [];
+
+        $village = $districtVillages->random();
+
+        return [
+            'provinsi' => $province->name,
+            'kota' => $city->name,
+            'kecamatan' => $district->name,
+            'kelurahan' => $village->name,
+            'kode_pos' => fake()->postcode(),
+            'jalan' => fake()->streetAddress(),
+        ];
     }
 }

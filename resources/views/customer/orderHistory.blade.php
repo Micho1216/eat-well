@@ -30,6 +30,12 @@
                 {{ session('message') }}
             </div>
         @endif
+        @if (session('error'))
+            <div id="flash-message" class="alert alert-danger"
+                style="position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:2000;min-width:250px;text-align:center;">
+                {{ session('error') }}
+            </div>
+        @endif
         <div class="container mt-4">
             <section class="">
                 <div class="row">

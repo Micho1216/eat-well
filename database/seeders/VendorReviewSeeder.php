@@ -25,6 +25,12 @@ class VendorReviewSeeder extends Seeder
                 $order = $this->getAllFinishedOrderForSpecificVendor($vendor->vendorId);
 
                 if(!$order){
+                    // $this->command->info("No order found for vendor ID {$vendor->vendorId}");
+                    continue;
+                }
+
+                if($order->vendorReview){
+                    // $this->command->info("Order {$order->orderId} already rated");
                     continue;
                 }
 
@@ -42,7 +48,7 @@ class VendorReviewSeeder extends Seeder
         }
 
         // Buat beberapa review acak tambahan. Ini akan mengambil vendor, user, dan order secara acak dari yang sudah ada.
-        VendorReview::factory()->count(30)->create();
+        // VendorReview::factory()->count(30)->create();
     }
 
     public function getAllFinishedOrderForSpecificVendor(String $id)
@@ -50,7 +56,7 @@ class VendorReviewSeeder extends Seeder
         $order = Order::query()
             ->where('vendorId', $id)
             ->where('isCancelled', 0)
-            ->where('endDate', '<', now())
+            ->whereDate('endDate', '<', now())
             ->inRandomOrder()
             ->first();
 

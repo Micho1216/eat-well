@@ -15,12 +15,13 @@ class ProviderRedirectController extends Controller
     {
         session()->put('role', $role);
         if(!in_array($provider, ['google'])){
-            return redirect(route('register'))->withErrors(['provider'=>'Invalid provider']);
+            return redirect(route('register', ['role' => $role ]))->withErrors(['provider'=>'Invalid provider']);
         }
+
         try{
             return Socialite::driver($provider)->redirect();
         } catch(\Exception $e){
-            return redirect(route('register'))->withErrors(['provider'=>'Something went wrong']);
+            return redirect(route('register', ['role' => $role ]))->withErrors(['provider'=>'Something went wrong']);
         }
     }
 }

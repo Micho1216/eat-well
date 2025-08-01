@@ -1,3 +1,85 @@
-<div>
-    <!-- The only way to do great work is to love what you do. - Steve Jobs -->
-</div>
+@php
+    use Carbon\Carbon;
+    Carbon::setLocale(app()->getLocale());
+@endphp
+
+@extends('components.admin-nav')
+
+@section('css')
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="stylesheet" href="{{ asset('css/main.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin/adminTable.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/admin/pagination.css') }}">
+@endsection
+
+@section('content')
+    <section class="container-fluid px-sm-5 pb-sm-4 pt-4">
+        <h1 class="text-center">{{ __('admin/order.title') }}</h1>
+    </section>
+    <section class="container-fluid px-sm-5 pb-sm-4 content-section d-flex flex-column justify-content-between"
+        style="min-height: 60vh;">
+        <div class="table-responsive mb-3">
+            <table class="table table-bordered align-middle text-center">
+                <thead class="table-light">
+                    <tr>
+                        <th scope="col">{{ __('admin/order.no') }}</th>
+                        <th scope="col">{{ __('admin/order.order_id') }}</th>
+                        <th scope="col">{{ __('admin/order.vendor_name') }}</th>
+                        <th scope="col">{{ __('admin/order.customer_name') }}</th>
+                        <th scope="col">{{ __('admin/order.order_items') }}</th>
+                        <th scope="col">{{ __('admin/order.order_period') }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($orders as $index => $order)
+                        <tr>
+                            <td>{{ ($orders->currentPage() - 1) * $orders->perPage() + $loop->iteration }}</td>
+                            <td>{{ $order->orderId }}</td>
+                            <td>{{ $order->vendor->name }}</td>
+                            <td>{{ $order->user->name }}</td>
+                            <td>
+                                <ul class="mb-0 ps-3">
+                                    @foreach ($order->orderItems as $item)
+                                        <li>{{ $item->package->name }} ({{ $item->packageTimeSlot }})
+                                            x{{ $item->quantity }}{{ !$loop->last ? ',' : '' }}</li>
+                                    @endforeach
+                                </ul>
+                            </td>
+                            <td>
+                                {{ Carbon::parse($order->startDate)->translatedFormat('d M Y') }} -
+                                {{ Carbon::parse($order->endDate)->translatedFormat('d M Y') }}
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-muted">{{ __('admin/order.no_orders') }}</td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        {{-- Pagination at the bottom --}}
+        @if ($orders->lastPage() > 1)
+            <ul class="catering-pagination pagination justify-content-center mt-auto">
+                <li class="page-item {{ $orders->onFirstPage() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $orders->previousPageUrl() ?? '#' }}">&laquo;</a>
+                </li>
+                @for ($i = 1; $i <= $orders->lastPage(); $i++)
+                    <li class="page-item {{ $orders->currentPage() == $i ? 'active' : '' }}">
+                        <a class="page-link" href="{{ $orders->url($i) }}">{{ $i }}</a>
+                    </li>
+                @endfor
+                <li class="page-item {{ !$orders->hasMorePages() ? 'disabled' : '' }}">
+                    <a class="page-link" href="{{ $orders->nextPageUrl() ?? '#' }}">&raquo;</a>
+                </li>
+            </ul>
+        @endif
+    </section>
+
+    <x-admin-footer></x-admin-footer>
+@endsection
+
+@section('scripts')
+@endsection

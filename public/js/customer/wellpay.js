@@ -34,10 +34,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const successToast = document.getElementById("successToast");
     const successToastMessage = document.getElementById("successToastMessage");
 
-    // ----- LOGIC VISIBILITY BALANCE -----
+    // Visibility balance
     const wellpayBalanceAmount = document.getElementById("wellpayBalanceAmount");
     const toggleVisibilityBtn = document.getElementById("toggleVisibilityBtn");
     const visibilityIcon = document.getElementById("visibilityIcon");
+
+    // Ambil elemen untuk saldo saat ini di Modal 1
+    const currentBalanceModal1 = customModal1.querySelector('.modal-body h5 span.fw-bold'); 
+
+    const loadingOverlay = document.getElementById("loadingOverlay");
 
     let actualDisplayedBalance = wellpayBalanceAmount.textContent;
     const numericPart = actualDisplayedBalance.replace(/[^0-9]/g, "");
@@ -92,6 +97,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Function to show the success toast
     function showSuccessToast(message) {
+        successToast.classList.remove("error");
+        successToast.style.backgroundColor = "";
         successToastMessage.textContent = message;
         successToast.classList.add("show");
         setTimeout(() => {
@@ -136,13 +143,40 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Event listener to open Custom Modal 1
     if (openCustomModal1Btn) {
-        openCustomModal1Btn.addEventListener("click", function () {
+
+        var hasPassword = document.querySelector('meta[name="has-password"]')?.content;
+        var pressedTopup = document.querySelector('meta[name="pressed-topup"]')?.content;
+
+        if(pressedTopup == 1){
             showModal(customModal1);
             if (topupInput) {
                 topupInput.value = "";
             }
             if (topupError) {
                 topupError.style.display = "none";
+            }
+            if (currentBalanceModal1) {
+                currentBalanceModal1.textContent = `Rp ${currentBalance.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+            }
+        }
+
+        openCustomModal1Btn.addEventListener("click", function () {
+            if(hasPassword != 1)
+            {
+                let url = "/add-password"
+                document.location.href = url;
+            }
+            else{
+                showModal(customModal1);
+                if (topupInput) {
+                    topupInput.value = "";
+                }
+                if (topupError) {
+                    topupError.style.display = "none";
+                }
+                if (currentBalanceModal1) {
+                    currentBalanceModal1.textContent = `Rp ${currentBalance.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                }
             }
         });
     }
@@ -238,7 +272,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 return;
             }
 
+            loadingOverlay.style.display = "flex";
+
             try {
+                console.log(finalAmount);
+                console.log(password);
                 const response = await fetch('/topup', { // Pastikan URL ini sesuai dengan route Laravel Anda
                     method: 'POST',
                     headers: {
@@ -253,6 +291,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 });
 
                 const data = await response.json();
+
+                loadingOverlay.style.display = "none";
 
                 if (response.ok) { // Status kode 200-299
                     hideModal(customModal2);
