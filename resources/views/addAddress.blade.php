@@ -1,6 +1,7 @@
 @extends('master')
 
 @section('css')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/addAddress.css') }}">
@@ -9,7 +10,9 @@
 @section('content')
     <div class="address-container text-center">
         <div class="text-start mb-3">
-            <i class="bi bi-arrow-left fs-4"></i>
+            <a href="/manage-address" style="text-decoration: none; color: black"> {{-- Ubah i menjadi a --}}
+                <i class="bi bi-arrow-left fs-4"></i>
+            </a>
         </div>
 
         <div class="divider"></div>
@@ -120,4 +123,12 @@
             </div>
         </form>
     </div>
+@endsection
+
+@section('scripts')
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous">
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="{{ asset('js/customer/addAddress.js') }}"></script>
 @endsection

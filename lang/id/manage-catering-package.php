@@ -63,4 +63,12 @@ return [
     'edit_package' => 'Edit Paket',
     'dz_drop_files_here' => 'Taruh file di sini atau klik untuk mengunggah',
     'kcal' => 'kkal',
+    'confirm_delete' => 'Ya, hapus!',
+    'cancel' => 'Batal',
+
+    'package_saved_success' => 'Paket berhasil disimpan',
+    'preview_deleted_success' => 'Pratinjau berhasil dihapus',
+
+    'preview_added_success' => 'Pratinjau berhasil ditambahkan',
+    'preview_updated_success' => 'Pratinjau berhasil diperbarui',
 ];

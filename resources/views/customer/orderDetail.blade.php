@@ -32,7 +32,7 @@
                     <div class="left-container">
                         <a href="{{ route('order-history') }}" class="btn-back">
                             <span class="icon">&lt;</span>
-                            <span class="">{{__('customer/order.back')}}</span>
+                            <span class="">{{ __('customer/order.back') }}</span>
                         </a>
                     </div>
                     <div class="right-container">
@@ -51,7 +51,7 @@
                             <div class="circle">
                                 <span class="material-symbols-outlined">shopping_cart</span>
                             </div>
-                            <div class="label">{{__('customer/order.ostat_placed')}}</div>
+                            <div class="label">{{ __('customer/order.ostat_placed') }}</div>
                         </div>
                         <div class="status-line {{ $order->payment && $order->payment->paid_at ? 'active' : '' }}"></div>
                         {{-- Order Paid --}}
@@ -59,7 +59,7 @@
                             <div class="circle">
                                 <span class="material-symbols-outlined">payments</span>
                             </div>
-                            <div class="label">{{__('customer/order.ostat_paid')}}</div>
+                            <div class="label">{{ __('customer/order.ostat_paid') }}</div>
                         </div>
                         <div class="status-line {{ now()->gt($order->startDate) ? 'active' : '' }}"></div>
                         {{-- Subscription Active --}}
@@ -67,7 +67,7 @@
                             <div class="circle">
                                 <span class="material-symbols-outlined">autorenew</span>
                             </div>
-                            <div class="label">{{__('customer/order.ostat_active')}}</div>
+                            <div class="label">{{ __('customer/order.ostat_active') }}</div>
                         </div>
                         <div class="status-line {{ now()->gt($order->endDate) ? 'active' : '' }}"></div>
                         {{-- Subscription Finished --}}
@@ -75,7 +75,7 @@
                             <div class="circle">
                                 <span class="material-symbols-outlined">check_circle</span>
                             </div>
-                            <div class="label">{{__('customer/order.ostat_finished')}}</div>
+                            <div class="label">{{ __('customer/order.ostat_finished') }}</div>
                         </div>
                     </div>
                 </section>
@@ -86,7 +86,7 @@
                     <div class="cds-status-flex">
                         {{-- LEFT: Delivery Address (unchanged) --}}
                         <div class="cds-status-left-container flex-grow-1 pe-xl-5 mb-3 mb-lg-0">
-                            <div class="cds-address-title">{{__('customer/order.adr_header')}}</div>
+                            <div class="cds-address-title">{{ __('customer/order.adr_header') }}</div>
                             <div class="cds-address-recipient">
                                 <h5 class="recipient-name">{{ $order->recipient_name }}</h5>
                                 <div class="d-flex flex-row gap-2 align-items-center">
@@ -109,9 +109,9 @@
                                 <div class="rating-container mt-3" data-order-id="{{ $order->orderId }}">
                                     <span class="cds-address-title">
                                         @if ($order->vendorReview)
-                                            {{__('customer/order.rated')}}
+                                            {{ __('customer/order.rated') }}
                                         @else
-                                            {{__('customer/order.rate')}}
+                                            {{ __('customer/order.rate') }}
                                         @endif
                                     </span>
                                     @if ($order->vendorReview)
@@ -170,12 +170,14 @@
                                                                         {{-- Choose icon based on status --}}
                                                                         <span
                                                                             class="material-symbols-outlined status-icon-sm">
-                                                                            @if ($deli_status->status->value ?? $deli_status->status === 'preparing')
+                                                                            @if ($deli_status->status->value === 'Prepared')
                                                                                 restaurant
-                                                                            @elseif ($deli_status->status->value ?? $deli_status->status === 'delivering')
+                                                                            @elseif ($deli_status->status->value === 'Delivered')
                                                                                 local_shipping
-                                                                            @elseif ($deli_status->status->value ?? $deli_status->status === 'arrived')
+                                                                            @elseif ($deli_status->status->value === 'Arrived')
                                                                                 check_circle
+                                                                            @elseif ($deli_status->status->value === 'Cancelled')
+                                                                                cancel
                                                                             @endif
                                                                         </span>
                                                                     </div>
@@ -204,7 +206,8 @@
                                                 <div class="cds-slot-title text-center mb-2">{{ $slot['label'] }}</div>
                                                 <div class="cds-slot-status-list">
                                                     @foreach ($statusesBySlot[$slot['key']] as $date => $deli_status)
-                                                        <div class="cds-slot-status-row {{ $deli_status->status->value }}">
+                                                        <div
+                                                            class="cds-slot-status-row {{ $deli_status->status->value }}">
                                                             <div
                                                                 class="cds-circle-icon d-flex align-items-center justify-content-center">
                                                                 <span class="material-symbols-outlined status-icon-sm">
@@ -214,6 +217,8 @@
                                                                         local_shipping
                                                                     @elseif ($deli_status->status->value === 'Arrived')
                                                                         check_circle
+                                                                    @elseif ($deli_status->status->value === 'Cancelled')
+                                                                        cancel
                                                                     @endif
                                                                 </span>
                                                             </div>
@@ -243,7 +248,7 @@
                                 <h5 class="">{{ $order->vendor->name }}</h5>
                             </div>
                             <a href="{{ route('catering-detail', $order->vendorId) }}" class="text-wrapper btn-view">
-                                <p>{{__('customer/order.card_view')}}</p>
+                                <p>{{ __('customer/order.card_view') }}</p>
                             </a>
                         </div>
                         <div class="right-container">
@@ -267,10 +272,16 @@
                                 </div>
                                 <div class="right-container">
                                     <div class="package-detail">
-                                        <div class="text-container detail-primary">{{ $item->package->name }}</div>
+                                        <div class="text-container detail-primary">
+                                            {{ $item->package->name }}
+                                            @if ($item->package->deleted_at)
+                                                {{ ' (' . __('customer/order.deleted_package') . ')' }}
+                                            @endif
+                                        </div>
                                         <div class="text-container d-flex flex-row flex-md-column column-gap-2">
                                             <div class="text-wrapper detail-secondary">
-                                                {{__('customer/order.card_variant')}}: {{ __('customer/order.' . $item->packageTimeSlot) }}
+                                                {{ __('customer/order.card_variant') }}:
+                                                {{ __('customer/order.' . $item->packageTimeSlot) }}
                                             </div>
                                             <div class="text-wrapper detail-secondary">
                                                 x{{ $item->quantity }}
@@ -294,7 +305,7 @@
                                 <div class="d-flex flex-row">
                                     <button class="btn btn-danger open-cancel-modal" id="open-cancel-modal"
                                         data-order-id="{{ $order->orderId }}">
-                                        {{__('customer/order.cancel')}}
+                                        {{ __('customer/order.cancel') }}
                                     </button>
                                 </div>
                             @endif
@@ -302,12 +313,12 @@
                         <div class="right-container">
                             <div class="total-container">
                                 <div class="total-row d-flex justify-content-between align-items-center">
-                                    <span class="total-label">{{__('customer/order.total_order')}}</span>
+                                    <span class="total-label">{{ __('customer/order.total_order') }}</span>
                                     <span class="total-value main-total">Rp
                                         {{ number_format($order->totalPrice, 2, ',', '.') }}</span>
                                 </div>
                                 <div class="total-row d-flex justify-content-between align-items-center">
-                                    <span class="total-label">{{__('customer/order.payment_method')}}</span>
+                                    <span class="total-label">{{ __('customer/order.payment_method') }}</span>
                                     <span class="total-value">{{ $paymentMethod->name }}</span>
                                 </div>
                             </div>
@@ -320,7 +331,7 @@
         <div id="rateReviewModal" class="custom-modal-overlay" style="display:none;">
             <div class="custom-modal-content">
                 <div class="modal-header d-flex justify-content-between align-items-center pb-1">
-                    <h5 class="modal-title">{{__('customer/order.rmod_header')}}</h5>
+                    <h5 class="modal-title">{{ __('customer/order.rmod_header') }}</h5>
                     <button type="button" class="btn-close" id="closeRateReviewModal" aria-label="Close">
                         <span class="material-symbols-outlined">close</span>
                     </button>
@@ -333,13 +344,16 @@
                         @endfor
                     </div>
                     <div class="mb-3">
-                        <label for="reviewText" class="form-label">{{__('customer/order.rmod_reviewheader')}}</label>
-                        <textarea class="form-control" id="reviewText" rows="3" placeholder="{{__('customer/order.rmod_reviewplaceholder')}}"></textarea>
+                        <label for="reviewText" class="form-label">{{ __('customer/order.rmod_reviewheader') }}</label>
+                        <textarea class="form-control" id="reviewText" rows="3"
+                            placeholder="{{ __('customer/order.rmod_reviewplaceholder') }}"></textarea>
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-end gap-2">
-                    <button type="button" class="btn btn-primary" id="submitRateReviewModal">{{__('customer/order.submit')}}</button>
-                    <button type="button" class="btn btn-secondary" id="cancelRateReviewModal">{{__('customer/order.cancel')}}</button>
+                    <button type="button" class="btn btn-primary"
+                        id="submitRateReviewModal">{{ __('customer/order.submit') }}</button>
+                    <button type="button" class="btn btn-secondary"
+                        id="cancelRateReviewModal">{{ __('customer/order.cancel') }}</button>
                 </div>
             </div>
         </div>
@@ -348,7 +362,7 @@
         <div id="successModal" class="custom-modal-overlay" style="display:none;">
             <div class="custom-modal-content text-center">
                 <div class="modal-header d-flex justify-content-between align-items-center pb-1">
-                    <h5 class="modal-title w-100">{{__('customer/order.sucmod_header')}}</h5>
+                    <h5 class="modal-title w-100">{{ __('customer/order.sucmod_header') }}</h5>
                     <button type="button" class="btn-close" id="closeSuccessModal" aria-label="Close">
                         <span class="material-symbols-outlined">close</span>
                     </button>
@@ -358,7 +372,7 @@
                         <span class="material-symbols-outlined" style="font-size:48px;color:#ffc107;">star_shine</span>
                     </div>
                     <div class="mb-2">
-                        <strong>{{__('customer/order.sucmod_body')}}</strong>
+                        <strong>{{ __('customer/order.sucmod_body') }}</strong>
                     </div>
                 </div>
                 <div class="modal-footer d-flex justify-content-end gap-2">
@@ -370,15 +384,17 @@
         <!-- Modal Confirmation -->
         <div id="cancelModal" class="modal-overlay hidden">
             <div class="modal-content">
-                <h4>{{__('customer/order.cancelmod_header')}}</h4>
-                <p style="font-size: 16px;">{{__('customer/order.cancelmod_body')}}</p>
+                <h4>{{ __('customer/order.cancelmod_header') }}</h4>
+                <p style="font-size: 16px;">{{ __('customer/order.cancelmod_body') }}</p>
 
                 <form method="POST" id="cancelForm">
                     @csrf
                     @method('put')
                     <div class="modal-actions">
-                        <button type="submit" id="submitCancelOrderBtn" class="btn-confirm">{{__('customer/order.cancelmod_yes')}}</button>
-                        <button type="button" id="closeModalBtn" class="btn-cancel">{{__('customer/order.cancelmod_no')}}</button>
+                        <button type="submit" id="submitCancelOrderBtn"
+                            class="btn-confirm">{{ __('customer/order.cancelmod_yes') }}</button>
+                        <button type="button" id="closeModalBtn"
+                            class="btn-cancel">{{ __('customer/order.cancelmod_no') }}</button>
                     </div>
                 </form>
             </div>

@@ -20,4 +20,9 @@ return [
     'arrived' => 'Arrived',
     'search_by_order' => 'Search by Order #',
     'decline_order' => 'Decline Order',
+    'processing' => 'Processing...',
+    'status_update_saved' => 'Status changes have been successfully saved.',
+    'status_updated_success' => 'Status updated successfully',
+    'order_rejected_success' => 'Order rejected successfully',
+    'rejected_success' => 'Rejected successfully',
 ];

@@ -40,7 +40,7 @@ class SessionController extends Controller
                 'password' => 'Credentials do not match'
             ]);
         }
-        
+
         if(!$user->email_verified_at || $user->enabled_2fa){
             $otp = rand(100000, 999999);
             $user->update([
@@ -55,7 +55,7 @@ class SessionController extends Controller
 
             return redirect()->route('auth.verify');
         }
-        
+
         Auth::login($user, $remember);
         loginLog($request->email, 'Successfully');
         return redirect()->route('home');

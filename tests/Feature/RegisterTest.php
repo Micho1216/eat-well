@@ -2,11 +2,9 @@
 
 namespace Tests\Feature;
 
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Laravel\Socialite\Two\User as SocialiteUser;
-use Laravel\Socialite\Facades\Socialite;
+
 
 class registerTest extends TestCase
 {
@@ -19,7 +17,7 @@ class registerTest extends TestCase
         $response = $this->get('/register/customer');
 
         // Title
-        $response->assertSee('Join EatWell');
+        $response->assertSee('Sign in to EatWell');
 
         // Form fields and labels
         $response->assertSee('Name');
@@ -48,7 +46,7 @@ class registerTest extends TestCase
         ]);
 
         // Assert user is redirected (adjust as needed)
-        $response->assertRedirect('/home'); // or wherever your app redirects after registration
+        $response->assertRedirect('/verify-otp'); // or wherever your app redirects after registration
 
         // Assert user is in the database
         $this->assertDatabaseHas('users', [
@@ -138,7 +136,7 @@ class registerTest extends TestCase
         $response = $this->get('/register/customer');
 
         // Check for the "Register with Google" button or link
-        $response->assertSeeText('Register with Google');
+        $response->assertSeeText('Continue with Google');
     }
 
 
@@ -177,7 +175,7 @@ class registerTest extends TestCase
         ]);
 
         // Assert user is redirected (adjust as needed)
-        $response->assertRedirect('/home'); // or wherever your app redirects after registration
+        $response->assertRedirect('/verify-otp'); // or wherever your app redirects after registration
 
         // Assert user is in the database
         $this->assertDatabaseHas('users', [
@@ -266,8 +264,7 @@ class registerTest extends TestCase
     {
         $response = $this->get('/register/vendor');
 
-        // Check for the "Register with Google" button or link
-        $response->assertSeeText('Register with Google');
+        $response->assertSeeText('Continue with Google');
     }
 
 }

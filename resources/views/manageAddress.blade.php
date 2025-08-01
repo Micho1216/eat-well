@@ -1,5 +1,3 @@
-
-
 @extends('master')
 
 @section('css')

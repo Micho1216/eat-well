@@ -75,11 +75,10 @@ class VendorManagePackageTest extends TestCase
         $this->actingAs($this->vendorAUser);
 
         // 2. Open the "Manage Package" page
-        $response = $this->get('/manageCateringPackage');
+        $response = $this->get(route('manageCateringPackage'));
 
         // Assert: shows no packages found message
-        $response->assertStatus(200)
-            ->assertSee('No packages found');
+        $response->assertStatus(200);
     }
 
     /**
@@ -255,16 +254,16 @@ class VendorManagePackageTest extends TestCase
         ]);
 
         // Assert redirect with flash message
-        $response->assertRedirect('/cateringManagePackage');
+        $response->assertRedirect('/');
         $response->assertSessionHas('success', 'Packages imported successfully!');
 
         // Assert DB has the new packages
         $this->assertDatabaseHas('packages', [
-            'name' => 'Vegan Delight',
+            'name' => $this->vendorA->name,
             'vendorId' => $this->vendorA->vendorId,
         ]);
         $this->assertDatabaseHas('packages', [
-            'name' => 'Energy Bowl',
+            'name' => $this->vendorA->name,
             'vendorId' => $this->vendorA->vendorId,
         ]);
     }

@@ -2,18 +2,79 @@
 
 namespace Tests\Feature;
 
+use Illuminate\Support\Facades\App;
 use Tests\TestCase;
 use App\Models\User;
 use App\Models\Order;
 use App\Models\Vendor;
 use App\Models\Package;
 use App\Models\OrderItem;
+use App\Models\PackageCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class OrderHistoryTest extends TestCase
 {
+    protected function setupSearchOrdersTest(): array
+    {
+        /**
+         * @var User|Authenticatable $user
+         */
+        $user = User::factory()->create(['role' => 'Customer']);
+        $this->actingAs($user); // Log in the user
+
+        // Create vendors
+        $vendorA = Vendor::factory()->create(['name' => 'Alpha Catering']);
+        $vendorB = Vendor::factory()->create(['name' => 'Beta Catering']);
+
+        // Create a PackageCategory before creating any Packages (as PackageFactory depends on it)
+        $category = PackageCategory::first();
+
+        // Create orders for the user with different vendors
+        $orderA = Order::factory()->create([
+            'userId' => $user->userId,
+            'vendorId' => $vendorA->vendorId,
+        ]);
+        $orderB = Order::factory()->create([
+            'userId' => $user->userId,
+            'vendorId' => $vendorB->vendorId,
+        ]);
+
+        $packageA = Package::factory()->create([
+            'vendorId' => $vendorA->vendorId,
+            'categoryId' => $category->categoryId,
+            'name' => 'Special Lunch'
+        ]);
+        $packageB = Package::factory()->create([
+            'vendorId' => $vendorB->vendorId,
+            'categoryId' => $category->categoryId,
+            'name' => 'Deluxe Dinner'
+        ]);
+
+        // Create order items with all required fields
+        OrderItem::create([
+            'orderId' => $orderA->orderId,
+            'packageId' => $packageA->packageId,
+            'name' => $packageA->name, // Store the actual package name here for searchability
+            'packageTimeSlot' => 'Afternoon',
+            'price' => 30000,
+            'quantity' => 3,
+            'mealType' => 'Lunch', // Added mealType for completeness
+        ]);
+        OrderItem::create([
+            'orderId' => $orderB->orderId,
+            'packageId' => $packageB->packageId,
+            'name' => $packageB->name, // Store the actual package name here
+            'packageTimeSlot' => 'Evening',
+            'price' => 50000,
+            'quantity' => 4,
+            'mealType' => 'Dinner', // Added mealType for completeness
+        ]);
+
+        return compact('user', 'vendorA', 'vendorB', 'orderA', 'orderB', 'packageA', 'packageB');
+    }
+
     /** @test */
-    public function test_orders_are_displayed_in_order_history()
+    public function tc1_orders_are_displayed_in_order_history()
     {
         $user = User::query()->where('role', 'like', 'Customer')->first();
         $vendor = Vendor::factory()->create();
@@ -32,7 +93,7 @@ class OrderHistoryTest extends TestCase
     }
 
     /** @test */
-    public function filter_orders_by_status(){
+    public function tc2_filter_orders_by_status(){
         $user = User::query()->where('role', 'like', 'Customer')->first();
         $vendorActive = Vendor::factory()->create(['name'=> 'Active Vendor']);
         $vendorFinished = Vendor::factory()->create(['name' => 'Finished Vendor']);
@@ -79,98 +140,146 @@ class OrderHistoryTest extends TestCase
     $response->assertDontSee((string)$finishedOrder->vendor->name);
     }
 
-   /** @test */
-    public function test_order_history_page_shows_orders_or_empty_message()
+    /** @test */
+    public function tc3_order_history_page_shows_existing_orders()
     {
+        // 1. Get or create a customer user
         $user = User::query()->where('role', 'like', 'Customer')->first();
 
-        // Check if user has any orders
-        $hasOrders = Order::where('userId', $user->userId)->exists();
-
-        if ($hasOrders) {
-            // Pick one order to check detail page
-            $order = Order::where('userId', $user->userId)->first();
-            $response = $this->actingAs($user)->get("/orders/{$order->orderId}");
-            $response->assertSee($order->vendor->name);
-            // Assert all order item/package names are shown
-            foreach ($order->orderItems as $item) {
-                $response->assertSee($item->name);
-            }
-        } else {
-            // Check empty message for each status
-            $statuses = [
-                'active' => 'You have no active orders.',
-                'finished' => 'You have no finished orders.',
-                'cancelled' => 'You have no cancelled orders.',
-                'all' => "You haven't ordered anything yet.",
-            ];
-
-            foreach ($statuses as $status => $message) {
-                $response = $this->actingAs($user)->get("/orders?status={$status}");
-                $response->assertSee('No orders found');
-                $response->assertSee($message);
-            }
+        // If no customer exists, create one for the test
+        if (!$user) {
+            $user = User::factory()->create(['role' => 'Customer']);
         }
+
+        // 2. Ensure the user has at least one order for this test
+        // If the user already has orders, this will simply not create a new one.
+        // If not, it creates a new order for the user.
+        if ($user->orders->isEmpty()) {
+            // Assuming you have Order and Vendor factories set up
+            $vendor = Vendor::factory()->create(); // Create a vendor if needed
+            $order = Order::factory()->create([
+                'userId' => $user->userId,
+                'vendorId' => $vendor->vendorId,
+                // ... any other required order fields
+            ]);
+            // Also create some order items for the order
+            OrderItem::factory()->count(2)->create([
+                'orderId' => $order->orderId,
+                // ... other item specific fields
+            ]);
+        } else {
+            // If user already has orders, pick the first one for consistency
+            $order = $user->orders->first();
+        }
+
+
+        // 3. Act as the user and visit the order detail page
+        /**
+         * @var User|Authenticatable $user
+         */
+        $response = $this->actingAs($user)->get("/orders/{$order->orderId}");
+
+        // 4. Assert the response contains the expected details
+        $response->assertSee($order->vendor->name);
+        foreach ($order->orderItems as $item) {
+            $response->assertSee($item->name);
+        }
+
+        // You can also add more general assertions about the page
+        $response->assertStatus(200); // Verify the page loaded successfully
+        $response->assertSee('Order Detail'); // Or some other common page element
     }
 
     /** @test */
-    public function test_search_orders_by_vendor_name_or_id()
+    public function tc4_catering_detail_shows_no_package_selected_message_and_disables_checkout()
     {
+        // 1. Log in as a customer (ensure their cart is empty for this test)
         $user = User::query()->where('role', 'like', 'Customer')->first();
+        if (!$user) {
+            $user = User::factory()->create(['role' => 'Customer']);
+        }
 
-        // Create vendors
-        $vendorA = Vendor::factory()->create(['name' => 'Alpha Catering']);
-        $vendorB = Vendor::factory()->create(['name' => 'Beta Catering']);
 
-        // Create orders for the user with different vendors
-        $orderA = Order::factory()->create([
-            'userId' => $user->userId,
-            'vendorId' => $vendorA->vendorId,
-        ]);
-        $orderB = Order::factory()->create([
-            'userId' => $user->userId,
-            'vendorId' => $vendorB->vendorId,
-        ]);
+        if ($user->cart) {
+            $user->cart->cartItems()->delete(); // Delete all items in the cart
+            $user->cart->delete(); // Delete the cart itself
+        }
 
-        $packageA = Package::factory()->create(['name' => 'Special Lunch']);
-        $packageB = Package::factory()->create(['name' => 'Deluxe Dinner']);
+        // 2. Assuming there's a catering/vendor detail page (e.g., catering-detail/{vendor_id})
+        // Get an existing vendor or create one if necessary
+        $vendor = Vendor::first() ?: Vendor::factory()->create();
+        App::setLocale('en');
 
-        // Create order items with all required fields
-        OrderItem::create([
-            'orderId' => $orderA->orderId,
-            'packageId' => $packageA->packageId, // <-- use packageId, not id
-            'name' => 'Special Lunch',
-            'packageTimeSlot' => 'Afternoon',
-            'price' => 30000,
-            'quantity' => 3,
-        ]);
-        OrderItem::create([
-            'orderId' => $orderB->orderId,
-            'packageId' => $packageB->packageId, // <-- use packageId, not id
-            'name' => 'Deluxe Dinner',
-            'packageTimeSlot' => 'Evening',
-            'price' => 50000,
-            'quantity' => 4,
-        ]);
-        // Search by vendor name
+        // 3. Navigate to the catering detail page for a specific vendor
+        /**
+        * @var User|Authenticatable $user
+        */
+        $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
+
+        // 4. Assert the "No Package Selected Yet." message is displayed
+        $response->assertStatus(200); // Ensure the page loaded
+        $response->assertSeeText('No Package Selected Yet.');
+    }
+
+
+    /** @test */
+    public function tc5_search_orders_by_vendor_name()
+    {
+        ['user' => $user, 'vendorA' => $vendorA, 'vendorB' => $vendorB] = $this->setupSearchOrdersTest();
+
+        // Search by vendor name "Alpha"
         $response = $this->actingAs($user)->get('/orders?query=Alpha');
+        $response->assertStatus(200);
         $response->assertSee('Alpha Catering');
         $response->assertDontSee('Beta Catering');
-
-        // Search by order item/package name
-        $response = $this->actingAs($user)->get('/orders?query=Deluxe');
-        $response->assertSee('Beta Catering');
-        $response->assertSee('Deluxe Dinner');
-        $response->assertDontSee('Alpha Catering');
-        $response->assertDontSee('Special Lunch');
-
-        // Search with a keyword that matches nothing
-        $response = $this->actingAs($user)->get('/orders?query=NotExist');
-        $response->assertSee('No orders found');
     }
 
     /** @test */
-    public function test_order_detail_page_shows_package_details()
+    public function tc6_search_orders_by_package_name(){
+        ['user' => $user, 'vendorA' => $vendorA, 'vendorB' => $vendorB, 'packageA' => $packageA, 'packageB' => $packageB] = $this->setupSearchOrdersTest();
+
+        // Search by package name "Deluxe"
+        $response = $this->actingAs($user)->get('/orders?query=Deluxe');
+        $response->assertStatus(200);
+        $response->assertSee('Beta Catering'); // Vendor of Deluxe Dinner
+        $response->assertSee('Deluxe Dinner'); // Package name
+        $response->assertDontSee('Alpha Catering');
+        $response->assertDontSee('Special Lunch');
+    }
+
+    /** @test */
+    public function tc7_search_orders_by_unmatched_keyword(){
+        ['user' => $user] = $this->setupSearchOrdersTest();
+        App::setLocale('en');
+        // Search with a keyword that matches nothing
+        $response = $this->actingAs($user)->get('/orders?query=NotExist');
+        $response->assertStatus(200);
+
+        $response->assertSeeText('No orders found');
+    }
+
+    /** @test */
+    public function tc8_view_catering_button_redirects_to_vendor_detail()
+    {
+        // 1. Get the first user with role "customer" (deterministic creation for the test)
+        /**
+        * @var User|Authenticatable $customer
+        */
+        $customer = User::factory()->create(['role' => 'Customer']);
+        $this->actingAs($customer); // Log in the customer
+
+        // Create a vendor that the "view catering" button would link to
+        $vendor = Vendor::factory()->create(['name' => 'Delicious Bites Catering']);
+
+        // 2. Procedure: Simulate clicking on the "view catering" button.
+        $response = $this->actingAs($customer)->get(route('catering-detail', $vendor->vendorId));
+        $response->assertStatus(200); 
+        $response->assertSeeText($vendor->name);
+   }
+
+
+    /** @test */
+    public function tc9_order_detail_page_shows_package_details()
     {
         $user = User::query()->where('role', 'like', 'Customer')->first();
         $vendor = Vendor::factory()->create(['name' => 'Murazik LLC']);
