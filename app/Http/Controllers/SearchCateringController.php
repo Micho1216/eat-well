@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SetAddressRequest;
 use App\Http\Requests\VendorSearchRequest;
 use App\Models\Address;
 use App\Models\PackageCategory;
@@ -118,7 +119,7 @@ class SearchCateringController extends Controller
         return view('customer.search', compact('vendors', 'all_categories', 'user', 'mainAddress'));
     }
 
-    public function setAddress(Request $request)
+    public function setAddress(SetAddressRequest $request)
     {
         $user = Auth::user();
         $addressId = $request->input('address_id');
