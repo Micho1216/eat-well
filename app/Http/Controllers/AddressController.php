@@ -87,6 +87,7 @@ class AddressController extends Controller
 
         $newAddress->save();
 
+        logActivity('Successfully', 'Added', "New Address");
         return redirect('/manage-address')->with('success', 'Alamat berhasil ditambahkan.');
     }
 

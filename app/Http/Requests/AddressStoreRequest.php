@@ -6,6 +6,10 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\Log;
+
 
 class AddressStoreRequest extends FormRequest
 {
@@ -73,5 +77,16 @@ class AddressStoreRequest extends FormRequest
                 'regex:/^[0-9]+$/',
             ],
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        logActivity('Failed', 'Add', "Address due to validation errors : " . implode($validator->errors()->all()));
+
+        throw new HttpResponseException(
+            redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+        );
     }
 }
