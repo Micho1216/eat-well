@@ -1,7 +1,17 @@
-<a href="{{ route('catering-detail', $vendor->vendorId) }}" class="catering-card-link">
+<a href="{{ route('catering-detail', $vendor->vendorId) }}" 
+   class="catering-card-link position-relative {{ $tooFar ? 'too-far' : '' }}">
+    
+    @if ($tooFar)
+        <div class="too-far-label">
+            {{ __('customer/card-vendor.too_far') ?? 'Too Far' }}
+        </div>
+    @endif
+
     <div class="catering-card">
         <div class="catering-card-img-wrapper">
-            <img src="{{ asset('asset/vendorLogo/' . $vendor->logo) }}" alt="Catering Picture" class="catering-card-img">
+            <img src="{{ asset('asset/vendorLogo/' . $vendor->logo) }}" 
+                 alt="Catering Picture" 
+                 class="catering-card-img">
         </div>
         <div class="catering-card-body d-flex flex-column flex-grow-1">
             <div class="d-flex justify-content-between align-items-center">
