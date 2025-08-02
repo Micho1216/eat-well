@@ -24,4 +24,5 @@ return [
     'ordered_on' => 'Ordered on',
     'avg_calories' => 'Calories',
     'kkal' => 'kcal',
+    'no_food_prev' => 'No food preview available.',
 ];

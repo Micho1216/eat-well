@@ -24,4 +24,5 @@ return [
     'ordered_on' => 'Dipesan pada',
     'avg_calories' => 'Kalori',
     'kkal' => 'kkal',
+    'no_food_prev' => 'Tidak ada pratinjau makanan yang tersedia.',
 ];

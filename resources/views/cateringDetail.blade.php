@@ -91,37 +91,43 @@
     <div class="food-preview-container">
         <h1 class="lexend">{{ __('catering-detail.food_preview') }}</h1>
 
-        <div class="carousel-wrapper">
-            <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true"
-                data-bs-interval="2500">
-                <div class="carousel-indicators">
-                    @foreach ($vendor->previews as $key => $preview)
-                        <button type="button" data-bs-target="#carouselExampleAutoplaying"
-                            data-bs-slide-to="{{ $key }}" class="{{ $loop->first ? 'active' : '' }}"
-                            aria-current="{{ $loop->first ? 'true' : 'false' }}"
-                            aria-label="Slide {{ $key + 1 }}"></button>
-                    @endforeach
-                </div>
-                <div class="carousel-inner">
-                    @foreach ($vendor->previews as $key => $preview)
-                        <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
-                            <img src="{{ asset('asset/catering-preview/' . $preview->previewPicturePath) }}"
-                                class="d-block w-100" alt="Food Preview {{ $key + 1 }}">
+        @if ($vendor->previews->isNotEmpty())
+                <div class="carousel-wrapper">
+                    <div id="carouselExampleAutoplaying" class="carousel slide" data-bs-ride="carousel" data-bs-touch="true"
+                        data-bs-interval="2500">
+                        <div class="carousel-indicators">
+                            @foreach ($vendor->previews as $key => $preview)
+                                <button type="button" data-bs-target="#carouselExampleAutoplaying"
+                                    data-bs-slide-to="{{ $key }}" class="{{ $loop->first ? 'active' : '' }}"
+                                    aria-current="{{ $loop->first ? 'true' : 'false' }}"
+                                    aria-label="Slide {{ $key + 1 }}"></button>
+                            @endforeach
                         </div>
-                    @endforeach
+                        <div class="carousel-inner">
+                            @foreach ($vendor->previews as $key => $preview)
+                                <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
+                                    <img src="{{ asset('asset/catering-preview/' . $preview->previewPicturePath) }}"
+                                        class="d-block w-100" alt="Food Preview {{ $key + 1 }}">
+                                </div>
+                            @endforeach
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
+                            data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
+                            data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
                 </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleAutoplaying"
-                    data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Previous</span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleAutoplaying"
-                    data-bs-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="visually-hidden">Next</span>
-                </button>
             </div>
-        </div>
+        @else
+            <h2 class="text-white mt-4">{{ __('catering-detail.no_food_prev')}}</h2>
+        @endif
+    </div>
     </div>
     </div>
 
@@ -337,8 +343,7 @@
             <p>Debug: Selected Address Jalan = {{ $selectedAddress->jalan ?? 'N/A' }}</p>
         </div> --}}
 
-        <a href="{{ route('payment.show') }}"
-            class="button-order inter" id="proceedToPaymentLink"
+        <a href="{{ route('payment.show') }}" class="button-order inter" id="proceedToPaymentLink"
             style="cursor: default; pointer-events: none; text-decoration: none;">
             <span class="order-message">{{ __('catering-detail.no_package_selected_yet') }}</span>
             <span class="package-count" style="display:none;"></span>

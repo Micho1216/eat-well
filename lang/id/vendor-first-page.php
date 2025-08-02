@@ -25,9 +25,9 @@ return [
 
     'name_required' => 'Nama vendor wajib diisi',
 
-    'close_breakfast_after' => 'Waktu selesai sarapan harus setelah waktu mulai sarapan',
-    'close_lunch_after' => 'Waktu selesai makan siang harus setelah waktu mulai makan siang',
-    'close_dinner_after' => 'Waktu selesai makan malam harus setelah waktu mulai makan malam',
+    'closeBreakfast_after' => 'Waktu selesai sarapan harus setelah waktu mulai sarapan',
+    'closeLunch_after' => 'Waktu selesai makan siang harus setelah waktu mulai makan siang',
+    'closeDinner_after' => 'Waktu selesai makan malam harus setelah waktu mulai makan malam',
 
     'province_required' => 'Provinsi wajib diisi',
     'city_required' => 'Kota wajib diisi',
@@ -38,27 +38,12 @@ return [
     'zip_code_digits' => 'Kode pos harus terdiri dari :digits digit',
 
     'phone_number_required' => 'Nomor telepon wajib diisi',
-    'phone_number_regex' => 'Nomor telepon harus diawali dengan "08" dan terdiri dari 10-15 digit',
+    'phone_number_regex' => 'Nomor telepon harus terdiri dari 10-15 digit',
 
     'address_required' => 'Alamat wajib diisi',
 
-    // Custom time validation messages
-    'time_invalid_format' => ':attribute bukan format waktu yang valid.',
-    'breakfast_time_range' => ':attribute harus antara 00:00 dan 10:29',
-    'breakfast_close_max_time' => ':attribute harus pada atau sebelum 10:30',
-    'lunch_time_range' => ':attribute harus antara 10:31 dan 14:59',
-    'lunch_close_max_time' => ':attribute harus pada atau sebelum 15:00',
-    'dinner_time_range' => ':attribute harus antara 15:01 dan 23:58',
-    'dinner_close_max_time' => ':attribute harus pada atau sebelum 23:59',
-
 
     'attributes' => [
-        'startBreakfast' => 'waktu mulai sarapan',
-        'closeBreakfast' => 'waktu selesai sarapan',
-        'startLunch' => 'waktu mulai makan siang',
-        'closeLunch' => 'waktu selesai makan siang',
-        'startDinner' => 'waktu mulai makan malam',
-        'closeDinner' => 'waktu selesai makan malam',
         'provinsi' => 'provinsi',
         'kota' => 'kota',
         'kecamatan' => 'kecamatan',
@@ -69,5 +54,12 @@ return [
         'logo' => 'logo',
         'name' => 'nama',
     ],
+    // Custom time validation messages
+    'breakfast_time_range' => 'Waktu mulai sarapan harus antara 06:00 dan 10:00',
+    'breakfast_close_max_time' => 'Waktu selesai sarapan harus pada atau sebelum 10:00',
+    'lunch_time_range' => 'Waktu mulai makan siang harus antara 11:00 dan 14:00',
+    'lunch_close_max_time' => 'Waktu selesai makan siang harus pada atau sebelum 14:00',
+    'dinner_time_range' => 'Waktu makan malam harus antara 17:00 dan 20:00',
+    'dinner_close_max_time' => 'Waktu selesai makan malam harus pada atau sebelum 20:00',
         
 ];
