@@ -66,6 +66,7 @@ class ProfileRequest extends FormRequest
             'profilePicInput.max' => $locale === 'id' ? 'Foto profil tidak boleh lebih dari 2MB.' : 'Profile picture must not be larger than 2MB.',
         ];
     }
+    
 
 
     protected function failedValidation(Validator $validator)
