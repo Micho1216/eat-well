@@ -33,61 +33,61 @@ document.addEventListener('DOMContentLoaded', () => {
 
         document.querySelectorAll('input, select').forEach(input => {
             input.addEventListener('input', function() {
-                const feedbackElement = this.nextElementSibling;
-                if (feedbackElement && feedbackElement.classList.contains('invalid-feedback')) {
-                    if (!this.validity.valid && this.type !== 'hidden') {
-                        this.classList.add('is-invalid');
-                        setCustomValidationMessage(this, feedbackElement);
-                    } else {
-                        this.classList.remove('is-invalid');
-                        feedbackElement.textContent = '';
-                    }
-                }
+                // const feedbackElement = this.nextElementSibling;
+                // if (feedbackElement && feedbackElement.classList.contains('invalid-feedback')) {
+                //     if (!this.validity.valid && this.type !== 'hidden') {
+                //         this.classList.add('is-invalid');
+                //         setCustomValidationMessage(this, feedbackElement);
+                //     } else {
+                //         this.classList.remove('is-invalid');
+                //         feedbackElement.textContent = '';
+                //     }
+                // }
             });
 
             if (input.tagName === 'SELECT') {
                 input.addEventListener('change', function() {
-                    const feedbackElement = this.nextElementSibling;
-                    if (feedbackElement && feedbackElement.classList.contains('invalid-feedback')) {
-                        if (!this.validity.valid) {
-                            this.classList.add('is-invalid');
-                            setCustomValidationMessage(this, feedbackElement);
-                        } else {
-                            this.classList.remove('is-invalid');
-                            feedbackElement.textContent = '';
-                        }
-                    }
+                    // const feedbackElement = this.nextElementSibling;
+                    // if (feedbackElement && feedbackElement.classList.contains('invalid-feedback')) {
+                    //     if (!this.validity.valid) {
+                    //         this.classList.add('is-invalid');
+                    //         setCustomValidationMessage(this, feedbackElement);
+                    //     } else {
+                    //         this.classList.remove('is-invalid');
+                    //         feedbackElement.textContent = '';
+                    //     }
+                    // }
                 });
             }
         });
 
-        form.addEventListener('submit', function(event) {
-            let formValid = true;
+        // form.addEventListener('submit', function(event) {
+        //     let formValid = true;
 
-            document.querySelectorAll('#addressForm [required], #addressForm [pattern], #addressForm [minlength], #addressForm [maxlength]').forEach(inputElement => {
-                if (!inputElement.checkValidity()) {
-                    inputElement.classList.add('is-invalid');
-                    const feedbackElement = inputElement.nextElementSibling;
-                    if (feedbackElement && feedbackElement.classList.contains('invalid-feedback')) {
-                        setCustomValidationMessage(inputElement, feedbackElement);
-                    }
-                    formValid = false;
-                } else {
-                    inputElement.classList.remove('is-invalid');
-                    const feedbackElement = inputElement.nextElementSibling;
-                    if (feedbackElement && feedbackElement.classList.contains('invalid-feedback')) {
-                        feedbackElement.textContent = '';
-                    }
-                }
-            });
+        //     document.querySelectorAll('#addressForm [required], #addressForm [pattern], #addressForm [minlength], #addressForm [maxlength]').forEach(inputElement => {
+        //         if (!inputElement.checkValidity()) {
+        //             inputElement.classList.add('is-invalid');
+        //             const feedbackElement = inputElement.nextElementSibling;
+        //             if (feedbackElement && feedbackElement.classList.contains('invalid-feedback')) {
+        //                 setCustomValidationMessage(inputElement, feedbackElement);
+        //             }
+        //             formValid = false;
+        //         } else {
+        //             inputElement.classList.remove('is-invalid');
+        //             const feedbackElement = inputElement.nextElementSibling;
+        //             if (feedbackElement && feedbackElement.classList.contains('invalid-feedback')) {
+        //                 feedbackElement.textContent = '';
+        //             }
+        //         }
+        //     });
 
-            if (!formValid) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
+        //     if (!formValid) {
+        //         event.preventDefault();
+        //         event.stopPropagation();
+        //     }
 
-            form.classList.add('was-validated');
-        }, false);
+        //     form.classList.add('was-validated');
+        // }, false);
     })();
 
     // --- Logika Pengisian Dropdown dan Input Hidden (Menggunakan AJAX ke Laravel) ---
@@ -116,10 +116,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Load Provinsi saat halaman dimuat
-    resetSelect(provinsiSelect, 'Pilih Provinsi');
-    resetSelect(kotaSelect, 'Pilih Kota');
-    resetSelect(kecamatanSelect, 'Pilih Kecamatan');
-    resetSelect(kelurahanSelect, 'Pilih Kelurahan');
+    // resetSelect(provinsiSelect, 'Pilih Provinsi');
+    // resetSelect(kotaSelect, 'Pilih Kota');
+    // resetSelect(kecamatanSelect, 'Pilih Kecamatan');
+    // resetSelect(kelurahanSelect, 'Pilih Kelurahan');
 
     $.ajax({
         url: "/api/fetch-provinces",
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         dataType: 'JSON',
         success: function(result) {
             openSelect(provinsiSelect);
-            provinsiSelect.innerHTML = '<option value="">Pilih Provinsi</option>';
+            // provinsiSelect.innerHTML = '<option value=""></option>';
             $.each(result, function(key, value) {
                 provinsiSelect.insertAdjacentHTML('beforeend', '<option value="' + value.id + '">' + value.name + '</option>');
             });

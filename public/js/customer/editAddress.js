@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Set up CSRF token for all AJAX requests using jQuery
     const csrfToken = $('meta[name="csrf-token"]').attr('content');
     if (csrfToken) {
         $.ajaxSetup({
@@ -7,97 +6,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 'X-CSRF-TOKEN': csrfToken
             }
         });
-    } else {
-        console.error('CSRF token not found! Please ensure <meta name="csrf-token" content="..."> is in your head.');
     }
 
-    // --- Fungsi untuk menangani validasi kustom dan pesan error ---
-    function setCustomValidationMessage(inputElement, feedbackElement) {
-        if (inputElement.validity.valueMissing) {
-            feedbackElement.textContent = feedbackElement.dataset.messageRequired || 'Bidang ini tidak boleh kosong.';
-        } else if (inputElement.validity.patternMismatch) {
-            feedbackElement.textContent = feedbackElement.dataset.messagePattern || 'Format tidak sesuai.';
-        } else if (inputElement.validity.tooShort) {
-            feedbackElement.textContent = feedbackElement.dataset.messageMinlength || `Minimal ${inputElement.minLength} karakter.`;
-        } else if (inputElement.validity.tooLong) {
-            feedbackElement.textContent = feedbackElement.dataset.messageMaxlength || `Maksimal ${inputElement.maxLength} karakter.`;
-        } else {
-            feedbackElement.textContent = ''; // Hapus pesan jika valid
-        }
-    }
-
-    // --- Inisialisasi Validasi Bootstrap ---
-    (function() {
-        'use strict';
-        const form = document.getElementById('addressForm');
-
-        document.querySelectorAll('input, select').forEach(input => {
-            input.addEventListener('input', function() {
-                const feedbackElement = this.nextElementSibling;
-                if (feedbackElement && feedbackElement.classList.contains('invalid-feedback')) {
-                    if (!this.validity.valid && this.type !== 'hidden') {
-                        this.classList.add('is-invalid');
-                        setCustomValidationMessage(this, feedbackElement);
-                    } else {
-                        this.classList.remove('is-invalid');
-                        feedbackElement.textContent = '';
-                    }
-                }
-            });
-
-            if (input.tagName === 'SELECT') {
-                input.addEventListener('change', function() {
-                    const feedbackElement = this.nextElementSibling;
-                    if (feedbackElement && feedbackElement.classList.contains('invalid-feedback')) {
-                        if (!this.validity.valid) {
-                            this.classList.add('is-invalid');
-                            setCustomValidationMessage(this, feedbackElement);
-                        } else {
-                            this.classList.remove('is-invalid');
-                            feedbackElement.textContent = '';
-                        }
-                    }
-                });
-            }
-        });
-
-        form.addEventListener('submit', function(event) {
-            let formValid = true;
-
-            document.querySelectorAll('#addressForm [required], #addressForm [pattern], #addressForm [minlength], #addressForm [maxlength]').forEach(inputElement => {
-                if (!inputElement.checkValidity()) {
-                    inputElement.classList.add('is-invalid');
-                    const feedbackElement = inputElement.nextElementSibling;
-                    if (feedbackElement && feedbackElement.classList.contains('invalid-feedback')) {
-                        setCustomValidationMessage(inputElement, feedbackElement);
-                    }
-                    formValid = false;
-                } else {
-                    inputElement.classList.remove('is-invalid');
-                    const feedbackElement = inputElement.nextElementSibling;
-                    if (feedbackElement && feedbackElement.classList.contains('invalid-feedback')) {
-                        feedbackElement.textContent = '';
-                    }
-                }
-            });
-
-            if (!formValid) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
-
-            form.classList.add('was-validated');
-        }, false);
-    })();
-
-    // --- Logika Pengisian Dropdown dan Input Hidden (Menggunakan AJAX ke Laravel) ---
+    const form = document.getElementById('addressForm');
 
     const provinsiSelect = document.getElementById('provinsi');
     const kotaSelect = document.getElementById('kota');
     const kecamatanSelect = document.getElementById('kecamatan');
     const kelurahanSelect = document.getElementById('kelurahan');
 
-    // Mengambil variabel global dari Blade
     const currentAddress = window.currentAddress || {};
     const oldInput = window.oldInput || {};
 
@@ -112,32 +29,21 @@ document.addEventListener('DOMContentLoaded', () => {
         formSelect.disabled = true;
         formSelect.innerHTML = '<option value="" selected>' + placeholder + '</option>';
         const hiddenInput = document.getElementById(formSelect.id + '_name');
-        if (hiddenInput) {
-            hiddenInput.value = '';
-        }
-        formSelect.classList.remove('is-invalid');
-        const feedbackElement = formSelect.nextElementSibling;
-        if (feedbackElement && feedbackElement.classList.contains('invalid-feedback')) {
-            feedbackElement.textContent = '';
-        }
+        if (hiddenInput) hiddenInput.value = '';
     }
 
     function openSelect(formSelect) {
         formSelect.disabled = false;
     }
 
-    // --- Fungsi cleanRegionName yang disesuaikan ---
-    // Hanya konversi ke huruf kecil dan trim whitespace
     function cleanRegionName(name) {
         if (!name) return '';
         return name.toLowerCase().trim();
     }
 
     async function populateAndSelectDropdowns() {
-        // Tentukan data mana yang akan digunakan untuk pre-fill: oldInput jika ada, else currentAddress
         const dataToUse = hasOldDropdownInput() ? oldInput : currentAddress;
 
-        // 1. Load dan Pilih Provinsi
         const provData = await $.ajax({
             url: "/api/fetch-provinces",
             type: "POST",
@@ -150,11 +56,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         let selectedProvId = '';
-        // Prioritaskan ID untuk pemilihan
         if (dataToUse.provinsi_id && dataToUse.provinsi_id !== "null" && dataToUse.provinsi_id !== "") {
             selectedProvId = dataToUse.provinsi_id;
             provinsiSelect.value = selectedProvId;
-        } else if (dataToUse.provinsi || dataToUse.provinsi_name) { // Fallback ke nama jika ID tidak ada/valid
+        } else if (dataToUse.provinsi || dataToUse.provinsi_name) {
             const nameToMatch = cleanRegionName(dataToUse.provinsi_name || dataToUse.provinsi);
             for (let i = 0; i < provinsiSelect.options.length; i++) {
                 const optionText = cleanRegionName(provinsiSelect.options[i].text);
@@ -167,8 +72,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         document.getElementById('provinsi_name').value = provinsiSelect.selectedIndex !== -1 ? provinsiSelect.options[provinsiSelect.selectedIndex].text : '';
 
-
-        // 2. Load dan Pilih Kota (Hanya jika Provinsi terpilih/cocok)
         let selectedKotaId = '';
         if (selectedProvId) {
             openSelect(kotaSelect);
@@ -203,7 +106,6 @@ document.addEventListener('DOMContentLoaded', () => {
             resetSelect(kotaSelect, 'Pilih Kota');
         }
 
-        // 3. Load dan Pilih Kecamatan (Hanya jika Kota terpilih/cocok)
         let selectedKecId = '';
         if (selectedKotaId) {
             openSelect(kecamatanSelect);
@@ -238,7 +140,6 @@ document.addEventListener('DOMContentLoaded', () => {
             resetSelect(kecamatanSelect, 'Pilih Kecamatan');
         }
 
-        // 4. Load dan Pilih Kelurahan (Hanya jika Kecamatan terpilih/cocok)
         let selectedKelId = '';
         if (selectedKecId) {
             openSelect(kelurahanSelect);
@@ -272,27 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             resetSelect(kelurahanSelect, 'Pilih Kelurahan');
         }
-
-        // Jika old input digunakan (misal: ada error validasi di field dropdown)
-        if (hasOldDropdownInput()) {
-            // Ini untuk menampilkan pesan validasi jika ada oldInput dan validasi gagal
-            const dropdowns = [provinsiSelect, kotaSelect, kecamatanSelect, kelurahanSelect];
-            dropdowns.forEach(dropdown => {
-                if (!dropdown.validity.valid) { // Jika elemen dropdown tidak valid
-                    dropdown.classList.add('is-invalid');
-                    const feedbackElement = dropdown.nextElementSibling;
-                    if (feedbackElement && feedbackElement.classList.contains('invalid-feedback')) {
-                        setCustomValidationMessage(dropdown, feedbackElement);
-                    }
-                }
-            });
-        }
     }
 
     populateAndSelectDropdowns();
 
-    // Event listeners untuk pemuatan dinamis setelah pemuatan halaman awal
-    // ... (kode event listener change seperti sebelumnya, tidak ada perubahan) ...
     provinsiSelect.addEventListener('change', async function() {
         const selectedOption = this.options[this.selectedIndex];
         document.getElementById('provinsi_name').value = selectedOption.text;
@@ -303,28 +187,22 @@ document.addEventListener('DOMContentLoaded', () => {
         resetSelect(kecamatanSelect, 'Pilih Kecamatan');
         resetSelect(kelurahanSelect, 'Pilih Kelurahan');
 
-        if (provID) {
-            await $.ajax({
-                url: "/api/fetch-cities",
-                type: "POST",
-                data: { province_id: provID },
-                dataType: 'JSON',
-                success: function(result) {
-                    openSelect(kotaSelect);
-                    kotaSelect.innerHTML = '<option value="">Pilih Kota</option>';
-                    $.each(result, function(key, value) {
-                        kotaSelect.insertAdjacentHTML('beforeend', '<option value="' + value.id + '">' + value.name + '</option>');
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching cities:", error);
-                    alert("Gagal memuat data kota. Silakan coba lagi.");
-                }
-            });
-        } else {
-            this.classList.add('is-invalid');
-            this.nextElementSibling.textContent = this.nextElementSibling.dataset.messageRequired;
-        }
+        if (!provID) return;
+
+        await $.ajax({
+            url: "/api/fetch-cities",
+            type: "POST",
+            data: { province_id: provID },
+            dataType: 'JSON',
+            success: function(result) {
+                openSelect(kotaSelect);
+                kotaSelect.innerHTML = '<option value="">Pilih Kota</option>';
+                $.each(result, function(key, value) {
+                    kotaSelect.insertAdjacentHTML('beforeend', '<option value="' + value.id + '">' + value.name + '</option>');
+                });
+            }
+        });
+
         this.dispatchEvent(new Event('input'));
     });
 
@@ -337,28 +215,22 @@ document.addEventListener('DOMContentLoaded', () => {
         resetSelect(kecamatanSelect, 'Pilih Kecamatan');
         resetSelect(kelurahanSelect, 'Pilih Kelurahan');
 
-        if (kotaID) {
-            await $.ajax({
-                url: "/api/fetch-districts",
-                type: "POST",
-                data: { city_id: kotaID },
-                dataType: 'JSON',
-                success: function(result) {
-                    openSelect(kecamatanSelect);
-                    kecamatanSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
-                    $.each(result, function(key, value) {
-                        kecamatanSelect.insertAdjacentHTML('beforeend', '<option value="' + value.id + '">' + value.name + '</option>');
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching districts:", error);
-                    alert("Gagal memuat data kecamatan. Silakan coba lagi.");
-                }
-            });
-        } else {
-            this.classList.add('is-invalid');
-            this.nextElementSibling.textContent = this.nextElementSibling.dataset.messageRequired;
-        }
+        if (!kotaID) return;
+
+        await $.ajax({
+            url: "/api/fetch-districts",
+            type: "POST",
+            data: { city_id: kotaID },
+            dataType: 'JSON',
+            success: function(result) {
+                openSelect(kecamatanSelect);
+                kecamatanSelect.innerHTML = '<option value="">Pilih Kecamatan</option>';
+                $.each(result, function(key, value) {
+                    kecamatanSelect.insertAdjacentHTML('beforeend', '<option value="' + value.id + '">' + value.name + '</option>');
+                });
+            }
+        });
+
         this.dispatchEvent(new Event('input'));
     });
 
@@ -370,32 +242,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resetSelect(kelurahanSelect, 'Pilih Kelurahan');
 
-        if (kecID) {
-            await $.ajax({
-                url: "/api/fetch-villages",
-                type: "POST",
-                data: { district_id: kecID },
-                dataType: 'JSON',
-                success: function(result) {
-                    openSelect(kelurahanSelect);
-                    kelurahanSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
-                    $.each(result, function(key, value) {
-                        kelurahanSelect.insertAdjacentHTML('beforeend', '<option value="' + value.id + '">' + value.name + '</option>');
-                    });
-                },
-                error: function(xhr, status, error) {
-                    console.error("Error fetching villages:", error);
-                    alert("Gagal memuat data kelurahan. Silakan coba lagi.");
-                }
-            });
-        } else {
-            this.classList.add('is-invalid');
-            this.nextElementSibling.textContent = this.nextElementSibling.dataset.messageRequired;
-        }
+        if (!kecID) return;
+
+        await $.ajax({
+            url: "/api/fetch-villages",
+            type: "POST",
+            data: { district_id: kecID },
+            dataType: 'JSON',
+            success: function(result) {
+                openSelect(kelurahanSelect);
+                kelurahanSelect.innerHTML = '<option value="">Pilih Kelurahan</option>';
+                $.each(result, function(key, value) {
+                    kelurahanSelect.insertAdjacentHTML('beforeend', '<option value="' + value.id + '">' + value.name + '</option>');
+                });
+            }
+        });
+
         this.dispatchEvent(new Event('input'));
     });
 
-    kelurahanSelect.addEventListener('change', async function() {
+    kelurahanSelect.addEventListener('change', function() {
         const selectedOption = this.options[this.selectedIndex];
         document.getElementById('kelurahan_name').value = selectedOption.text;
         this.dispatchEvent(new Event('input'));

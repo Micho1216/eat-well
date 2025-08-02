@@ -1,6 +1,6 @@
 @extends('master')
 
-@section('title', 'Manage Prodile')
+@section('title', 'Manage Profile')
 @section('css')
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/manageProfile.css') }}">

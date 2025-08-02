@@ -18,8 +18,8 @@
             <div class="row">
                 <div class="col-2">
                     <a href="{{ route('manage-profile-vendor-account') }}"
-                        style="text-decoration: none; font-size: 40px; font-weight:900" class="fw-bold">
-                        ←
+                        style="text-decoration: none;" >
+                        <img src="{{ asset('asset/backbutton.png') }}" alt="">
                     </a>
                 </div>
                 <div class="col-8">
@@ -61,7 +61,7 @@
                         <label>{{ __('manage-profile-vendor.email') }}</label>
                         <input type="text" class="form-control" value="{{ $user->email }}" disabled>
 
-                         <label>{{ __('manage-profile-vendor.address') }}</label>
+                         <label>{{ __('manage-profile.address') }}</label>
                         <input type="text" class="form-control" value="{{ $address }}" disabled>
                     </div>
 
