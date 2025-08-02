@@ -5,19 +5,20 @@
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
     <link rel="stylesheet" href="{{ asset('css/manageProfile.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous">
+    </script>
 @endsection
 
 @section('content')
-    <div id="translation-data"
-        data-save-text = "{{ __('customer/manage-profile.save') }}"
+    <div id="translation-data" data-save-text = "{{ __('customer/manage-profile.save') }}"
         data-cancel-text = "{{ __('customer/manage-profile.cancel') }}"
         data-edit-text = "{{ __('customer/manage-profile.edit') }}"
         data-pass-fill-all-text= "{{ __('customer/manage-profile.pass_fill_all') }}"
         data-pass-no-match-text= "{{ __('customer/manage-profile.pass_no_match') }}"
         data-pass-cha-text= "{{ __('customer/manage-profile.pass_cha') }}"
         data-but-cha-text= "{{ __('customer/manage-profile.but_cha') }}">
-    </div>  
+    </div>
     <div class="container container-custom">
         <div class="left-panel outer-panel">
             <div class="lexend font-medium manage-profile">
@@ -100,7 +101,7 @@
                                     role="alert" aria-live="assertive" aria-atomic="true">
                                     <div class="d-flex">
                                         <div class="toast-body">
-                                            {{ __('manage-profile.success_msg')}}
+                                            {{ __('manage-profile.success_msg') }}
                                         </div>
                                         <button type="button" class="btn-close btn-close-white me-2 m-auto"
                                             data-bs-dismiss="toast" aria-label="Close"></button>
@@ -121,8 +122,7 @@
                         @endif
                     @endif
                     <div class="manage-profile-in">
-                        <form action="{{ route('manage-profile.update') }}" method="POST"
-                            enctype="multipart/form-data">
+                        <form action="{{ route('manage-profile.update') }}" method="POST" enctype="multipart/form-data">
                             @csrf
                             @method('PATCH')
                             <div class="datafoto">
@@ -229,8 +229,8 @@
                                 </div>
                                 <div class="photo-data">
                                     <div class="profile-image-wrapper">
-                                        <img src="{{ asset($user->profilePath) }}"
-                                            alt="Profile Picture" class="profile-picture" id="profilePicPreview">
+                                        <img src="{{ asset($user->profilePath) }}" alt="Profile Picture"
+                                            class="profile-picture" id="profilePicPreview">
                                         <label for="profilePicInput" class="change-image-label">
                                             <span class="material-symbols-outlined change-image-icon">
                                                 add_photo_alternate
@@ -241,7 +241,7 @@
                                     </div>
                                     <div class="edit-btn-group d-flex flex-row">
                                         <button class="inter font-medium edit-data">Edit</button>
-                                        
+
                                     </div>
                                     <p style="color: rgb(242, 185, 12)">{{ __('manage-profile.click_edit') }}</p>
 
@@ -287,12 +287,23 @@
                             </div>
 
                             <div class="mfa-toggle-row">
-                                <label class="mfa-switch">
-                                    <input type="checkbox" id="mfaToggle">
-                                    <span class="mfa-slider"></span>
-                                </label>
-                                <span
-                                    class="inter font-bold mfa-toggle-label">{{ __('manage-profile.enable_mfa') }}</span>
+                                <form method="POST" action="{{ route('manage-two-factor') }}">
+                                    @csrf
+                                    <button type="submit" class="btn">
+                                        <label class="mfa-switch">
+                                            <input type="checkbox" @checked($user->enabled_2fa) />
+                                            <span class="mfa-slider"></span>
+                                        </label>
+                                    </button>
+                                </form>
+
+                                <span class="inter font-bold mfa-toggle-label">
+                                    @if ($user->enabled_2fa)
+                                        Two Factor Authentication is enabled
+                                    @else
+                                        Enable Multi Factor Authentication
+                                    @endif
+                                </span>
                             </div>
 
                             <p class="mfa-desc inter font-bold">
