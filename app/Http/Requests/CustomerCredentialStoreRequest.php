@@ -25,13 +25,13 @@ class CustomerCredentialStoreRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'profilePath' => ['required', 'mimes:png, jpg, jpeg'],
+            'profile' => ['file', 'mimes:png, jpg, jpeg', 'max:10240'],
             'province' => ['required'],
             'city' => ['required'],
             'district' => ['required'],
             'village' => ['required'],
-            'phoneNumber' => ['required'],
-            'zipCode' => ['required'],
+            'phoneNumber' => ['required', 'digits_between:8, 14'],
+            'zipCode' => ['required', 'digits:5'],
             'address' => ['required'],
         ];
     }

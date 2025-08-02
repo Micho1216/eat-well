@@ -7,22 +7,18 @@ use App\Http\Requests\CustomerCredentialStoreRequest;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
-use App\Models\Address;
-use App\Models\District;
-use App\Models\City;
-use App\Models\Village;
 use App\Models\Province;
+use App\Models\City;
+use App\Models\District;
+use App\Models\Village;
+use Illuminate\Support\Facades\Storage;
+use App\Models\User;
 
 class CustomerFirstPageController extends Controller
 {
     public function index() : View
     {
-        $user = Auth::user();
-        $profilePicture = $user->profile_picture;
-
-        return view('customer.customerFirstPage',
-            ['profilePicture' => $profilePicture]);
+        return view('customer.customerFirstPage');
     }
 
     public function store(CustomerCredentialStoreRequest $request) : RedirectResponse
@@ -44,9 +40,17 @@ class CustomerFirstPageController extends Controller
             'is_default' => true,
             'userId' => $user->userId,
         ]);
+
+
+        $image = $attrs['profile'];
+        $imageName = time().'.'.$image->getClientOriginalExtension();
+        Storage::putFileAs('public/profiles', $image, $imageName);
+        $user->profilePath = 'storage/profiles/'.$imageName;
+        
         $user->save();
+
+
         logActivity('Successfully', 'Registered', 'Customer Account with id : ' . $user->userId);
         return redirect()->route('home');
-
     }
 }
