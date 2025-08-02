@@ -15,8 +15,34 @@ class CancelOrderCustomerTest extends TestCase
 
     /** @test */
     /** @test */
-    public function user_can_cancel_order_and_get_wellpay_refunded()
+    public function test_user_can_cancel_existing_order()
     {
+       
+        // dump($user);
+
+        $order = Order::where('isCancelled', false)->first();
         
+        $iduser = $order->userId;
+
+        $user = User::find($iduser);
+        $this->actingAs($user);
+
+        $wellpay = $user->wellpay;
+        $this->assertNotNull($order);
+
+        $totalPrice = $order->totalPrice;
+
+        $corectWellpay = $wellpay + $totalPrice;
+
+        $response = $this->put(route('order.cancel', ['id' => $order->orderId]));
+        $response->assertRedirect();
+
+        $this->assertDatabaseHas('orders', [
+            'orderId' => $order->orderId,
+            'isCancelled' => true,
+        ]);
+
+        $user->refresh();
+        $this->assertGreaterThan($corectWellpay, $user->wellpay);
     }
 }
