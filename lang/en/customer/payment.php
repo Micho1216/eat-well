@@ -59,5 +59,8 @@ return [
     'retrieve_check_connection' => 'Failed to retrieve Wellpay balance. Please check your internet connection.',
     'wellpay_cancel' => 'Wellpay payment cancelled.',
     'continue' => 'Continue',
+    'processing' => 'Processing...',
+    'see_my_order' => 'See my order',
+
 
 ];

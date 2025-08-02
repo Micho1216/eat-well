@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const enterPassTextTranslate = translationDataElement.dataset.enterPassText;
     const wellpayCancelTextTranslate = translationDataElement.dataset.wellpayCancelText;
     const continueTextTranslate = translationDataElement.dataset.continueText;
+    const processingTextTranslate = translationDataElement.dataset.processingText;
 
 
     // --- Get DOM Elements ---
@@ -510,7 +511,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 // Show loading directly on the button for the actual payment processing
                 wellpayConfirmBtn.innerHTML = `
                     <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
-                    <span>Processing...</span>
+                    <span>${processingTextTranslate}</span>
                 `;
                 wellpayConfirmBtn.disabled = true;
 
@@ -518,7 +519,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 await processPaymentAjax(password);
 
                 // Revert button state after processPaymentAjax completes (handled by finally block there)
-                wellpayConfirmBtn.innerHTML = "Continue"; // Or "Confirm" if you want to reset fully
+                wellpayConfirmBtn.innerHTML = `${continueTextTranslate}`; // Or "Confirm" if you want to reset fully
                 wellpayConfirmBtn.disabled = false;
             }
         });

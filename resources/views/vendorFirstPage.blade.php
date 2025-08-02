@@ -1,6 +1,7 @@
 @extends('master')
 
 @section('css')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <link rel="stylesheet" href="{{ asset('css/customerVendorFirstPage.css') }}">
@@ -33,33 +34,27 @@
                             <hr class="border border-blackx` order-2 align-self-center w-50 my-0 opacity-100">
                             <h2 class="h2 text-center account-sertup-title p-2">{{ __('vendor-first-page.fill_data') }}</h2>
                         </div>
-                        <div class="row" style="margin-bottom: 20px;">
-                            <div class="col-4 d-flex flex-column align-items-center justify-content-center">
+                        <div class="row d-flex justify-content-center" style="margin-bottom: 20px;">
+                            <div class="col d-flex flex-column align-items-center justify-content-center">
                                 <span class="form-label mt-2">Vendor Logo</span>
                                 <div class="position-relative" style="width: 120px; height: 120px;">
                                     <img id="vendorLogoPreview"
-                                        src="{{ old('logo_path')
-                                            ? asset('storage/' . old('logo_path'))
-                                            : (session('logo_path')
-                                                ? asset('storage/' . session('logo_path'))
-                                                : (isset($vendor) && $vendor->logo
-                                                    ? asset('storage/' . $vendor->logo)
-                                                    : asset('asset/profile/noPict.jpg'))) }}"
+                                        src= "asset/profile/noPict.jpg"
                                         alt="Vendor Logo" class="rounded-circle border vendor"
                                         style="width: 120px; height:120px; object-fit:cover">
-                                </div>
-                                <button type="button" class="btn btn-outline-secondary mt-2" id="logoUploadBtn">
-                                    <span>Add Logo</span>
-                                </button>
-                                <input type="file" id="vendorLogoInput" name="logo" accept="image/*"
+                                    </div>
+                                    <button type="button" class="btn btn-outline-secondary mt-2" id="logoUploadBtn">
+                                        <span>Add Logo</span>
+                                    </button>
+                                    <input type="file" id="vendorLogoInput" name="logo" accept="image/*"
                                     style="display: none;" value="{{ old('logo') }}">
-
-                                @error('logo')
+                                    
+                                    @error('logo')
                                     <div class="text-danger mt-1">{{ $message }}</div>
-                                @enderror
+                                    @enderror
+                                </div>
                             </div>
-
-                            <div class="col-8 d-flex flex-column align-items-space-between" style="margin-top:20px">
+                            <div class="col-8 d-flex flex-column align-items-space-between mb-4" style="margin-top:20px">
                                 <label for="vendorName" class="form-label">{{ __('vendor-first-page.vendor_name') }}</label>
                                 <input type="text" value="{{ old('name') }}"class="form-control" id="vendorName"
                                     placeholder="Vendor Name" name="name">
@@ -67,8 +62,7 @@
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
-                        </div>
-                        <div class="row fw-bold mb-2">
+                            <div class="row fw-bold mb-2">
                             <div class="col-12">{{ __('vendor-first-page.delivery_schedule') }}</div>
                         </div>
 
@@ -137,9 +131,9 @@
                                 <select id="provinsi" name="provinsi" class="form-select"
                                     aria-label="Small select example">
                                     <option selected>{{ __('vendor-first-page.province') }}</option>
-
                                 </select>
-                                @error('provinsi')
+                                <input type="hidden" name="provinsi_name" id="provinsi_name">
+                                @error('provinsi_name')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -148,7 +142,8 @@
                                 <select id="kota" name="kota" class="form-select">
                                     <option selected>{{ __('vendor-first-page.city') }}</option>
                                 </select>
-                                @error('kota')
+                                <input type="hidden" name="kota_name" id="kota_name">
+                                @error('kota_name')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -157,7 +152,8 @@
                                 <select id="kecamatan" name="kecamatan" class="form-select">
                                     <option selected>{{ __('vendor-first-page.district') }}</option>
                                 </select>
-                                @error('kecamatan')
+                                <input type="hidden" name="kecamatan_name" id="kecamatan_name">
+                                @error('kecamatan_name')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -168,7 +164,8 @@
                                 <select id="kelurahan" name="kelurahan" class="form-select">
                                     <option selected>{{ __('vendor-first-page.village')}}</option>
                                 </select>
-                                @error('kelurahan')
+                                <input type="hidden" name="kelurahan_name" id="kelurahan_name">
+                                @error('kelurahan_name')
                                     <div class="text-danger mt-1">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -215,6 +212,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous">
     </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="{{ asset('js/vendorFirstPage.js') }}"></script>
 
     <script>
