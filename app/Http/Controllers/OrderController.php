@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use App\Notifications\CustomerSubscribed;
+use Illuminate\Contracts\Auth\Authenticatable;
 
 class OrderController extends Controller
 {
@@ -503,7 +504,21 @@ class OrderController extends Controller
 
     public function cancelOrder(string $id)
     {
+        /**
+         * @var User | Authenticatable $user
+         */
+        $user = Auth::user();
         $order = Order::findOrFail($id);
+
+        if($order->userId != $user->userId) {
+            return redirect()->back()->with('error', 'Invalid order to cancel!');
+        }
+
+        if($order->payment->paymentMethod->name === 'WellPay') {
+            $user->wellpay += $order->totalPrice;
+            $user->save();
+        }
+
         $order->isCancelled = true;
         $order->save();
 
