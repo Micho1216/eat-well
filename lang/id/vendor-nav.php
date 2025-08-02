@@ -6,6 +6,7 @@ return [
     'orders' => 'Pesanan',
     'search' => 'Cari',
     'home' => 'Beranda',
+    'sales' => 'Penjualan',
     'about_us' => 'Tentang Kami',
     'contact' => 'Kontak',
     'address' => 'Jl. Pakuan No.3, Sumur Batu, Babakan Madang, Bogor, Jawa Barat 16810',

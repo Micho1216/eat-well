@@ -6,6 +6,9 @@ return [
     'start_date' => 'Tanggal mulai',
     'end_date' => 'Tanggal berakhir',
     'export' => 'Cetak',
+    'clear' => 'Hapus Filter',
+    'filter' => 'Filter',
+
     'no_sales' => 'Belum ada penjualan',
 
     // sales table
@@ -23,6 +26,6 @@ return [
     'Morning' => 'Sarapan',
     'Afternoon' => 'Makan Siang',
     'Evening' => 'Makan Malam',
-    
+
     'total' => 'Total Penjualan',
 ];

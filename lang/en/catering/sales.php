@@ -6,6 +6,8 @@ return [
     'start_date' => 'Start Date',
     'end_date' => 'End Date',
     'export' => 'Export',
+    'clear' => 'Clear',
+    'filter' => 'Filter',
     'no_sales' => 'No sales yet.',
 
     // sales table
@@ -23,6 +25,6 @@ return [
     'Morning' => 'Breakfast',
     'Afternoon' => 'Lunch',
     'Evening' => 'Dinner',
-    
+
     'total' => 'Total Sales',
 ];

@@ -26,19 +26,6 @@
             </a>
 
             <!-- Language Dropdown -->
-            {{-- <div class="dropdown dropdown-bahasa" style="margin-left: 50px">
-
-                <button id="languageToggle" class="btn btn-outline-light dropdown-toggle" type="button"
-                    data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 20px">
-                    EN
-                </button>
-
-                <ul class="dropdown-menu dropdown-bahasa">
-                    <li><button class="dropdown-item" onclick="setLanguage('EN')">EN</button></li>
-                    <li><button class="dropdown-item" onclick="setLanguage('ID')">ID</button></li>
-                </ul>
-            </div> --}}
-
             <form action="/lang" method="POST">
                 @csrf
                 <div class="dropdown-wrapper">
@@ -73,10 +60,10 @@
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('manageOrder') ? 'active' : '' }}"
                                 href="/manageOrder">{{ __('vendor-nav.orders') }}</a>
                         </li>
-                        {{-- <li class="nav-item">
-                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('caterings') ? 'active' : '' }}"
-                                href="/caterings">{{ __('vendor-nav.search') }}</a>
-                        </li> --}}
+                        <li class="nav-item">
+                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('sales.show') ? 'active' : '' }}"
+                                href="{{route('sales.show')}}">{{ __('vendor-nav.sales') }}</a>
+                        </li>
                         <li class="nav-item">
                             <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('catering-detail') ? 'active' : '' }}"
                                 href="{{ route('vendor.review') }}">{{ __('navigation.rating_and_review_vendor') }}</a>
