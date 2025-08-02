@@ -42,12 +42,14 @@ class CustomerFirstPageController extends Controller
         ]);
 
 
-        $image = $attrs['profile'];
-        $imageName = time().'.'.$image->getClientOriginalExtension();
-        Storage::putFileAs('public/profiles', $image, $imageName);
-        $user->profilePath = 'storage/profiles/'.$imageName;
-        
-        $user->save();
+        if(isset($attrs['profile'])) {
+            $image = $attrs['profile'];
+            $imageName = time().'.'.$image->getClientOriginalExtension();
+            Storage::putFileAs('public/profiles', $image, $imageName);
+            $user->profilePath = 'storage/profiles/'.$imageName;
+            
+            $user->save();
+        }
 
 
         logActivity('Successfully', 'Registered', 'Customer Account with id : ' . $user->userId);
