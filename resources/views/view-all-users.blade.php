@@ -20,30 +20,32 @@
         @if ($users->isEmpty())
             <h3 class="text-center fw-bold lexend mt-5" style="margin-bottom: 130px">{{ __('view-all-users.no_data') }}</h3>
         @else
-        <table class="table text-center" style="margin-bottom: 130px">
-            <thead>
-                <tr>
-                    <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-users.no') }}</th>
-                    <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-users.id') }}</th>
-                    <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-users.username') }}</th>
-                    <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-users.email') }}</th>
-                    <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-users.role') }}</th>
-                    <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-users.created_at') }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($users as $user)
+        <div class="table-responsive">
+            <table class="table text-center" style="margin-bottom: 130px">
+                <thead>
                     <tr>
-                        <th scope="row">{{ $loop->iteration }}</th>
-                        <td>{{ $user->usersId }}</td>
-                        <td>{{ $user->name }}</td>
-                        <td>{{ $user->email }}</td>
-                        <td>{{ $user->role }}</td>
-                        <td>{{ $user->created_at }}</td>
+                        <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-users.no') }}</th>
+                        <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-users.id') }}</th>
+                        <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-users.username') }}</th>
+                        <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-users.email') }}</th>
+                        <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-users.role') }}</th>
+                        <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-users.created_at') }}</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($users as $user)
+                        <tr>
+                            <th scope="row">{{ $loop->iteration }}</th>
+                            <td>{{ $user->usersId }}</td>
+                            <td>{{ $user->name }}</td>
+                            <td>{{ $user->email }}</td>
+                            <td>{{ $user->role }}</td>
+                            <td>{{ $user->created_at }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
         @if ($users->lastPage() > 1)
             <ul class="catering-pagination pagination justify-content-center my-3">
