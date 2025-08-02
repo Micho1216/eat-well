@@ -75,7 +75,6 @@ class UserController extends Controller
         // Mengambil user yang sedang login
         $user = Auth::user();
 
-
         logActivity('Successfully', 'Visited', 'Manage Profile Page');
         return view('customer/manageProfile', compact('user'));
     }

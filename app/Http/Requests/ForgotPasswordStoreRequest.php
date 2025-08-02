@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rules\Password;
 
-class StoreAddPasswordRequest extends FormRequest
+class ForgotPasswordStoreRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,6 +23,8 @@ class StoreAddPasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'token' => ['required'],
+            'email' => ['required', 'email'],
             'password' => ['required', Password::min(8)->letters()->numbers()->uncompromised(), 'confirmed'],
             'password_confirmation' => ['required']
         ];

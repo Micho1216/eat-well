@@ -26,6 +26,7 @@ use App\Http\Controllers\CustomerRatingController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\DeliveryStatusController;
 use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\ManageTwoFactorController;
 use App\Http\Controllers\OrderVendorController;
 use App\Http\Controllers\ProvinceController;
@@ -52,7 +53,9 @@ use App\Http\Middleware\EnsurePasswordExists;
 /* --------------------
      GUEST ROUTES
 -------------------- */
-
+Route::post('/forgot-password', [ForgotPasswordController::class, 'email'])->name('password.email');
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'reset'])->name('password.reset');
+Route::post('/reset-password', [ForgotPasswordController::class, 'update'])->name('password.update');
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/', function () {
@@ -79,6 +82,8 @@ Route::middleware(['guest'])->group(function () {
     Route::get('/auth/{provider}/redirect/{role?}', ProviderRedirectController::class)->name('auth.redirect');
     Route::get('/auth/{provider}/callback/', ProviderCallbackController::class)->name('auth.callback');
 
+    Route::get('/forgot-password', [ForgotPasswordController::class, 'request'])->name('password.request');
+
     Route::fallback(function () {
         return redirect()->route('landingPage');
     });
@@ -100,10 +105,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('api/fetch-villages', [VillageController::class, 'fetchVillages']);
     
     Route::post('/manage-profile', [SessionController::class, 'destroy'])->name('logout');
-
-    // Route::get('/manage-profile', function () {
-    //     return view('manageProfile');
-    // })->name('manage-profile');
 
     Route::post('/manage-two-factor', [ManageTwoFactorController::class, 'index'])->name('manage-two-factor');
 

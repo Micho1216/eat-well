@@ -313,32 +313,12 @@
                         <div class="security-divider"></div>
                         <div class="right-security">
                             <p class="inter font-bold title-security">{{ __('manage-profile.change_password') }}</p>
-                            <div class="change-password-form">
-                                <div class="password-input-group">
-                                    <input type="password" id="oldPassword" class="password-input"
-                                        placeholder="{{ __('manage-profile.old_password') }}">
-                                    <span class="toggle-password" data-target="oldPassword">
-                                        <span class="material-symbols-outlined">visibility_off</span>
-                                    </span>
-                                </div>
-                                <div class="password-input-group">
-                                    <input type="password" id="newPassword" class="password-input"
-                                        placeholder="{{ __('manage-profile.new_password') }}">
-                                    <span class="toggle-password" data-target="newPassword">
-                                        <span class="material-symbols-outlined">visibility_off</span>
-                                    </span>
-                                </div>
-                                <div class="password-input-group">
-                                    <input type="password" id="verifyPassword" class="password-input"
-                                        placeholder="{{ __('manage-profile.verify_password') }}">
-                                    <span class="toggle-password" data-target="verifyPassword">
-                                        <span class="material-symbols-outlined">visibility_off</span>
-                                    </span>
-                                </div>
-                                <div class="change-btn-group">
-                                    <button class="inter save-password-btn">{{ __('manage-profile.change') }}</button>
-                                </div>
-                            </div>
+                            <p>{{ session('status') }}</p>
+                            <form action="/forgot-password" method="post">
+                                @csrf
+                                <input type="hidden" name="email" value="{{ $user->email }}">
+                                <button class="inter save-password-btn">{{ __('manage-profile.change') }}</button>
+                            </form>
                         </div>
                     </div>
                 </div>
