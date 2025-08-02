@@ -14,33 +14,33 @@
             <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-4 my-5">
                 <div class="card text-bg-light rounded-5 d-block" id="login-card">
                     <div class="card-body p-5 p-sm-5">
-                        <div class="h5 card-title text-center mb-5">Sign in to EatWell</div>
+                        <div class="h5 card-title text-center mb-5">{{ __('auth/login.title') }}</div>
                         <form method="POST" action="login" novalidate>
                             @csrf
                             <div class="form-floating mb-3">
                                 <input type="email" name="email" class="form-control m-0 @error('email') is-invalid @enderror" id="email" value="{{ old('email') }}" placeholder="" >
-                                <label for="email" class="form-label m-0">Email</label>
+                                <label for="email" class="form-label m-0">{{ __('auth/login.email') }}</label>
                                 <div class="invalid-feedback">{{ $errors->first('email') }}</div>
                             </div>
 
                             <div class="form-floating mb-3">
                                 <input type="password" name="password" class="form-control m-0 @error('password') is-invalid @enderror" id="password" placeholder="" >
-                                <label for="password" class="form-label m-0">Password</label>
+                                <label for="password" class="form-label m-0">{{ __('auth/login.password') }}</label>
                                 <div class="invalid-feedback">{{ $errors->first('password') }}</div>
                             </div>
 
                             <div class="d-flex flex-row justify-content-between w-100">
                                 <div class="form-check">
                                     <input type="checkbox" name="remember" class="form-check-input border border-secondary" id="remember">
-                                    <label for="remember" class="form-check-label">Remember me</label>
+                                    <label for="remember" class="form-check-label">{{ __('auth/login.remember_me') }}</label>
                                 </div>
     
-                                <a href="{{ route('password.request') }}" class="link-dark">Forgot Password?</a>
+                                <a href="{{ route('password.request') }}" class="link-dark">{{ __('auth/login.forgot_password') }}</a>
                             </div>
                             <button type="submit" class="mb-2 mt-5 w-100 gsi-material-button">
                                 <div class="gsi-material-button-state"></div>
                                 <div class="gsi-material-button-content-wrapper">
-                                    <span class="gsi-material-button-contents">Sign in</span>
+                                    <span class="gsi-material-button-contents">{{ __('auth/login.sign_in') }}</span>
                                 </div>
                             </button>
                         </form>
@@ -58,15 +58,15 @@
                                             <path fill="none" d="M0 0h48v48H0z"></path>
                                         </svg>
                                     </div>
-                                    <span class="gsi-material-button-contents">Continue with Google</span>
+                                    <span class="gsi-material-button-contents">{{ __('auth/login.google') }}</span>
                                 </div>
                             </button>
                         </a>
 
                         <div class="row justify-content-center p-2">
-                            <a href="{{ url('/register/customer')}} " class="btn btn-link change-card-link text-center w-auto p-0">Don't have an account? <u>Register now!</u></a>
+                            <a href="{{ url('/register/customer')}} " class="btn btn-link change-card-link text-center w-auto p-0">{{ __('auth/login.customer_register_link') }}</a>
                             <p class="text-center change-card-link m-0">or</p>
-                            <a href="{{ url('/register/vendor') }}" class="btn btn-link change-card-link text-center w-auto p-0">Join Eatwell as a <u>vendor!</u></a>
+                            <a href="{{ url('/register/vendor') }}" class="btn btn-link change-card-link text-center w-auto p-0">{{ __('auth/login.vendor_register_link') }}</a>
                         </div>
                     </div>
                 </div>

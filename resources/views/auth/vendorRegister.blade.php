@@ -13,40 +13,40 @@
             <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-4 my-5">
                 <div class="card text-bg-light rounded-5 d-block" id="login-card">
                     <div class="card-body p-5 p-sm-5">
-                        <div class="h5 card-title text-center mb-5">Vendor Registration</div>
+                        <div class="h5 card-title text-center mb-5">{{ __('auth/vendor-register.title') }}</div>
                         <form action="{{ route('register', ['role' => 'vendor']) }}" method="post" novalidate>
                             @csrf
 
                             <div class="form-floating mb-3">
                                 <input type="text" name="name" id="name" class="form-control m-0 @error('name') is-invalid @enderror" value="{{old('name')}}" placeholder="">
-                                <label for="name" class="form-label m-0">Name</label>
+                                <label for="name" class="form-label m-0">{{ __('auth/vendor-register.name') }}</label>
                                 <div class="invalid-feedback">@error('name') {{$errors->first('name')}}@enderror</div>
                             </div>
 
 
                             <div class="form-floating mb-3">
                                 <input type="email" name="email" id="email" class="form-control m-0 @error('email') is-invalid @enderror" value="{{ old('email') }}" placeholder="">
-                                <label for="email" class="form-label m-0">Email</label>
+                                <label for="email" class="form-label m-0">{{ __('auth/vendor-register.email') }}</label>
                                 <div class="invalid-feedback">@error('email') {{$errors->first('email')}} @enderror</div>
                             </div>
 
                             <div class="form-floating mb-3">
                                 <input type="password" name="password" id="password" class="form-control m-o @error('password') is-invalid @enderror" placeholder="">
-                                <label for="password" class="form-label m-0">Password</label>
+                                <label for="password" class="form-label m-0">{{ __('auth/vendor-register.password') }}</label>
                                 <div class="invalid-feedback">@error('password') {{$errors->first('password')}}@enderror</div>
                             </div>
 
 
                             <div class="form-floating">
                                 <input type="password" name="password_confirmation" id="pasword_confirmation" class="form-control m-0 @error('password_confirmation') is-invalid @enderror" placeholder="">
-                                <label for="password_confirmation" class="form-label m-0">Password Confirmation</label>
+                                <label for="password_confirmation" class="form-label m-0">{{ __('auth/vendor-register.password_confirmation') }}</label>
                                 <div class="invalid-feedback">@error('password_confirmation') {{$errors->first('password_confirmation')}}@enderror</div>
                             </div>
 
                             <button type="submit" class="mb-2 mt-4 w-100 gsi-material-button w-100">
                                 <div class="gsi-material-button-state"></div>
                                 <div class="gsi-material-button-content-wrapper">
-                                    <span class="gsi-material-button-contents">Register</span>
+                                    <span class="gsi-material-button-contents">{{ __('auth/vendor-register.register') }}</span>
                                 </div>
                             </button>
                         </form>
@@ -64,14 +64,14 @@
                                             <path fill="none" d="M0 0h48v48H0z"></path>
                                         </svg>
                                     </div>
-                                    <span class="gsi-material-button-contents">Continue with Google</span>
+                                    <span class="gsi-material-button-contents">{{ __('auth/vendor-register.google') }}</span>
                                 </div>
                             </button>
                         </a>
                         <div class="row justify-content-center p-2">
-                            <a href="{{ url('/login') }}" class="btn btn-link change-card-link text-center w-auto p-0">Already has an account? <u>Login now!</u></a>
-                            <p class="text-center change-card-link m-0">or</p>
-                            <a href="{{ url('/register/customer') }}" class="btn btn-link change-card-link text-center w-auto p-0">Join Eatwell as a <u>customer!</u></a>
+                        <a href="{{ url('/login') }}" class="btn btn-link change-card-link text-center w-auto p-0">{{ __('auth/vendor-register.sign_in_link') }}</a>
+                            <p class="text-center change-card-link m-0">{{ __('auth/vendor-register.or') }}</p>
+                            <a href="{{ url('/register/customer') }}" class="btn btn-link change-card-link text-center w-auto p-0">{{ __('auth/vendor-register.customer_register_link') }}</a>
                         </div>
                     </div>
                 </div>
