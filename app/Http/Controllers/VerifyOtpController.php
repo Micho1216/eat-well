@@ -49,7 +49,6 @@ class VerifyOtpController extends Controller
 
     public function resendOtp(ResendOTPRequest $request)
     {
-
         $attrs = $request->validated();
         $email = $attrs['email'];
         $user = User::where('email', $email)->first();
