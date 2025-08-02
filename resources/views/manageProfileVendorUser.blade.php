@@ -22,7 +22,7 @@
         <div class="left-panel outer-panel">
             <div class="lexend font-medium manage-profile">
                 <div class="left-panel-in photo-prof">
-                    <img src="{{ asset('asset/profile/' . $user->profilePath) }}" alt="Profile Picture" class="prof-pict">
+                    <img src="{{ asset($user->profilePath) }}" alt="Profile Picture" class="prof-pict">
                 </div>
                 <div class="right-panel-in data-prof">
                     <p class="profile-name text-white lexend font-regular">{{ $user->name }}</p>
@@ -121,7 +121,7 @@
                         @endif
                     @endif
                     <div class="manage-profile-in">
-                        <form action="{{ route('manage-profile.update') }}" method="POST"
+                        <form action="{{ route('manage-profile-vendor-account.updateUser') }}" method="POST"
                             enctype="multipart/form-data">
                             @csrf
                             @method('PATCH')
@@ -229,7 +229,7 @@
                                 </div>
                                 <div class="photo-data">
                                     <div class="profile-image-wrapper">
-                                        <img src="{{ asset('asset/profile/' . $user->profilePath) }}"
+                                        <img src="{{ asset($user->profilePath) }}"
                                             alt="Profile Picture" class="profile-picture" id="profilePicPreview">
                                         <label for="profilePicInput" class="change-image-label">
                                             <span class="material-symbols-outlined change-image-icon">

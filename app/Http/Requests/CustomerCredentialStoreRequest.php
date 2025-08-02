@@ -25,8 +25,9 @@ class CustomerCredentialStoreRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255'],
-            'profile' => ['file', 'mimes:png, jpg, jpeg', 'max:10240'],
+            'profile' => ['nullable','file', 'mimes:png,jpg,jpeg', 'max:10240'],
             'province' => ['required'],
+
             'city' => ['required'],
             'district' => ['required'],
             'village' => ['required'],

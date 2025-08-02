@@ -30,7 +30,7 @@
                     <div class="profile-rating-wrapper">
                         <div class="profile-wrapper">
                             <div class="profile">
-                                <img src="{{ asset('asset/profile/' . $review->user->profilePath) }}" alt="User Profile" class="profile-user">
+                                <img src="{{ asset($review->user->profilePath) }}" alt="User Profile" class="profile-user">
                             </div>
                             <h5 class="username inter">
                                 {{ substr($review->user->name, 0, 1) . str_repeat('*', strlen($review->user->name) - 1) }}

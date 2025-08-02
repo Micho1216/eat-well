@@ -88,11 +88,14 @@ class UserController extends Controller
 
         $updated_user = User::find($userId);
         
-        if($user->name != $request->nameInput) {
-            logActivity('Successfully', 'Updated', "Profile to {$updated_user->name}");
-        }
+        
 
         $updated_user->name = $request->nameInput;
+
+        if($user->name != $request->nameInput) {
+            // logActivity('Successfully', 'Updated', "Profile to {$updated_user->name}");
+            logActivity('Successfully', 'Updated', "Profile to :  {$updated_user->name}");
+        }
 
         if ($request->filled('dateOfBirth')) {
             $updated_user->dateOfBirth = $request->input('dateOfBirth');

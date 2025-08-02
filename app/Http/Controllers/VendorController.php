@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
 
 class VendorController extends Controller
 {
@@ -161,7 +162,7 @@ class VendorController extends Controller
 
         if ($vendor->name != $request->nameInput)
         {
-            logActivity('Successfully', 'Updated', 'Vendor Name to ' . $request->nameInput);
+            logActivity('Successfully', 'Updated', 'Catering Name to ' . $request->nameInput);
         }
 
         $vendor->name = $request->nameInput;
@@ -261,6 +262,8 @@ class VendorController extends Controller
         $user = Auth::user();
         $userId = $user->userId;
 
+        $oldName = $user->name;
+
         $updated_user = User::find($userId);
 
         $updated_user->name = $request->nameInput;
@@ -272,15 +275,19 @@ class VendorController extends Controller
         if ($request->hasFile('profilePicInput')) {
             $file = $request->file('profilePicInput');
             $filename = time() . '.' . $file->getClientOriginalExtension();
-            $file->move(public_path('asset/profile'), $filename);
-            $updated_user->profilePath = $filename;
+            Storage::putFileAs('public/profiles', $file, $filename);
+            $updated_user->profilePath = 'storage/profiles/'.$filename;
         }
 
         $updated_user->genderMale = ($request->gender === 'male') ? 1 : 0;
 
         $updated_user->save();
 
-        logActivity('Successfully', 'Updated', "Profile to {$updated_user->name}");
+        // dd($updated_user->name);
+
+        // dd($oldName);
+
+        logActivity('Successfully', 'Updated', "Profile to :  {$updated_user->name}");
 
         return redirect()->route('manage-profile-vendor-account')->with('success', 'Profile updated successfully!');
     }

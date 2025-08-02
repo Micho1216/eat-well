@@ -44,7 +44,7 @@
                                         <span>{{ __('customer/customer-first-page.add_profile') }}</span>
                                     </button>
 
-                                    @error('profilePath')
+                                    @error('profile')
                                         <div class="text-danger mt-1">{{ $message }}</div>
                                     @enderror
                                 </div>

@@ -239,6 +239,9 @@
                                                 accept="image/*" style="display:none;" disabled>
                                         </label>
                                     </div>
+                                    @error('profilePicInput')
+                                        <div class="" style="color: rgb(194, 12, 12)">{{ $message }}</div>
+                                    @enderror
                                     <div class="edit-btn-group d-flex flex-row">
                                         <button class="inter font-medium edit-data">Edit</button>
 

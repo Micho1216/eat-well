@@ -31,9 +31,9 @@ class StorePackageRequest extends FormRequest
                     }
                 }
             ],
-            'breakfastPrice' => 'nullable|numeric|gt:0',
-            'lunchPrice' => 'nullable|numeric|gt:0',
-            'dinnerPrice' => 'nullable|numeric|gt:0',
+            'breakfastPrice' => 'nullable|numeric|gte:0',
+            'lunchPrice' => 'nullable|numeric|gte:0',
+            'dinnerPrice' => 'nullable|numeric|gte:0',
 
             'menuPDFPath' => 'nullable|file|mimes:pdf,csv',
             'imgPath' => 'nullable|image|mimes:jpeg,png,jpg',

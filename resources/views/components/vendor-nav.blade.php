@@ -61,7 +61,7 @@
                                 href="/manageOrder">{{ __('vendor-nav.orders') }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link mx-lg-2 navigationcustlink {{ Request::is('sales.show') ? 'active' : '' }}"
+                            <a class="nav-link mx-lg-2 navigationcustlink {{ request()->routeIs('sales.show') ? 'active' : '' }}"
                                 href="{{route('sales.show')}}">{{ __('vendor-nav.sales') }}</a>
                         </li>
                         <li class="nav-item">
@@ -92,7 +92,7 @@
 
             <a href="/manage-profile-vendor-account">
                 <div class="imgstyle m-2" style="border-radius:100%; margin-right:20px">
-                    <img class="" src="{{ asset('asset/profile/' . Auth::user()->profilePath) }}"
+                    <img class="" src="{{ asset( Auth::user()->profilePath) }}"
                         alt="Card image " width="50px" height="50px" style="border-radius: 100%">
                 </div>
             </a>

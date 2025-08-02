@@ -60,3 +60,11 @@ body
     background: #f8f8f8;
     border-color: #eee;
 }
+
+
+@media screen and (max-width: 400px) {
+  #myChart
+  {
+    margin-top: 50px;
+  }
+}
