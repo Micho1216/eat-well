@@ -14,12 +14,12 @@
             <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-4 my-5">
                 <div class="card text-bg-light rounded-5 d-block" id="login-card">
                     <div class="card-body p-5 p-sm-5">
-                        <div class="h5 card-title text-center mt-5 mb-5">Forgot your password?</div>
+                        <div class="h5 card-title text-center mt-5 mb-5">{{ __('auth/forgot-password.title') }}</div>
                         <form method="post" action="{{route('password.request') }}" novalidate>
                             @csrf
                             <div class="form-floating mb-3">
                                 <input type="email" name="email" class="form-control m-0 @error('email') is-invalid @enderror @if(session('status')) is-valid @endif" id="email" value="{{ old('email') }}" placeholder="" >
-                                <label for="email" class="form-label m-0">Email</label>
+                                <label for="email" class="form-label m-0">{{ __('auth/forgot-password.email') }}</label>
                                 <div class="invalid-feedback">{{ $errors->first('email') }}</div>
                                 <div class="valid-feedback">{{ session('status') }}</div>
                             </div>
@@ -27,7 +27,7 @@
                             <button type="submit" class="mb-2 mt-5 w-100 gsi-material-button">
                                 <div class="gsi-material-button-state"></div>
                                 <div class="gsi-material-button-content-wrapper">
-                                    <span class="gsi-material-button-contents">Continue</span>
+                                    <span class="gsi-material-button-contents">{{ __('auth/forgot-password.continue') }}</span>
                                 </div>
                             </button>
                         </form>

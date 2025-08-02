@@ -10,24 +10,24 @@
 @section('content')
     <div class="container-fluid p-5 vh-100 bg-success-subtle">
         <div class="row p-5">
-            <h2>Forgot your password?</h2>
+            <h2>{{ __('auth/reset-password.title') }}</h2>
             <form action="{{ route('password.update') }}" method="post">
                 @csrf
                 <div class="form-floating mb-3">
                     <input type="password" class="form-control @error('password') is-invalid @enderror" id="password" name="password" placeholder="">
-                    <label for="password">Password</label>
+                    <label for="password">{{ __('auth/reset-password.password') }}</label>
                     <div class="invalid-feedback">{{ $errors->first('password') }}</div>
                 </div>
                 <div class="form-floating mb-3">
                     <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror" id="password_confirmation" name="password_confirmation" placeholder="">
-                    <label for="password_confirmation">Password Confirmation</label>
+                    <label for="password_confirmation">{{ __('auth/reset-password.password_confirmation') }}</label>
                     <div class="invalid-feedback">{{ $errors->first('password_confirmation') }}</div>
                 </div>
                 <input type="hidden" name="token" value="{{ $token }}">
                 <input type="hidden" name="email" value="{{ $email }}">
 
             
-                <button type="submit" class="btn btn-primary">Continue</button>
+                <button type="submit" class="btn btn-primary">{{ __('auth/reset-password.continue') }}</button>
             </form>
 
         </div>
