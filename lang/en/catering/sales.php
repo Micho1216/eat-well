@@ -20,6 +20,10 @@ return [
     'th_method' => 'Payment Method',
     'th_pkg' => 'Package Ordered',
     'th_sales' => 'Sales',
+    'th_timeslot' => 'Time Slot',
+    'th_qty' => 'Quantity',
+    'th_total_sales' => 'Total Order Sales',
+
 
     // time slots
     'Morning' => 'Breakfast',

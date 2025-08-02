@@ -440,23 +440,6 @@ class OrderController extends Controller
             Log::info('Vendor user ' . $vendorUser->userId . ' notified for Order ID: ' . $order->orderId);
         }
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
     /**
      * Display the specified resource.
      */
@@ -486,7 +469,7 @@ class OrderController extends Controller
             $dateKey = Carbon::parse($status->deliveryDate)->format('l, d M Y');
             $statusesBySlot[$slotKey][$dateKey] = $status;
         }
-        // dd($statusesBySlot);
+
         $status = '';
         if ($order->isCancelled == 1) {
             $status = 'cancelled';
@@ -498,7 +481,6 @@ class OrderController extends Controller
             $status = 'active';
         }
 
-        // logActivity('Successfully', 'Visited', "Order #{$order->orderId} Detail Page");
         return view('customer.orderDetail', compact('order', 'paymentMethod', 'slots', 'statusesBySlot', 'status'));
     }
 
@@ -524,29 +506,5 @@ class OrderController extends Controller
 
         logActivity('Successfullyy', 'Cancelled', "Order ". $order->orderId);
         return redirect()->back()->with('message', 'Success cancelling order!');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
     }
 }

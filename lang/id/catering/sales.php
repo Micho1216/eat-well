@@ -21,6 +21,9 @@ return [
     'th_method' => 'Metode Pembayaran',
     'th_pkg' => 'Paket yang dipesan',
     'th_sales' => 'Penjualan',
+    'th_timeslot' => 'Waktu',
+    'th_qty' => 'Jumlah',
+    'th_total_sales' => 'Total Harga Pesanan',
 
     // time slots
     'Morning' => 'Sarapan',

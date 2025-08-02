@@ -14,8 +14,8 @@
 
 @section('content')
     {{-- TITLE --}}
-    <section class="container mt-3">
-        <h2 class="fw-bold text-center" style="color: #f1f5eb;">
+    <section class="container mt-5  ">
+        <h2 class="fw-bold text-center m-0" style="color: #f1f5eb;">
             {{ __('catering/sales.sales_head', ['name' => $vendor->name]) }}</h2>
     </section>
 
@@ -24,12 +24,12 @@
         <form action="{{ route('sales.show') }}" method="GET" class="d-flex flex-row flex-wrap gap-2 align-items-end">
             @csrf
             <div>
-                <label for="startDate" class="form-label mb-0">{{ __('catering/sales.start_date') }}</label>
+                <label for="startDate" class="form-label mb-0 text-white">{{ __('catering/sales.start_date') }}</label>
                 <input type="date" name="startDate" id="startDate" class="form-control"
                     value="{{ request()->query('startDate') }}" max="{{ now()->format('Y-m-d') }}">
             </div>
             <div>
-                <label for="endDate" class="form-label mb-0">{{ __('catering/sales.end_date') }}</label>
+                <label for="endDate" class="form-label mb-0 text-white">{{ __('catering/sales.end_date') }}</label>
                 <input type="date" name="endDate" id="endDate" class="form-control"
                     value="{{ request()->query('endDate') }}" max="{{ now()->format('Y-m-d') }}">
             </div>
