@@ -274,7 +274,7 @@
                 <hr class="section-divider">
                 <div id="management-security" class="management-section mt-4">
                     <div class="security-manage">
-                        <p class="lexend font-medium text-black title">{{ __('manage-profile.security_management') }}</p>
+                        <p class="lexend font-medium text-black title">{{__('manage-profile.security_management') }}</p>
                         <p class="inter font-regular text-black description">{{ __('manage-profile.subtitle') }}</p>
                         <hr
                             style="height: 1.8px; background-color:black; opacity:100%; border: none; margin-left: 180px; margin-right: 180px;">
@@ -282,11 +282,25 @@
                     <div class="left-right-security">
                         <div class="left-security">
                             <p class="inter font-bold title-security">{{ __('manage-profile.mfa_management') }}</p>
+                            @if(session('no_password'))
+                                <div class="alert alert-danger w-75 d-flex align-self-center" role="alert">
+                                    {{ __('manage-profile.no_password')}}
+                                </div>
+                            @endif
+
                             <div class="mfa-warning">
-                                <span class="material-symbols-outlined mfa-warning-icon">warning</span>
-                                <span class="inter font-bold mfa-warning-text">
-                                    {{ __('manage-profile.mfa_warning') }}
-                                </span>
+                                @if(!$user->enabled_2fa)
+                                    <span class="material-symbols-outlined mfa-warning-icon">warning</span>
+                                    <span class="inter font-bold mfa-warning-text">
+                                        {{ __('manage-profile.mfa_warning') }}
+                                    </span>
+                                @else
+                                    <span class="material-symbols-outlined mfa-activated-icon">key</span>
+                                    <span class="inter font-bold mfa-warning-text">
+                                        {{ __('manage-profile.mfa_activated') }}
+                                    </span>
+                                @endif
+
                             </div>
 
                             <div class="mfa-toggle-row">
@@ -302,9 +316,9 @@
 
                                 <span class="inter font-bold mfa-toggle-label">
                                     @if ($user->enabled_2fa)
-                                        Two Factor Authentication is enabled
+                                        {{ __('manage-profile.disable_mfa')}}
                                     @else
-                                        Enable Multi Factor Authentication
+                                        {{ __('manage-profile.enable_mfa') }}
                                     @endif
                                 </span>
                             </div>
@@ -315,12 +329,36 @@
                         </div>
                         <div class="security-divider"></div>
                         <div class="right-security">
-                            <p class="inter font-bold title-security">{{ __('manage-profile.change_password') }}</p>
-                            <p>{{ session('status') }}</p>
+                            
+                            <p class="inter font-bold title-security">
+                                @if($user->password)
+                                    {{ __('manage-profile.change_password') }}
+                                @else
+                                    {{ __('manage-profile.add_password')}}
+                                @endif
+                            </p>
+
+                            @if(session('status'))
+                                <div class="alert alert-primary w-75 d-flex align-self-center" role="alert">
+                                    {{ session('status') }}
+                                </div>
+                            @endif
+                            @error('email')
+                                <div class="alert alert-danger w-75 d-flex align-self-center" role="alert">
+                                    {{ $errors->first('email')}}
+                                </div>
+                            @endif
+
                             <form action="/forgot-password" method="post">
                                 @csrf
                                 <input type="hidden" name="email" value="{{ $user->email }}">
-                                <button class="inter save-password-btn">{{ __('manage-profile.change') }}</button>
+                                <button class="inter save-password-btn">
+                                    @if ($user->password)
+                                        {{ __('manage-profile.change_password_button') }}
+                                    @else
+                                        {{ __('manage-profile.add_password_button')}}
+                                    @endif
+                                </button>
                             </form>
                         </div>
                     </div>

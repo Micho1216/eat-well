@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use App\Models\User;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Mail;
+use App\Notifications\OneTimePassword;
 use Illuminate\Support\Facades\Hash;
 
 class SessionController extends Controller
@@ -24,8 +24,7 @@ class SessionController extends Controller
 
         $remember = request()->has('remember');
         $user = User::where('email', $attrs['email'])->first();
-        Session(['remember' => $remember]);
-        Session(['email' => $attrs['email']]);
+        
         if(!$user){
             loginLog($request->email, ' Login Failed : Error, user not found');
             throw ValidationException::withMessages([
@@ -34,7 +33,15 @@ class SessionController extends Controller
             ]);
         }
 
-        if(!($user->email === $attrs['email'] && Hash::check($attrs['password'], $user->password))){
+        Session(['remember' => $remember]);
+        Session(['email' => $attrs['email']]);
+        
+        if(!$user->password && $user->provider_id)
+        {
+            return redirect()->back()->with('use_provider', true);
+        }
+
+        if(!(Hash::check($attrs['password'], $user->password))){
             loginLog($request->email, ' Login Failed : Error, credentials do not match');
             throw ValidationException::withMessages([
                 'email' => 'Credentials do not match',
@@ -42,18 +49,8 @@ class SessionController extends Controller
             ]);
         }
 
-        if(!$user->email_verified_at || $user->enabled_2fa){
-            $otp = rand(100000, 999999);
-            $user->update([
-                'otp' => $otp,
-                'otp_expires_at' => Carbon::now()->addMinutes(3),
-            ]);
-
-            $email = $user->email;
-            Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($email){
-                $message->to($email)->subject('Your OTP');
-            });
-
+        if($user->enabled_2fa){
+            $user->notify(new OneTimePassword($user));
             return redirect()->route('auth.verify');
         }
 

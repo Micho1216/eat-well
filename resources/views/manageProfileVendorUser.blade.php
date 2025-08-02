@@ -279,20 +279,45 @@
                     <div class="left-right-security">
                         <div class="left-security">
                             <p class="inter font-bold title-security">{{ __('manage-profile.mfa_management') }}</p>
+                            @if(session('no_password'))
+                                <div class="alert alert-danger w-75 d-flex align-self-center" role="alert">
+                                    {{ __('manage-profile.no_password')}}
+                                </div>
+                            @endif
+
                             <div class="mfa-warning">
-                                <span class="material-symbols-outlined mfa-warning-icon">warning</span>
-                                <span class="inter font-bold mfa-warning-text">
-                                    {{ __('manage-profile.mfa_warning') }}
-                                </span>
+                                @if(!$user->enabled_2fa)
+                                    <span class="material-symbols-outlined mfa-warning-icon">warning</span>
+                                    <span class="inter font-bold mfa-warning-text">
+                                        {{ __('manage-profile.mfa_warning') }}
+                                    </span>
+                                @else
+                                    <span class="material-symbols-outlined mfa-activated-icon">key</span>
+                                    <span class="inter font-bold mfa-warning-text">
+                                        {{ __('manage-profile.mfa_activated') }}
+                                    </span>
+                                @endif
+
                             </div>
 
                             <div class="mfa-toggle-row">
-                                <label class="mfa-switch">
-                                    <input type="checkbox" id="mfaToggle">
-                                    <span class="mfa-slider"></span>
-                                </label>
-                                <span
-                                    class="inter font-bold mfa-toggle-label">{{ __('manage-profile.enable_mfa') }}</span>
+                                <form method="POST" action="{{ route('manage-two-factor') }}">
+                                    @csrf
+                                    <button type="submit" class="btn">
+                                        <label class="mfa-switch">
+                                            <input type="checkbox" @checked($user->enabled_2fa) />
+                                            <span class="mfa-slider"></span>
+                                        </label>
+                                    </button>
+                                </form>
+
+                                <span class="inter font-bold mfa-toggle-label">
+                                    @if ($user->enabled_2fa)
+                                        {{ __('manage-profile.disable_mfa')}}
+                                    @else
+                                        {{ __('manage-profile.enable_mfa') }}
+                                    @endif
+                                </span>
                             </div>
 
                             <p class="mfa-desc inter font-bold">
@@ -301,12 +326,35 @@
                         </div>
                         <div class="security-divider"></div>
                         <div class="right-security">
-                            <p class="inter font-bold title-security">{{ __('manage-profile.change_password') }}</p>
-                            <p>{{ session('status') }}</p>
+                            <p class="inter font-bold title-security">
+                                @if($user->password)
+                                    {{ __('manage-profile.change_password') }}
+                                @else
+                                    {{ __('manage-profile.add_password')}}
+                                @endif
+                            </p>
+
+                            @if(session('status'))
+                                <div class="alert alert-primary w-75 d-flex align-self-center" role="alert">
+                                    {{ session('status') }}
+                                </div>
+                            @endif
+                            @error('email')
+                                <div class="alert alert-danger w-75 d-flex align-self-center" role="alert">
+                                    {{ $errors->first('email')}}
+                                </div>
+                            @endif
+
                             <form action="/forgot-password" method="post">
                                 @csrf
                                 <input type="hidden" name="email" value="{{ $user->email }}">
-                                <button class="inter save-password-btn">{{ __('manage-profile.change') }}</button>
+                                <button class="inter save-password-btn">
+                                    @if ($user->password)
+                                        {{ __('manage-profile.change_password_button') }}
+                                    @else
+                                        {{ __('manage-profile.add_password_button')}}
+                                    @endif
+                                </button>
                             </form>
                         </div>
                     </div>

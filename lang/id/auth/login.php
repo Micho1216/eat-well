@@ -10,5 +10,6 @@ return [
     'google' => 'Lanjut dengan Google',
     'customer_register_link' => 'Tidak punya akun? Ayok gabung!',
     'or' => 'atau',
-    'vendor_register_link' => 'Ayo menjadi vendor bersama EatWell!'
+    'vendor_register_link' => 'Ayo menjadi vendor bersama EatWell!',
+    'provider' => 'Mohon menggunakan google untuk masuk ke akun ini!'
 ];

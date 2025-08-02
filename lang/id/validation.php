@@ -195,7 +195,11 @@ return [
         'email' => 'alamat email',
         'password' => 'kata sandi',
         'password_confirmation' => 'konfirmasi password',
-        'name' => 'nama'
+        'name' => 'nama',
+        'province' => 'provinsi',
+        'city' => 'kota/kabupaten',
+        'district' => 'kecamatan',
+        'village' => 'kelurahan/desa'
     ],
 
 ];

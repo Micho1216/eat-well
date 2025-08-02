@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
         /** @var User|null $user */
         $user = Auth::user();
@@ -39,15 +39,15 @@ class HomeController extends Controller
             $hasPassword = false;
         }
         
-        if($request->session()->has('pressedTopup'))
-        {
-            $pressedTopup = true;
-        }
-        else{
-            $pressedTopup = false;
-        }
+        // if($request->session()->has('pressedTopup'))
+        // {
+        //     $pressedTopup = true;
+        // }
+        // else{
+        //     $pressedTopup = false;
+        // }
 
-        return view('customer.home', compact('vendors', 'favVendors', 'order', 'slotMap', 'wellpay', 'hasPassword', 'pressedTopup'));
+        return view('customer.home', compact('vendors', 'favVendors', 'order', 'slotMap', 'wellpay', 'hasPassword'));
     }
 
     private function getDefaultAddress(User $user): ?Address

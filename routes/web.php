@@ -40,6 +40,7 @@ use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\VillageController;
 use App\Http\Middleware\CheckNoPasswordExist;
+use App\Models\User;
 
 Route::post('/lang', LanguageController::class);
 
@@ -49,6 +50,7 @@ use App\Http\Middleware\AccountSetup\EnsureAddressExists;
 use App\Http\Middleware\AccountSetup\EnsureNoAddressExist;
 use App\Http\Middleware\EnsureNoPasswordExist;
 use App\Http\Middleware\EnsurePasswordExists;
+use App\Notifications\OneTimePassword;
 
 /* --------------------
      GUEST ROUTES
