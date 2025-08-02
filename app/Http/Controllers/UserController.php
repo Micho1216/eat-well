@@ -7,6 +7,7 @@ use App\Http\Requests\TopUpWellPayRequest;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 
@@ -47,9 +48,12 @@ class UserController extends Controller
 
             logActivity('successfully', 'top-up', 'WellPay');
 
+            $locale = App::getLocale();
+            $prefix = $locale === 'id' ? 'Isi saldo Rp ' : 'Top-up of Rp ';
+            $sufix = $locale === 'id' ? ' berhasil' : ' success';
             // Berikan respons sukses
             return response()->json([
-                'message' => 'Top-up of Rp ' . number_format($amount, 0, ',', '.') . ' successful!',
+                'message' => $prefix . number_format($amount, 0, ',', '.') . $sufix . '!',
                 'new_balance' => $newBalance, // Kirim saldo baru kembali ke frontend
             ], 200);
         } catch (ValidationException $e) {

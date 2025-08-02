@@ -98,14 +98,14 @@
                         <div class="custom-modal-content">
                             <div class="modal-header">
                                 <h1 class="modal-title fs-5" id="customModal2Title">{{ __('customer/home.confirm') }}
-                                    Top-up</h1>
+                                    {{ __('customer/home.topup') }}</h1>
                                 <button type="button" class="btn-close" id="closeCustomModal2" aria-label="Close">
                                     <span class="material-symbols-outlined">close</span>
                                 </button>
                             </div>
                             <div class="modal-body">
                                 <form>
-                                    <h6 class="m-0 inter">{{ __('customer/home.confirm_amount') }} top up: <span
+                                    <h6 class="m-0 inter">{{ __('customer/home.confirm_amount') }} {{ __('customer/home.topup') }}: <span
                                             id="confirmTopupAmount" class="fw-bold"></span></h6>
                                     <h6 class="m-0 inter">{{ __('customer/home.confirm_new') }}<span id="confirmNewBalance"
                                             class="fw-bold"></span></h6>
@@ -133,8 +133,8 @@
                     </div>
 
                     <button class="btn d-flex justify-content-center align-items-center m-0" id="openCustomModal1"
-                        style="width: 107px; background-color: var(--bg-contrast); padding: 5px; border-radius: 100px; color: #fff; cursor: pointer;">
-                        <span class="me-2">Top up</span>
+                        style="width: 120px; background-color: var(--bg-contrast); padding: 5px; border-radius: 100px; color: #fff; cursor: pointer;">
+                        <span class="me-2">{{ __('customer/home.topup') }}</span>
                         <div class="d-flex align-items-center justify-content-center"
                             style="width: 20px; height: 20px; border: 2px solid #fff; border-radius: 50%; background: var(--bg-contrast);">
                             <span class="material-symbols-outlined" style="font-size: 18px; color: #fff;">add</span>
@@ -145,13 +145,13 @@
 
             <div id="successToast" class="success-toast">
                 <span class="material-symbols-outlined check-icon">check_circle</span>
-                <p id="successToastMessage" class="toast-message">Top-up {{ __('customer/home.success') }}!</p>
+                <p id="successToastMessage" class="toast-message">{{ __('customer/home.topup') }} {{ __('customer/home.success') }}!</p>
             </div>
 
             <div id="loadingOverlay" class="custom-loading-overlay" style="display: none;">
                 <div class="loading-content text-center">
                     <div class="spinner"></div>
-                    <p class="loading-text mt-3">Processing your top-up...</p>
+                    <p class="loading-text mt-3">{{ __('customer/home.loading_topup') }}</p>
                 </div>
             </div>
 
@@ -191,7 +191,7 @@
                 @else
                     <div class="d-flex flex-column justify-content-center align-items-center gap-2">
                         <h2 class="text-center fw-500 mb-0 mt-2">{{ __('customer/home.no_order') }}</h2>
-                        <a href="{{ route('search') }}" class="btn btn-warning">Order Now</a>
+                        <a href="{{ route('search') }}" class="btn btn-warning">{{ __('customer/home.cta_order') }}</a>
                     </div>
                 @endif
             </section>

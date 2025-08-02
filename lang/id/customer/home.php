@@ -19,7 +19,10 @@ return [
     'rec_name' => 'Nama penerima',
     'delivery_adr' => 'Alamat pengiriman',
     'no_order' => 'Tidak ada orderan aktif saat ini',
-    'popular' => 'Catering Populer'
+    'popular' => 'Catering Populer',
+    'cta_order' => 'Pesan sekarang',
+    'loading_topup' => 'Memproses penambahan saldo...',
+    'topup' => 'Isi Saldo',
 ];
 
 /**
