@@ -318,7 +318,6 @@ body {
 .gender-group {
     display: flex;
     align-items: center;
-    gap: 60px;
     margin-top: 12px;
     padding-left: 20px;
 }
@@ -890,6 +889,7 @@ body {
         border-bottom: 1.4px solid #E77133;
         font-weight: 600;
         width: 100px;
+        text-align: center;
     }
 
     .left-right-security {
