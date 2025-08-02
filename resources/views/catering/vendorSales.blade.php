@@ -64,7 +64,7 @@
     @if (!$orders->isEmpty())
         @include('catering.salesTable', [$orders, $totalSales, $startDate, $endDate])
     @else
-        <h4>{{ __('catering/sales.no_sales') }}</h4>
+        <h4 class="text-white">{{ __('catering/sales.no_sales') }}</h4>
     @endif
 </div>
 @endsection
