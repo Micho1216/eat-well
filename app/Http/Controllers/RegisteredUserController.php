@@ -2,15 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use GuzzleHttp\Promise\Create;
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rules\Password;
-use Illuminate\Validation\ValidationException;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\RegisteredUserStoreRequest;
 use Illuminate\Support\Str;
 use App\Models\User;
-use App\Models\Vendor;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\App;
@@ -24,14 +18,9 @@ class RegisteredUserController extends Controller
         else return redirect('/');
     }
 
-    public function store(Request $request, String $role)
+    public function store(RegisteredUserStoreRequest $request, String $role)
     {
-        $attrs = $request->validate([
-            'name' => ['required'],
-            'email' => ['required', 'email', 'unique:users'],
-            'password' => ['required', 'min:8', 'confirmed'],
-            'password_confirmation' => ['required']
-        ]);
+        $attrs = $request->validated();
 
         $attrs['role'] = Str::ucfirst($role);
         $user = User::create($attrs);

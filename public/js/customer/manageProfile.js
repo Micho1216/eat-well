@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-     const editBtnGroup = document.querySelector('.edit-btn-group');
+    const editBtnGroup = document.querySelector('.edit-btn-group');
     const nameInput = document.getElementById('nameInput');
     const dobMonth = document.getElementById('dob_month');
     const dobDay = document.getElementById('dob_day');

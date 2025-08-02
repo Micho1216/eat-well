@@ -29,11 +29,14 @@
                                 <div class="invalid-feedback">{{ $errors->first('password') }}</div>
                             </div>
 
-                            <div class="form-check">
-                                <input type="checkbox" name="remember" class="form-check-input border border-secondary" id="remember">
-                                <label for="remember" class="form-check-label">Remember me</label>
+                            <div class="d-flex flex-row justify-content-between w-100">
+                                <div class="form-check">
+                                    <input type="checkbox" name="remember" class="form-check-input border border-secondary" id="remember">
+                                    <label for="remember" class="form-check-label">Remember me</label>
+                                </div>
+    
+                                <a href="{{ route('password.request') }}" class="link-dark">Forgot Password?</a>
                             </div>
-
                             <button type="submit" class="mb-2 mt-5 w-100 gsi-material-button">
                                 <div class="gsi-material-button-state"></div>
                                 <div class="gsi-material-button-content-wrapper">
