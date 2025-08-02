@@ -2,10 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\UserRole;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
+use Illuminate\Support\Facades\App;
 
 class UpdateProfileVendorRequest extends FormRequest
 {
@@ -28,7 +30,7 @@ class UpdateProfileVendorRequest extends FormRequest
                 'not_regex:/<[^>]*script.*?>.*?<\/[^>]*script.*?>/i',
                 'not_regex:/<[^>]+>/i',
             ],
-            'telpInput' => 'bail|required|string|max:255|starts_with:08',
+            'telpInput' => 'bail|required|string|max:15|min:10|regex:/^[0-9]+$/',
             'profilePicInput' => 'nullable|image|mimes:jpg,jpeg,png',
 
             // Time fields
@@ -45,29 +47,35 @@ class UpdateProfileVendorRequest extends FormRequest
 
     public function messages(): array
     {
+        $locale = App::getLocale();
         return [
-            'nameInput.required' => 'Vendor name must be filled!',
-            'nameInput.max' => 'Vendor name may not be greater than 255 characters.',
-            'nameInput.unique' => 'Vendor name is already taken!',
-            'nameInput.not_regex' => 'HTML or script tags are not allowed in the vendor name.',
 
-            'telpInput.required' => 'Telp number must be filled!',
-            'telpInput.starts_with' => 'Telp number must start with 08',
+            'nameInput.required' => $locale === 'id' ? 'Nama vendor harus diisi!' : 'Vendor name must be filled!',
+            'nameInput.max' => $locale === 'id' ? 'Nama vendor tidak boleh lebih dari 255 karakter.' : 'Vendor name may not be greater than 255 characters.',
+            'nameInput.unique' => $locale === 'id' ? 'Nama vendor sudah digunakan!' : 'Vendor name is already taken!',
+            'nameInput.not_regex' => $locale === 'id' ? 'Tag HTML atau script tidak diperbolehkan dalam nama vendor.' : 'HTML or script tags are not allowed in the vendor name.',
 
-            'profilePicInput.image' => 'Profile picture must be an image.',
-            'profilePicInput.mimes' => 'Profile picture must be a file of type: jpg, jpeg, png.',
+            'telpInput.required' => $locale === 'id' ? 'Nomor telepon harus diisi!' : 'Telp number must be filled!',
+            'telpInput.max' => $locale === 'id' ? 'Nomor telepon tidak boleh lebih dari 15 karakter.' : 'Telp number may not be greater than 15 characters.',
+            'telpInput.min' => $locale === 'id' ? 'Nomor telepon minimal terdiri dari 10 karakter.' : 'Telp number must be at least 10 characters.',
+            'telpInput.regex' => $locale === 'id' ? 'Nomor telepon harus berupa angka 0 - 9.' : 'Telp number must be number between 0 - 9',
 
-            'breakfast_time_start.date_format' => 'Breakfast start time must be in the format HH:MM.',
-            'breakfast_time_end.date_format' => 'Breakfast end time must be in the format HH:MM.',
-            'breakfast_time_end.after' => 'Breakfast end time must be after the start time.',
+            'profilePicInput.image' => $locale === 'id' ? 'Foto profil harus berupa gambar.' : 'Profile picture must be an image.',
+            'profilePicInput.mimes' => $locale === 'id' ? 'Foto profil harus bertipe: jpg, jpeg, png.' : 'Profile picture must be a file of type: jpg, jpeg, png.',
 
-            'lunch_time_start.date_format' => 'Lunch start time must be in the format HH:MM.',
-            'lunch_time_end.date_format' => 'Lunch end time must be in the format HH:MM.',
-            'lunch_time_end.after' => 'Lunch end time must be after the start time.',
+            'breakfast_time_start.date_format' => $locale === 'id' ? 'Waktu mulai sarapan harus dalam format HH:MM.' : 'Breakfast start time must be in the format HH:MM.',
+            'breakfast_time_end.date_format' => $locale === 'id' ? 'Waktu selesai sarapan harus dalam format HH:MM.' : 'Breakfast end time must be in the format HH:MM.',
+            'breakfast_time_end.after' => $locale === 'id' ? 'Waktu selesai sarapan harus setelah waktu mulai.' : 'Breakfast end time must be after the start time.',
 
-            'dinner_time_start.date_format' => 'Dinner start time must be in the format HH:MM.',
-            'dinner_time_end.date_format' => 'Dinner end time must be in the format HH:MM.',
-            'dinner_time_end.after' => 'Dinner end time must be after the start time.',
+            'lunch_time_start.date_format' => $locale === 'id' ? 'Waktu mulai makan siang harus dalam format HH:MM.' : 'Lunch start time must be in the format HH:MM.',
+            'lunch_time_end.date_format' => $locale === 'id' ? 'Waktu selesai makan siang harus dalam format HH:MM.' : 'Lunch end time must be in the format HH:MM.',
+            'lunch_time_end.after' => $locale === 'id' ? 'Waktu selesai makan siang harus setelah waktu mulai.' : 'Lunch end time must be after the start time.',
+
+            'dinner_time_start.date_format' => $locale === 'id' ? 'Waktu mulai makan malam harus dalam format HH:MM.' : 'Dinner start time must be in the format HH:MM.',
+            'dinner_time_end.date_format' => $locale === 'id' ? 'Waktu selesai makan malam harus dalam format HH:MM.' : 'Dinner end time must be in the format HH:MM.',
+            'dinner_time_end.after' => $locale === 'id' ? 'Waktu selesai makan malam harus setelah waktu mulai.' : 'Dinner end time must be after the start time.',
+
+
         ];
     }
 

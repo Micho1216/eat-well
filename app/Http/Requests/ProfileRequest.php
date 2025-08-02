@@ -2,12 +2,12 @@
 
 namespace App\Http\Requests;
 
+use App\Enums\UserRole;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Support\Facades\Log;
-
+use Illuminate\Support\Facades\App;
 class ProfileRequest extends FormRequest
 {
     /**
@@ -44,20 +44,26 @@ class ProfileRequest extends FormRequest
 
     public function messages()
     {
+        $locale = App::getLocale();
+
+
         return [
-            'nameInput.required' => 'Name is required.',
-            'nameInput.string' => 'Name must be a string.',
-            'nameInput.max' => 'Name must not be more than 255 characters.',
+            'nameInput.required' => $locale === 'id' ? 'Nama wajib diisi.' : 'Name is required.',
+            'nameInput.string' => $locale === 'id' ? 'Nama harus berupa teks.' : 'Name must be a string.',
+            'nameInput.max' => $locale === 'id' ? 'Nama tidak boleh lebih dari 255 karakter.' : 'Name must not be more than 255 characters.',
 
-            'dateOfBirth.date' => 'Date of Birth must be a valid date.',
-            'dateOfBirth.before' => 'Date of Birth must be before today.',
+            // dateOfBirth
+            'dateOfBirth.date' => $locale === 'id' ? 'Tanggal lahir harus berupa tanggal yang valid.' : 'Date of Birth must be a valid date.',
+            'dateOfBirth.before' => $locale === 'id' ? 'Tanggal lahir harus sebelum hari ini.' : 'Date of Birth must be before today.',
 
-            'gender.required' => 'Gender is required.',
-            'gender.in' => 'Gender must be either male or female.',
+            // gender
+            'gender.required' => $locale === 'id' ? 'Jenis kelamin wajib diisi.' : 'Gender is required.',
+            'gender.in' => $locale === 'id' ? 'Jenis kelamin harus laki-laki atau perempuan.' : 'Gender must be either male or female.',
 
-            'profilePicInput.image' => 'Profile picture must be an image.',
-            'profilePicInput.mimes' => 'Profile picture must be a file of type: jpg, jpeg, png.',
-            'profilePicInput.max' => 'Profile picture must not be larger than 2MB.',
+            // profilePicInput
+            'profilePicInput.image' => $locale === 'id' ? 'Foto profil harus berupa gambar.' : 'Profile picture must be an image.',
+            'profilePicInput.mimes' => $locale === 'id' ? 'Foto profil harus bertipe: jpg, jpeg, png.' : 'Profile picture must be a file of type: jpg, jpeg, png.',
+            'profilePicInput.max' => $locale === 'id' ? 'Foto profil tidak boleh lebih dari 2MB.' : 'Profile picture must not be larger than 2MB.',
         ];
     }
 

@@ -3,7 +3,7 @@
 return [
     'title' => 'Manage Vendor Profile',
     'manage_profile' => 'Manage Profile',
-    'edit' => 'Edit',
+    'edit' => 'Edit Photo',
     'email' => 'Email',
     'name' => 'Name',
     'telephone' => 'Phone Number',
@@ -11,4 +11,5 @@ return [
     'lunch_delivery' => 'Lunch Delivery Time',
     'dinner_delivery' => 'Dinner Delivery Time',
     'save' => 'Save',
+    'address' => 'Address',
 ];

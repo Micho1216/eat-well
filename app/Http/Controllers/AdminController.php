@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdminSearchRequest;
 use App\Models\Address;
 use App\Models\Order;
 use App\Models\Payment;
@@ -29,29 +30,27 @@ class AdminController extends Controller
         return view('viewAllVendor', compact('vendors', 'sales'));
     }
 
-    public function search(Request $request)
+    public function search(AdminSearchRequest $request)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255'
-        ]);
+        $validated = $request->validated();
         $name = $validated['name'];
-        // $name = $request->name;
 
-        // $vendors = Vendor::where('name', 'like','%' .$name . '%')->get();
+        // Cari vendor berdasarkan nama
         $vendors = Vendor::where('name', 'like', '%' . $name . '%')->get();
-        // $vendors->load('address');
-        // $addresses =  Address::where('addressId', $request->addressId)->get();
+
+        // Ambil total penjualan (sales) berdasarkan vendor
         $sales = DB::table('orders')
             ->select('vendorId', DB::raw('SUM(totalPrice) as totalSales'))
             ->groupBy('vendorId')
             ->pluck('totalSales', 'vendorId');
 
+        // Catat aktivitas pencarian
         logActivity('Successfully', 'Searched', 'Vendor by Name');
+
+        // Kirim data ke view
         return view('viewAllVendor', compact('vendors', 'sales'));
-
-
-        // return view('viewAllVendor', compact('vendors'));
     }
+
 
     public function view_all_logs()
     {
@@ -61,62 +60,7 @@ class AdminController extends Controller
         return view('view-all-logs', compact('all_logs'));
     }
 
-    public function view_all_payment()
-    {
-        $payments = PaymentMethod::all();
 
-        // logActivity('Successfully', 'Visited', 'View All Payment Page');
-        return view('view-all-payment', compact('payments'));
-    }
-
-    public function delete_payment(string $id)
-    {
-        $payment = PaymentMethod::query()->find($id);
-        $payment->delete();
-
-        $payments = PaymentMethod::all();
-
-
-        // Session::flash('message', 'Successfully delete payment !');
-        // return view('view-all-payment', compact('payments'));
-        // return redirect()->route('view-all-payment');
-        logActivity('Successfully', 'Deleted', 'Payment Method');
-        return redirect()->route('view-all-payment')->with('message_del', 'Successfully delete payment method!');
-    }
-
-    public function add_new_payment(Request $request)
-    {
-        // $name = $request->payment-method;
-        // $newPayment = PaymentMethod::create();
-
-        // $newPayment->name = $request->paymentMethod;
-
-        // $newPayment->save();
-        try {
-
-
-            $validated = $request->validate([
-                'paymentMethod' => 'string|max:255|unique:payment_methods,name'
-            ]);
-
-            $newPayment = PaymentMethod::create([
-                'name' => $validated['paymentMethod']
-            ]);
-
-            $payments = PaymentMethod::all();
-
-            // Session::flash('message_add', 'Successfully added payment !');
-            // return view('view-all-payment', compact('payments'));
-            logActivity('Successfully', 'Added', 'Payment Method');
-            return redirect()->route('view-all-payment')->with('message_add', 'Successfully added payment method!');
-        } catch (\Exception $e) {
-            // Log::error('Error adding new payment method: ' . $e->getMessage());
-            logActivity('Failed', 'Added', 'Payment Method due to error: ' . $e->getMessage());
-            return redirect()->back()->withErrors(['error' => 'Failed to add payment method.']);
-        }
-
-        // return redirect()->route('view-all-payment');
-    }
 
     public function view_all_transactions()
     {

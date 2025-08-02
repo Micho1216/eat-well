@@ -131,6 +131,7 @@ class VendorController extends Controller
             [$dinner_start, $dinner_end] = explode('-', $vendor->dinner_delivery);
         }
 
+        $address = $vendor->provinsi . ' ' . $vendor->kota . ' ' . $vendor->kecamatan . ' ' . $vendor->kelurahan . ' ' . $vendor->jalan . ' ' . $vendor->kode_pos;
         // logActivity('Successfully', 'Visited', 'Manage Profile Vendor Page');
 
         return view('manage-profile-vendors', compact(
@@ -141,7 +142,8 @@ class VendorController extends Controller
             'lunch_start',
             'lunch_end',
             'dinner_start',
-            'dinner_end'
+            'dinner_end',
+            'address',
         ));
     }
 

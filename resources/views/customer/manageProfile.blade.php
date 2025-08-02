@@ -100,7 +100,7 @@
                                     role="alert" aria-live="assertive" aria-atomic="true">
                                     <div class="d-flex">
                                         <div class="toast-body">
-                                            {{ session('success') }}
+                                            {{ __('manage-profile.success_msg')}}
                                         </div>
                                         <button type="button" class="btn-close btn-close-white me-2 m-auto"
                                             data-bs-dismiss="toast" aria-label="Close"></button>
@@ -239,10 +239,11 @@
                                                 accept="image/*" style="display:none;" disabled>
                                         </label>
                                     </div>
-                                    <div class="edit-btn-group d-flex flex-column">
+                                    <div class="edit-btn-group d-flex flex-row">
                                         <button class="inter font-medium edit-data">Edit</button>
-                                        <p style="color: rgb(242, 185, 12)">{{ __('manage-profile.click_edit') }}</p>
+                                        
                                     </div>
+                                    <p style="color: rgb(242, 185, 12)">{{ __('manage-profile.click_edit') }}</p>
 
                                     <div class="modal fade" id="exampleModal" tabindex="-1"
                                         aria-labelledby="exampleModalLabel" aria-hidden="true">

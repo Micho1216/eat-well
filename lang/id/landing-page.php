@@ -4,7 +4,7 @@ return
 [
     'eatwellis' => 'Eat Well adalah platfrom pintar yang menghubungkan pengguna dengan katering yang menyediakan makanan sehat. Mudah ditemukan, praktis, dan berlangganan pada penyedia katering sehat berdasarkan keutuhan diet mu dan berdasarkan preferensi. Semua dalam satu tempat.',
 
-    'registernow' => 'Register sekarang',
+    'registernow' => 'Daftar sekarang',
     'kolomtext1' => 'Berlangganan, berhenti, atau menganti rencana dengan hanya sedikit tindakan klik, dimanapun, MUDAH !',
     'kolomtext2' => 'Cari dan bandingkan berbagai penyedia makanan sehat yang terpercaya di lokasi mu !',
     'kolomtext3' => 'Nikmati porsi seimbang dan terkontrol dalam makanan mu setiap hari !',

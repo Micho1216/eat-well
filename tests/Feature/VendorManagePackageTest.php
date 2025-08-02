@@ -239,6 +239,8 @@ class VendorManagePackageTest extends TestCase
     {
         $this->actingAs($this->vendorAUser);
 
+        
+
         // Prepare Excel file
         Excel::fake();
 
@@ -252,6 +254,8 @@ class VendorManagePackageTest extends TestCase
         $response = $this->post('/packages/import', [
             'excel_file' => $file,
         ]);
+
+        // dump($response);
 
         // Assert redirect with flash message
         $response->assertRedirect('/');

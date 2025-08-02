@@ -46,7 +46,7 @@
 
                         <div>
                             <label for="profilePicInput" class="btn btn-secondary mt-2">
-                                {{ __('manage-profile-vendor.edit') }} Foto
+                                {{ __('manage-profile-vendor.edit') }}
                             </label>
                             <input type="file" id="profilePicInput" name="profilePicInput" accept="image/*"
                                 style="display: none;">
@@ -60,6 +60,9 @@
                     <div class="form-group">
                         <label>{{ __('manage-profile-vendor.email') }}</label>
                         <input type="text" class="form-control" value="{{ $user->email }}" disabled>
+
+                         <label>{{ __('manage-profile-vendor.address') }}</label>
+                        <input type="text" class="form-control" value="{{ $address }}" disabled>
                     </div>
 
                     <div class="form-group">

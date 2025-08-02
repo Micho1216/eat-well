@@ -31,4 +31,5 @@ return [
     'verify_password' => 'Verifikasi Kata Sandi Baru',
     'change' => 'Ubah',
     'logout' => 'Keluar',
+    'success_msg' => 'Berhasil mengubah profile !'
 ];

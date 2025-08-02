@@ -336,14 +336,14 @@ Route::middleware(['role:admin'])->group(function () {
         return view('view-all-packages-cuisine');
     });
 
-    Route::get('/view-all-payment', [AdminController::class, 'view_all_payment'])
-        ->name('view-all-payment');
+    // Route::get('/view-all-payment', [AdminController::class, 'view_all_payment'])
+    //     ->name('view-all-payment');
 
-    Route::delete('/view-all-payment/delete/{id}', [AdminController::class, 'delete_payment'])
-        ->name('delete-payment');
+    // Route::delete('/view-all-payment/delete/{id}', [AdminController::class, 'delete_payment'])
+    //     ->name('delete-payment');
 
-    Route::post('/view-all-payment', [AdminController::class, 'add_new_payment'])
-        ->name('add-new-payment');
+    // Route::post('/view-all-payment', [AdminController::class, 'add_new_payment'])
+    //     ->name('add-new-payment');
 
     // Route::post('/admin-dashboard', [SessionController::class, 'destroy'])->name('logout.admin');
 

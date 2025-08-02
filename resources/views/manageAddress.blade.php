@@ -19,7 +19,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{{ __('address.close') }}"></button>
                     </div>
                     <div class="modal-body text-center">
-                        <p>{{ session('delete_success') }}</p>
+                        {{-- <p>{{ session('delete_success') }}</p> --}}
+                        <p>{{ __('address.delete_success') }}</p>
                         <i class="material-symbols-outlined text-success" style="font-size: 50px;">check_circle</i>
                     </div>
                     <div class="modal-footer">

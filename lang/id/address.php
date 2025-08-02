@@ -19,4 +19,5 @@ return [
     'confirm_delete' => 'Konfirmasi Hapus',
     'confirm_delete_text' => 'Apakah Anda yakin ingin menghapus alamat ini?',
     'cancel' => 'Batal',
+    'delete_success' => 'Alamat berhasil dihapus'
 ];

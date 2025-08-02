@@ -11,5 +11,8 @@ return [
     'contact' => 'Contact',
     'footer_rights' => 'All rights reserved',
     'footer_address' => 'Pakuan Street No.3, Sumur Batu, Babakan Madang District, Bogor Regency, West Java 16810, Indonesia',
-    'rating_and_review_vendor' => 'Review'
+    'rating_and_review_vendor' => 'Review',
+    'Landing_page' => 'Landing Page',
+    'login' => 'Log In',
+    'contact'=> 'Contact',
 ];
