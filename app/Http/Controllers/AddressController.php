@@ -5,10 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\AddressDefaultRequest;
 use App\Http\Requests\AddressStoreRequest;
 use App\Models\Address;
-use App\Models\Province; // Import model Province
-use App\Models\City;     // Import model City
-use App\Models\District; // Import model District
-use App\Models\Village;  // Import model Village
+use App\Models\Province;
+use App\Models\City;
+use App\Models\District;
+use App\Models\Village; 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
@@ -36,12 +36,10 @@ class AddressController extends Controller
         $requestedAddressId = $request->input('address_id');
 
         try {
-            // Nonaktifkan semua alamat utama pengguna saat ini
             Address::where('userId', $loggedInUserId)
                 ->where('is_default', true)
                 ->update(['is_default' => false]);
 
-            // Set alamat yang dipilih menjadi utama
             $newDefaultAddress = Address::where('userId', $loggedInUserId)
                 ->where('addressId', $requestedAddressId)
                 ->firstOrFail();
@@ -72,7 +70,6 @@ class AddressController extends Controller
         $newAddress = new Address();
         $newAddress->userId = Auth::id();
 
-        // Ambil nama berdasarkan ID yang dikirim
         $newAddress->provinsi = Province::find($request->provinsi_id)->name;
         $newAddress->kota = City::find($request->kota_id)->name;
         $newAddress->kecamatan = District::find($request->kecamatan_id)->name;
@@ -83,7 +80,7 @@ class AddressController extends Controller
         $newAddress->notes = $request->notes;
         $newAddress->recipient_name = $request->recipient_name;
         $newAddress->recipient_phone = $request->recipient_phone;
-        $newAddress->is_default = 0; // Default to not default, user can set it later
+        $newAddress->is_default = 0; 
 
         $newAddress->save();
 
@@ -120,7 +117,6 @@ class AddressController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // Ambil nama berdasarkan ID yang dikirim
         $address->provinsi = Province::find($request->provinsi_id)->name;
         $address->kota = City::find($request->kota_id)->name;
         $address->kecamatan = District::find($request->kecamatan_id)->name;
@@ -146,7 +142,6 @@ class AddressController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // Anda bisa mengaktifkan kembali validasi ini jika tidak ingin alamat default bisa dihapus
         if ($address->is_default) {
              return redirect('/manage-address')->with('error', 'Tidak dapat menghapus alamat utama. Silakan atur alamat lain sebagai utama terlebih dahulu.');
         }
