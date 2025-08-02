@@ -1,3 +1,31 @@
+.label-status {
+  min-width: 82px;
+  text-align: center;
+  padding: 3px 8px;
+  font-size: 14px;
+  font-weight: 350;
+  border-radius: 5px;
+  /* border: 1px solid; */
+  box-shadow: 0px 1px 2px #0b0b0b15;
+  transition: 0.2s ease-in-out;
+}
+
+.label-status.status-active {
+  background-color: var(--accent-color);
+}
+
+.label-status.status-upcoming {
+    background-color: #efe748;
+}
+
+.label-status.status-cancelled {
+  background-color: #f15858;
+}
+
+.label-status.status-finished {
+  background-color: #adf4ba;
+}
+
 .custom-table {
     border-collapse: separate;
     border-spacing: 0;

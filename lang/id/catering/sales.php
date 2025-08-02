@@ -5,7 +5,7 @@ return [
     'sales_head' => 'Penjualan :name',
     'start_date' => 'Tanggal mulai',
     'end_date' => 'Tanggal berakhir',
-    'export' => 'Cetak',
+    'export' => 'Unduh',
     'clear' => 'Hapus Filter',
     'filter' => 'Filter',
 

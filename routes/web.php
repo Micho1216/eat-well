@@ -350,6 +350,9 @@ Route::middleware(['role:admin'])->group(function () {
     Route::get('/view-order-history', [AdminViewOrderController::class, 'index'])
         ->name('view-order-history');
 
+    Route::get('/admin/orders/export', [AdminViewOrderController::class, 'export'])->name('admin.order.export');
+
+
     Route::fallback(function () {
         return redirect()->route('admin-dashboard');
     });

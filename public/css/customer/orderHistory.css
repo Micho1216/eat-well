@@ -354,9 +354,12 @@ body {
   transition: 0.2s ease-in-out;
 }
 
-.label-status.status-active, .label-status.status-upcoming {
-  /* border-color: var(--primary-color); */
+.label-status.status-active {
   background-color: var(--accent-color);
+}
+
+.label-status.status-upcoming {
+    background-color: #efe748;
 }
 
 .label-status.status-cancelled {

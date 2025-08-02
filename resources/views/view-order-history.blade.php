@@ -1,8 +1,3 @@
-@php
-    use Carbon\Carbon;
-    Carbon::setLocale(app()->getLocale());
-@endphp
-
 @extends('components.admin-nav')
 
 @section('css')
@@ -16,66 +11,73 @@
 @section('content')
     <section class="container-fluid px-sm-5 pb-sm-4 pt-4">
         <h1 class="text-center">{{ __('admin/order.title') }}</h1>
-    </section>
-    <section class="container-fluid px-sm-5 pb-sm-4 content-section d-flex flex-column justify-content-between"
-        style="min-height: 60vh;">
-        <div class="table-responsive mb-3">
-            <table class="table table-bordered align-middle text-center">
-                <thead class="table-light">
-                    <tr>
-                        <th scope="col">{{ __('admin/order.no') }}</th>
-                        <th scope="col">{{ __('admin/order.order_id') }}</th>
-                        <th scope="col">{{ __('admin/order.vendor_name') }}</th>
-                        <th scope="col">{{ __('admin/order.customer_name') }}</th>
-                        <th scope="col">{{ __('admin/order.order_items') }}</th>
-                        <th scope="col">{{ __('admin/order.order_period') }}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @forelse ($orders as $index => $order)
-                        <tr>
-                            <td>{{ ($orders->currentPage() - 1) * $orders->perPage() + $loop->iteration }}</td>
-                            <td>{{ $order->orderId }}</td>
-                            <td>{{ $order->vendor->name }}</td>
-                            <td>{{ $order->user->name }}</td>
-                            <td>
-                                <ul class="mb-0 ps-3">
-                                    @foreach ($order->orderItems as $item)
-                                        <li>{{ $item->package->name }} ({{ $item->packageTimeSlot }})
-                                            x{{ $item->quantity }}{{ !$loop->last ? ',' : '' }}</li>
-                                    @endforeach
-                                </ul>
-                            </td>
-                            <td>
-                                {{ Carbon::parse($order->startDate)->translatedFormat('d M Y') }} -
-                                {{ Carbon::parse($order->endDate)->translatedFormat('d M Y') }}
-                            </td>
-                        </tr>
-                    @empty
-                        <tr>
-                            <td colspan="6" class="text-center text-muted">{{ __('admin/order.no_orders') }}</td>
-                        </tr>
-                    @endforelse
-                </tbody>
-            </table>
-        </div>
 
-        {{-- Pagination at the bottom --}}
-        @if ($orders->lastPage() > 1)
-            <ul class="catering-pagination pagination justify-content-center mt-auto">
-                <li class="page-item {{ $orders->onFirstPage() ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ $orders->previousPageUrl() ?? '#' }}">&laquo;</a>
-                </li>
-                @for ($i = 1; $i <= $orders->lastPage(); $i++)
-                    <li class="page-item {{ $orders->currentPage() == $i ? 'active' : '' }}">
-                        <a class="page-link" href="{{ $orders->url($i) }}">{{ $i }}</a>
-                    </li>
-                @endfor
-                <li class="page-item {{ !$orders->hasMorePages() ? 'disabled' : '' }}">
-                    <a class="page-link" href="{{ $orders->nextPageUrl() ?? '#' }}">&raquo;</a>
-                </li>
-            </ul>
-        @endif
+        <section
+            class="container-fluid px-sm-5 pb-sm-4 pt-4 d-flex flex-row flex-wrap justify-content-between align-items-end gap-2">
+            <form action="{{ route('view-order-history') }}" method="GET"
+                class="d-flex flex-row flex-wrap gap-2 align-items-end">
+                @csrf
+                <div>
+                    <label for="startDate" class="form-label mb-0">{{ __('admin/order.start_date') }}</label>
+                    <input type="date" name="startDate" id="startDate" class="form-control"
+                        value="{{ request()->query('startDate') }}" max="{{ now()->format('Y-m-d') }}">
+                </div>
+                <div>
+                    <label for="endDate" class="form-label mb-0">{{ __('admin/order.end_date') }}</label>
+                    <input type="date" name="endDate" id="endDate" class="form-control"
+                        value="{{ request()->query('endDate') }}" max="{{ now()->format('Y-m-d') }}">
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">{{ __('admin/order.filter') ?? 'Filter' }}</button>
+
+                    <a href="{{ route('view-order-history') }}" class="btn btn-secondary" id="clearFilterBtn">
+                        {{ __('admin/order.clear') ?? 'Clear' }}
+                    </a>
+                </div>
+            </form>
+            <div>
+                @if ($orders->isEmpty())
+                    <button class="btn btn-green" disabled>
+                        {{ __('admin/order.export') ?? 'Export' }}
+                    </button>
+                @else
+                    <a href="{{ route('admin.order.export', ['startDate' => request()->query('startDate'), 'endDate' => request()->query('endDate')]) }}"
+                        class="btn btn-green">
+                        {{ __('admin/order.export') ?? 'Export' }}
+                    </a>
+                @endif
+            </div>
+        </section>
+
+        <section class="container-fluid px-sm-5 pb-sm-4 content-section d-flex flex-column justify-content-between"
+            style="min-height: 60vh;">
+            @if ($errors->has('endDate'))
+                <div class="text-danger">{{ $errors->first('endDate') }}</div>
+            @endif
+
+            @if (!$orders->isEmpty())
+                @include('admin.order-table')
+                {{-- Pagination --}}
+                @if ($orders->lastPage() > 1)
+                    <ul class="catering-pagination pagination justify-content-center mt-auto">
+                        <li class="page-item {{ $orders->onFirstPage() ? 'disabled' : '' }}">
+                            <a class="page-link" href="{{ $orders->previousPageUrl() ?? '#' }}">&laquo;</a>
+                        </li>
+                        @for ($i = 1; $i <= $orders->lastPage(); $i++)
+                            <li class="page-item {{ $orders->currentPage() == $i ? 'active' : '' }}">
+                                <a class="page-link" href="{{ $orders->url($i) }}">{{ $i }}</a>
+                            </li>
+                        @endfor
+                        <li class="page-item {{ !$orders->hasMorePages() ? 'disabled' : '' }}">
+                            <a class="page-link" href="{{ $orders->nextPageUrl() ?? '#' }}">&raquo;</a>
+                        </li>
+                    </ul>
+                @endif
+            @else
+                <h4>{{ __('catering/sales.no_sales') }}</h4>
+            @endif
+
+        </section>
     </section>
 
     <x-admin-footer></x-admin-footer>

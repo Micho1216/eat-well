@@ -14,7 +14,7 @@ class FilterSalesRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return Auth::check() && Auth::user()->role === UserRole::Vendor;
+        return Auth::check() && (Auth::user()->role === UserRole::Vendor || Auth::user()->role === UserRole::Admin);
     }
 
     /**
