@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ResendOTPRequest;
+use App\Http\Requests\VerifyOTPRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Carbon\Carbon;
@@ -16,12 +18,9 @@ class VerifyOtpController extends Controller
         return view('auth.verifyOtp', compact('email'));
     }
 
-    public function check(Request $request)
+    public function check(VerifyOTPRequest $request)
     {
-        $attrs = $request->validate([
-            'otp' => 'required',
-            'email' => 'required'
-        ]);
+        $attrs = $request->validated();
         $otp = $attrs['otp'];
         $email = $attrs['email'];
         $remember = Session('remember');
@@ -48,9 +47,11 @@ class VerifyOtpController extends Controller
         return redirect()->route('home');
     }
 
-    public function resendOtp(Request $request)
+    public function resendOtp(ResendOTPRequest $request)
     {
-        $email = $request->email;
+
+        $attrs = $request->validated();
+        $email = $attrs['email'];
         $user = User::where('email', $email)->first();
         $otp = rand(100000, 999999);
         $user->update([

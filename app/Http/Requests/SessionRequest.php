@@ -14,7 +14,7 @@ class SessionRequest extends FormRequest
     public function rules()
     {
         return [
-            'email' => ['required', 'email', 'unique:users'],
+            'email' => ['required', 'email', 'exists:users'],
             'password' => ['required', 'min:8'],
         ];
     }
