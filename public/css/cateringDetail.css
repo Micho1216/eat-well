@@ -795,7 +795,7 @@ input, button, select, optgroup, textarea{
   text-align: center;
 }
 
-.order-message {
+.order-message, .too-far-warning-message {
   width: 100%;
   text-align: center;
 }

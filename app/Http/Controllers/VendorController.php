@@ -76,8 +76,11 @@ class VendorController extends Controller
             }
         }
 
+        $tooFar = false;
+        if($vendor->provinsi !== $selectedAddress->provinsi) $tooFar = true;
+
         // logActivity('Successfully', 'Visited', 'Catering Detail Page');
-        return view('cateringDetail', compact('vendor', 'packages', 'numSold', 'selectedAddress'));
+        return view('cateringDetail', compact('vendor', 'packages', 'numSold', 'selectedAddress', 'tooFar'));
     }
 
     public function review(Vendor $vendor)

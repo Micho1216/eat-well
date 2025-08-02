@@ -65,11 +65,13 @@
                                 </div>
                             </a>
                         @endif
-                        <div class="number-sold-container">
-                            {{-- <span class="inter rating-and-sold">10k+</span>
+                        @unless ($tooFar)
+                            <div class="number-sold-container">
+                                {{-- <span class="inter rating-and-sold">10k+</span>
                             <span class="inter sold-text">sold</span> --}}
-                            <span class="inter rating-and-sold">{{ __('catering-detail.order') }}</span>
-                        </div>
+                                <span class="inter rating-and-sold">{{ __('catering-detail.order') }}</span>
+                            </div>
+                        @endunless
                     </div>
                 </div>
 
@@ -268,9 +270,11 @@
                                                     {{ __('catering-detail.view_menu') }}
                                                 </p>
                                             @endif
-                                            <div class="add-button" data-tab="item{{ $package->packageId }}">
-                                                <p class="add-text inter">{{ __('catering-detail.add') }}</p>
-                                            </div>
+                                            @unless ($tooFar)
+                                                <div class="add-button" data-tab="item{{ $package->packageId }}">
+                                                    <p class="add-text inter">{{ __('catering-detail.add') }}</p>
+                                                </div>
+                                            @endunless
                                         </div>
                                     </div>
 
@@ -337,13 +341,22 @@
             <p>Debug: Selected Address Jalan = {{ $selectedAddress->jalan ?? 'N/A' }}</p>
         </div> --}}
 
-        <a href="{{ route('payment.show') }}" class="button-order inter" id="proceedToPaymentLink"
-            style="cursor: default; pointer-events: none; text-decoration: none;">
-            <span class="order-message">{{ __('catering-detail.no_package_selected_yet') }}</span>
-            <span class="package-count" style="display:none;"></span>
-            <span class="item-count" style="display:none;"></span>
-            <span class="price-total" style="display:none;"></span>
-        </a>
+        @if ($tooFar)
+            <div class="button-order inter text-center" style="height: 50px;;">
+                <span class="too-far-warning-message">
+                    {{ __('catering-detail.too_far_warning') ?? 'Catering is too far from your location' }}
+                </span>
+            </div>
+        @else
+            <a href="{{ route('payment.show') }}" class="button-order inter" id="proceedToPaymentLink"
+                style="cursor: default; pointer-events: none; text-decoration: none;">
+                <span class="order-message">{{ __('catering-detail.no_package_selected_yet') }}</span>
+                <span class="package-count" style="display:none;"></span>
+                <span class="item-count" style="display:none;"></span>
+                <span class="price-total" style="display:none;"></span>
+            </a>
+        @endif
+
     </section>
 
     <!-- Modal PDF Viewer -->

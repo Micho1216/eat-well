@@ -19,6 +19,7 @@ return [
     'packages' => 'Packages',
     'items' => 'Items',
     'no_package_selected_yet' => 'No Package Selected Yet.',
+    'too_far_warning' => 'Catering is too far',
     'download_menu' => 'Download Menu',
     'no_reviews' => 'No reviews for this vendor yet.',
     'ordered_on' => 'Ordered on',
