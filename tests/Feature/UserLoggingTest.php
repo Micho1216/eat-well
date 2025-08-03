@@ -70,8 +70,8 @@ class UserLoggingTest extends TestCase
                         'Breakfast' => $package->breakfastPrice ? 2 : 0,
                         'Lunch' => $package->lunchPrice ? 1 : 0,
                         'Dinner' => $package->dinnerPrice ? 1 : 0,
-                    ]
                 ],
+            ]
             ]
         ]);
         $this->get("/catering-detail/{$vendorId}/payment");

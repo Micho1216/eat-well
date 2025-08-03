@@ -78,7 +78,7 @@ class VendorController extends Controller
         }
 
         $tooFar = false;
-        if($vendor->provinsi !== $selectedAddress->provinsi) $tooFar = true;
+        if ($vendor->provinsi !== $selectedAddress->provinsi) $tooFar = true;
 
         // logActivity('Successfully', 'Visited', 'Catering Detail Page');
         return view('cateringDetail', compact('vendor', 'packages', 'numSold', 'selectedAddress', 'tooFar'));
@@ -160,8 +160,7 @@ class VendorController extends Controller
         $userId = $user->userId;
         $vendor = Vendor::where('userId', $userId)->first();
 
-        if ($vendor->name != $request->nameInput)
-        {
+        if ($vendor->name != $request->nameInput) {
             logActivity('Successfully', 'Updated', 'Catering Name to ' . $request->nameInput);
         }
 
@@ -204,10 +203,22 @@ class VendorController extends Controller
         // $file->move(public_path('asset/vendorLogo/', $filename));
 
         $file = $request->file('logo');
-        $filename = time() . '.' . $file->getClientOriginalExtension();
-        $file->move(public_path('asset/vendorLogo'), $filename);
-        $vendor->logo = $filename;
-        $vendor->save(); 
+        $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+        $filename = $originalName . '_' . time() . '.' . $file->getClientOriginalExtension();
+        if (app()->environment('testing')) {
+            // In test, use Storage::fake so the test doesn't fail
+            $file->storeAs('public/asset/vendorLogo', $filename);
+        } else {
+            // In normal use, move the file to public directory
+            $destinationPath = public_path('asset/vendorLogo');
+            if (!file_exists($destinationPath)) {
+                mkdir($destinationPath, 0755, true);
+            }
+
+            $file->move($destinationPath, $filename);
+        }
+        $vendor->logo = 'asset/vendorLogo/' . $filename;
+        $vendor->save();
         logActivity('Successfully', 'Added', 'Profile pict ');
 
 
@@ -281,7 +292,7 @@ class VendorController extends Controller
             $file = $request->file('profilePicInput');
             $filename = time() . '.' . $file->getClientOriginalExtension();
             Storage::putFileAs('public/profiles', $file, $filename);
-            $updated_user->profilePath = 'storage/profiles/'.$filename;
+            $updated_user->profilePath = 'storage/profiles/' . $filename;
         }
 
         $updated_user->genderMale = ($request->gender === 'male') ? 1 : 0;

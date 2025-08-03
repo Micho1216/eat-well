@@ -73,10 +73,10 @@ class AddressController extends Controller
         $newAddress->userId = Auth::id();
 
         // Ambil nama berdasarkan ID yang dikirim
-        $newAddress->provinsi = Province::find($request->provinsi_id)->name;
-        $newAddress->kota = City::find($request->kota_id)->name;
-        $newAddress->kecamatan = District::find($request->kecamatan_id)->name;
-        $newAddress->kelurahan = Village::find($request->kelurahan_id)->name;
+        $newAddress->provinsi = $request->provinsi_name;
+        $newAddress->kota = $request->kota_name;
+        $newAddress->kecamatan = $request->kecamatan_name;
+        $newAddress->kelurahan = $request->kelurahan_name;
 
         $newAddress->jalan = $request->jalan;
         $newAddress->kode_pos = $request->kode_pos;

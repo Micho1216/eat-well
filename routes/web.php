@@ -99,10 +99,10 @@ Route::get('/about-us', function () {
 ---------------------*/
 
 Route::middleware(['auth'])->group(function () {
-    Route::post('api/fetch-provinces', [ProvinceController::class, 'fetchProvinces']);
-    Route::post('api/fetch-cities', [CityController::class, 'fetchCities']);
-    Route::post('api/fetch-districts', [DistrictController::class, 'fetchDistricts']);
-    Route::post('api/fetch-villages', [VillageController::class, 'fetchVillages']);
+    Route::post('api/fetch-provinces', [ProvinceController::class, 'fetchProvinces'])->name('api-provinces');
+    Route::post('api/fetch-cities', [CityController::class, 'fetchCities'])->name('api-cities');
+    Route::post('api/fetch-districts', [DistrictController::class, 'fetchDistricts'])->name('api-districts');
+    Route::post('api/fetch-villages', [VillageController::class, 'fetchVillages'])->name('api-villages');
     
     Route::post('/manage-profile', [SessionController::class, 'destroy'])->name('logout');
 
@@ -137,14 +137,6 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
     Route::post('favorite/{vendorId}', [FavoriteController::class, 'favorite'])->name('favorite');
     Route::post('unfavorite/{vendorId}', [FavoriteController::class, 'unfavorite'])->name('unfavorite');
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorite.show');
-
-    // Route::get('/manage-profile', function () {
-    //     return view('manageProfile');
-    // })->name('manage-profile');
-
-    // dipindahkan kebawah
-    // Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
-    // Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
 
     // Search Caterings
     Route::get('/caterings', [SearchCateringController::class, 'search'])->name('search');
@@ -220,7 +212,7 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
 
 
 
-/* ---------------------
+/* ---------------------a
      VENDOR ROUTES
 ---------------------- */
 /* ---------------------
