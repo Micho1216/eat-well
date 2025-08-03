@@ -24,13 +24,19 @@
         <img src="{{ asset('asset/customer/home/iklan 1.jpg') }}" class="img-fluid" alt="..."
             style="width: 100%; max-height: 350px; object-fit: cover;">
         <main class="container pt-3 pb-3 lexend">
-            {{-- Untuk button ini jangan dihapus, untuk sementara button logout disini, menunggu UI logout beneran dibuat --}}
-            {{-- <form action="{{ route('logout') }}" method="post">
-                @csrf
-                <button type="submit"></button>
-            </form> --}}
             {{-- WellPay --}}
             <div class="wellpay-container mb-4">
+                <div id="wellpay-translations" data-invalid-amount="{{ __('customer/wellpay.invalid_amount') }}"
+                    data-min-topup="{{ __('customer/wellpay.min_topup') }}"
+                    data-max-topup="{{ __('customer/wellpay.max_topup') }}"
+                    data-max-balance="{{ __('customer/wellpay.max_balance') }}"
+                    data-empty-password="{{ __('customer/wellpay.empty_password') }}"
+                    data-csrf-missing="{{ __('customer/wellpay.csrf_missing') }}"
+                    data-unknown-error="{{ __('customer/wellpay.unknown_error') }}"
+                    data-network-error="{{ __('customer/wellpay.network_error') }}"
+                    data-pass-error="{{__('customer/wellpay.incorrect_password') }}"
+                    data-no-password="{{__('customer/wellpay.no_pass') }}">
+                </div>
                 <div class="d-flex align-items-center mb-2 lexend">
                     <span><img src="{{ asset('asset/navigation/eatwellLogo.png') }}" alt="logo"
                             style="width: 3.5vh; background-color: var(--bg-primary); border-radius: 5px;"></span>
@@ -104,8 +110,9 @@
                             </div>
                             <div class="modal-body">
                                 <form>
-                                    <h6 class="m-0 inter">{{ __('customer/home.confirm_amount') }} {{ __('customer/home.topup') }}: <span
-                                            id="confirmTopupAmount" class="fw-bold"></span></h6>
+                                    <h6 class="m-0 inter">{{ __('customer/home.confirm_amount') }}
+                                        {{ __('customer/home.topup') }}: <span id="confirmTopupAmount"
+                                            class="fw-bold"></span></h6>
                                     <h6 class="m-0 inter">{{ __('customer/home.confirm_new') }}<span id="confirmNewBalance"
                                             class="fw-bold"></span></h6>
                                     <input type="hidden" id="finalTopupAmount" value="">
@@ -130,11 +137,12 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div id="customModal3" class="custom-modal-overlay">
                         <div class="custom-modal-content">
                             <div class="modal-header">
-                                <h1 class="modal-title fs-5" id="customModal3Title">{{ __('customer/home.no_password_title') }}
+                                <h1 class="modal-title fs-5" id="customModal3Title">
+                                    {{ __('customer/home.no_password_title') }}
                                 </h1>
                                 <button type="button" class="btn-close" id="closeCustomModal3" aria-label="Close">
                                     <span class="material-symbols-outlined">close</span>
@@ -163,7 +171,8 @@
 
             <div id="successToast" class="success-toast">
                 <span class="material-symbols-outlined check-icon">check_circle</span>
-                <p id="successToastMessage" class="toast-message">{{ __('customer/home.topup') }} {{ __('customer/home.success') }}!</p>
+                <p id="successToastMessage" class="toast-message">{{ __('customer/home.topup') }}
+                    {{ __('customer/home.success') }}!</p>
             </div>
 
             <div id="loadingOverlay" class="custom-loading-overlay" style="display: none;">
@@ -224,31 +233,10 @@
                     @endforeach
                 </div>
             </section>
-            {{-- Favorited Catering or Recently Viewed? --}}
-            {{-- @if (!$favVendors->isEmpty())
-                <section class="container fav-catering-container mt-3 w-100 h-auto mb-md-5 mb-4">
-                    <div class="section-title-wrap d-flex flex-row justify-content-between align-items-center">
-                        <h3 class="title-1">Your Favorites</h3>
-                        @if ($favVendors->count() > 4)
-                            <a href="{{route('favorite.show')}}" class="detail-link">View all</a>
-                        @endif
-                    </div>
-                    <div class="carousel-slider-wrap carousel-style-1 mt-10 align-self-center">
-                        <ul class="carousel-product-list">
-                            @foreach ($favVendors as $vendor)
-                                <li id="fav-card-{{ $vendor->vendorId }}">
-                                    <x-card-vendor :vendor="$vendor"></x-card-vendor>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </section>
-            @endif --}}
         </main>
     @endsection
 
     @section('scripts')
         <script src="{{ asset('js/customer/favoriteCatering.js') }}"></script>
-        {{-- <script src="{{ asset('js/customer/view-wellpay.js') }}"></script> --}}
         <script src="{{ asset('js/customer/wellpay.js') }}"></script>
     @endsection

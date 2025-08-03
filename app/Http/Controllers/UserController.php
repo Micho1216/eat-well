@@ -16,7 +16,7 @@ class UserController extends Controller
     public function topUpWellPay(TopUpWellPayRequest $request)
     {
         if (!Auth::check()) {
-            return response()->json(['message' => 'Unauthorized. Please login first.'], 401);
+            return response()->json(['message' => __('customer/wellpay.unauthorized')], 401);
         }
 
         $user = User::find(Auth::id());
@@ -27,7 +27,7 @@ class UserController extends Controller
 
             if (!Hash::check($password, $user->password)) {
                 throw ValidationException::withMessages([
-                    'password' => ['Incorrect password.'],
+                    'password' => [__('customer/wellpay.incorrect_password')],
                 ]);
             }
 
@@ -36,7 +36,7 @@ class UserController extends Controller
 
             if ($newBalance > $maxAllowedBalance) {
                 logActivity('Failed', 'top-up', 'WellPay, Error : Balance cannot exceed Rp ' . number_format($maxAllowedBalance, 0, ',', '.') . '.');
-                return response()->json(['message' => 'Your balance cannot exceed Rp ' . number_format($maxAllowedBalance, 0, ',', '.') . '.'], 400);
+                return response()->json(['message' => __('customer/wellpay.max_balance') . number_format($maxAllowedBalance, 0, ',', '.') . '.'], 400);
             }
 
             $user->wellpay = $newBalance;
@@ -55,12 +55,12 @@ class UserController extends Controller
         } catch (ValidationException $e) {
             logActivity('Failed', 'top-up', 'WellPay, Error : ' . $e->getMessage());
             return response()->json([
-                'message' => 'Validation Error',
+                'message' => __('customer/wellpay.validation_err'),
                 'errors' => $e->errors()
             ], 422); 
         } catch (\Exception $e) {
             logActivity('Failed', 'top-up', 'WellPay, Error : ' . $e->getMessage());
-            return response()->json(['message' => 'An error occurred: ' . $e->getMessage()], 500);
+            return response()->json(['message' => __('customer/wellpay.err_occured') . $e->getMessage()], 500);
         }
     }
 

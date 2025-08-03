@@ -11,7 +11,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const minTopup = 1000;
     const maxTopup = 20000000;
 
-    const hasPassword = document.querySelector('meta[name="has-password"]')?.content;
+    const hasPassword = document.querySelector(
+        'meta[name="has-password"]'
+    )?.content;
 
     // Custom Modal Elements
     const customModal1 = document.getElementById("customModal1");
@@ -27,7 +29,8 @@ document.addEventListener("DOMContentLoaded", function () {
     const confirmTopupBtn = document.getElementById("confirmTopupBtn");
 
     // Elements for Modal 2 content
-    const confirmTopupAmountSpan = document.getElementById("confirmTopupAmount");
+    const confirmTopupAmountSpan =
+        document.getElementById("confirmTopupAmount");
     const confirmNewBalanceSpan = document.getElementById("confirmNewBalance");
     const finalTopupAmountInput = document.getElementById("finalTopupAmount");
 
@@ -40,12 +43,16 @@ document.addEventListener("DOMContentLoaded", function () {
     const successToastMessage = document.getElementById("successToastMessage");
 
     // Visibility balance
-    const wellpayBalanceAmount = document.getElementById("wellpayBalanceAmount");
+    const wellpayBalanceAmount = document.getElementById(
+        "wellpayBalanceAmount"
+    );
     const toggleVisibilityBtn = document.getElementById("toggleVisibilityBtn");
     const visibilityIcon = document.getElementById("visibilityIcon");
 
     // Ambil elemen untuk saldo saat ini di Modal 1
-    const currentBalanceModal1 = customModal1.querySelector('.modal-body h5 span.fw-bold'); 
+    const currentBalanceModal1 = customModal1.querySelector(
+        ".modal-body h5 span.fw-bold"
+    );
 
     const loadingOverlay = document.getElementById("loadingOverlay");
 
@@ -57,10 +64,13 @@ document.addEventListener("DOMContentLoaded", function () {
     let isBalanceHidden = true;
 
     function showBalance(balanceValue) {
-        const formattedBalance = parseFloat(balanceValue).toLocaleString('id-ID', {
-            minimumFractionDigits: 2,
-            maximumFractionDigits: 2
-        });
+        const formattedBalance = parseFloat(balanceValue).toLocaleString(
+            "id-ID",
+            {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+            }
+        );
         wellpayBalanceAmount.textContent = formattedBalance;
         wellpayBalanceAmount.classList.remove("bullet-display");
         visibilityIcon.textContent = "visibility_off";
@@ -78,6 +88,20 @@ document.addEventListener("DOMContentLoaded", function () {
         hideBalance();
     } else {
         showBalance(currentBalance);
+    }
+
+    function getTrans(key, replace = {}) {
+        const el = document.getElementById("wellpay-translations");
+        if (!el) return key;
+
+        const dataKey = `data-${key.replace(/_/g, "-")}`;
+        let message = el.getAttribute(dataKey) ?? key;
+
+        for (const [k, v] of Object.entries(replace)) {
+            message = message.replace(`:${k}`, v);
+        }
+
+        return message;
     }
 
     toggleVisibilityBtn.addEventListener("click", function () {
@@ -136,8 +160,8 @@ document.addEventListener("DOMContentLoaded", function () {
             topupError.style.display = "none";
         });
 
-        topupInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter' || event.keyCode === 13) {
+        topupInput.addEventListener("keypress", function (event) {
+            if (event.key === "Enter" || event.keyCode === 13) {
                 event.preventDefault(); // Mencegah perilaku default browser
                 if (nextCustomModalBtn) {
                     nextCustomModalBtn.click();
@@ -149,11 +173,9 @@ document.addEventListener("DOMContentLoaded", function () {
     // Event listener to open Custom Modal 1
     if (openCustomModal1Btn) {
         openCustomModal1Btn.addEventListener("click", function () {
-            if(hasPassword != 1)
-            {
+            if (hasPassword != 1) {
                 showModal(customModal3);
-            }
-            else{
+            } else {
                 showModal(customModal1);
                 if (topupInput) {
                     topupInput.value = "";
@@ -162,7 +184,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     topupError.style.display = "none";
                 }
                 if (currentBalanceModal1) {
-                    currentBalanceModal1.textContent = `Rp ${currentBalance.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+                    currentBalanceModal1.textContent = `Rp ${currentBalance.toLocaleString(
+                        "id-ID",
+                        { minimumFractionDigits: 2, maximumFractionDigits: 2 }
+                    )}`;
                 }
             }
         });
@@ -184,16 +209,14 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    if(closeCustomModal3Btn)
-    {
-        closeCustomModal3Btn.addEventListener("click", function() {
+    if (closeCustomModal3Btn) {
+        closeCustomModal3Btn.addEventListener("click", function () {
             hideModal(customModal3);
         });
     }
 
-    if(closeCustomModal4Btn)
-    {
-        closeCustomModal4Btn.addEventListener("click", function() {
+    if (closeCustomModal4Btn) {
+        closeCustomModal4Btn.addEventListener("click", function () {
             hideModal(customModal3);
         });
     }
@@ -204,7 +227,9 @@ document.addEventListener("DOMContentLoaded", function () {
             e.preventDefault();
             e.stopPropagation();
 
-            let rawValue = topupInput.value.replace(/\./g, "").replace(/[^0-9]/g, "");
+            let rawValue = topupInput.value
+                .replace(/\./g, "")
+                .replace(/[^0-9]/g, "");
             let topupAmount = parseInt(rawValue);
             let valid = true;
 
@@ -212,16 +237,22 @@ document.addEventListener("DOMContentLoaded", function () {
             topupError.innerText = "";
 
             if (isNaN(topupAmount) || topupAmount <= 0) {
-                topupError.innerText = "Please enter a valid amount.";
+                topupError.innerText = getTrans("invalid_amount");
                 valid = false;
             } else if (topupAmount < minTopup) {
-                topupError.innerText = `The minimum top-up amount is Rp ${minTopup.toLocaleString("id-ID")}.`;
+                topupError.innerText = getTrans("min_topup", {
+                    amount: minTopup.toLocaleString("id-ID"),
+                });
                 valid = false;
             } else if (topupAmount > maxTopup) {
-                topupError.innerText = `The maximum top-up amount is Rp ${maxTopup.toLocaleString("id-ID")}.`;
+                topupError.innerText = getTrans("max_topup", {
+                    amount: maxTopup.toLocaleString("id-ID"),
+                });
                 valid = false;
             } else if (topupAmount + currentBalance > maxBalance) {
-                topupError.innerText = `Your balance cannot exceed Rp ${maxBalance.toLocaleString("id-ID")}.`;
+                topupError.innerText = getTrans("max_balance", {
+                    amount: maxBalance.toLocaleString("id-ID"),
+                });
                 valid = false;
             }
 
@@ -233,8 +264,12 @@ document.addEventListener("DOMContentLoaded", function () {
             hideModal(customModal1);
             showModal(customModal2);
 
-            confirmTopupAmountSpan.textContent = `Rp ${topupAmount.toLocaleString("id-ID")}`;
-            confirmNewBalanceSpan.textContent = `Rp ${(currentBalance + topupAmount).toLocaleString("id-ID")}`;
+            confirmTopupAmountSpan.textContent = `Rp ${topupAmount.toLocaleString(
+                "id-ID"
+            )}`;
+            confirmNewBalanceSpan.textContent = `Rp ${(
+                currentBalance + topupAmount
+            ).toLocaleString("id-ID")}`;
             finalTopupAmountInput.value = topupAmount;
             accountPasswordInput.value = "";
             passwordError.style.display = "none";
@@ -261,15 +296,19 @@ document.addEventListener("DOMContentLoaded", function () {
             passwordError.innerText = "";
 
             if (password.trim() === "") {
-                passwordError.innerText = "Please enter your password.";
+                passwordError.innerText = getTrans("no_password");
                 passwordError.style.display = "block";
                 return;
             }
 
-            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+            const csrfToken = document.querySelector(
+                'meta[name="csrf-token"]'
+            )?.content;
             if (!csrfToken) {
-                console.error("CSRF token not found. Please add a meta tag: <meta name='csrf-token' content='{{ csrf_token() }}'>");
-                showErrorToast("Application error: CSRF token missing.");
+                console.error(
+                    "CSRF token not found. Please add a meta tag: <meta name='csrf-token' content='{{ csrf_token() }}'>"
+                );
+                showErrorToast(getTrans("csrf_missing"));
                 return;
             }
 
@@ -278,24 +317,26 @@ document.addEventListener("DOMContentLoaded", function () {
             try {
                 console.log(finalAmount);
                 console.log(password);
-                const response = await fetch('/topup', { // Pastikan URL ini sesuai dengan route Laravel Anda
-                    method: 'POST',
+                const response = await fetch("/topup", {
+                    // Pastikan URL ini sesuai dengan route Laravel Anda
+                    method: "POST",
                     headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json',
-                        'X-CSRF-TOKEN': csrfToken
+                        "Content-Type": "application/json",
+                        Accept: "application/json",
+                        "X-CSRF-TOKEN": csrfToken,
                     },
                     body: JSON.stringify({
                         amount: finalAmount,
-                        password: password
-                    })
+                        password: password,
+                    }),
                 });
 
                 const data = await response.json();
 
                 loadingOverlay.style.display = "none";
 
-                if (response.ok) { // Status kode 200-299
+                if (response.ok) {
+                    // Status kode 200-299
                     hideModal(customModal2);
                     showSuccessToast(data.message);
                     accountPasswordInput.value = "";
@@ -309,27 +350,29 @@ document.addEventListener("DOMContentLoaded", function () {
                     } else {
                         showBalance(currentBalance); // Jika terlihat, tampilkan saldo baru yang diformat
                     }
-
-                } else { // Status kode 4xx, 5xx
+                } else {
+                    // Status kode 4xx, 5xx
                     if (data.errors && data.errors.password) {
                         passwordError.innerText = data.errors.password[0];
                         passwordError.style.display = "block";
                     } else if (data.message) {
                         showErrorToast(data.message);
                     } else {
-                        showErrorToast("An unknown error occurred during top-up.");
+                        showErrorToast(
+                            getTrans("unknown_error")
+                        );
                     }
                 }
             } catch (error) {
-                console.error('Error:', error);
-                showErrorToast("Network error. Please try again.");
+                console.error("Error:", error);
+                showErrorToast(getTrans("network_error"));
             }
         });
     }
 
     if (accountPasswordInput) {
-        accountPasswordInput.addEventListener('keypress', function(event) {
-            if (event.key === 'Enter' || event.keyCode === 13) {
+        accountPasswordInput.addEventListener("keypress", function (event) {
+            if (event.key === "Enter" || event.keyCode === 13) {
                 event.preventDefault(); // Mencegah submit form tradisional (jika ada)
                 confirmTopupBtn.click(); // Memicu klik pada tombol konfirmasi
             }
