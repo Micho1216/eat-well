@@ -17,7 +17,7 @@ class registerTest extends TestCase
         $response = $this->get('/register/customer');
 
         // Title
-        $response->assertSee('Sign in to EatWell');
+        $response->assertSee('Customer Registration');
 
         // Form fields and labels
         $response->assertSee('Name');
@@ -29,10 +29,10 @@ class registerTest extends TestCase
         $response->assertSee('Register');
 
         // Links/buttons for login and vendor registration
-        $response->assertSee('Already has an account?');
+        $response->assertSee('Already have an Account?');
         $response->assertSee('Login now!');
-        $response->assertSee('Join Eatwell as a');
-        $response->assertSee('vendor!');
+        $response->assertSee('Join EatWell as a vendor');
+        // $response->assertSee('vendor!');
     }
 
     /** @test */
@@ -41,12 +41,12 @@ class registerTest extends TestCase
         $response = $this->post('/register/customer', [
             'name' => 'Test Customer',
             'email' => 'testcustomer@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+            'password' => 'magisterofthedead20318@',
+            'password_confirmation' => 'magisterofthedead20318@',
         ]);
 
         // Assert user is redirected (adjust as needed)
-        $response->assertRedirect('/verify-otp'); // or wherever your app redirects after registration
+        $response->assertRedirect(route('auth.verify'));
 
         // Assert user is in the database
         $this->assertDatabaseHas('users', [
@@ -170,8 +170,8 @@ class registerTest extends TestCase
         $response = $this->post('/register/vendor', [
             'name' => 'Test Vendor',
             'email' => 'testvendor@example.com',
-            'password' => 'password123',
-            'password_confirmation' => 'password123',
+            'password' => 'magisterofthedead20318@',
+            'password_confirmation' => 'magisterofthedead20318@',
         ]);
 
         // Assert user is redirected (adjust as needed)
