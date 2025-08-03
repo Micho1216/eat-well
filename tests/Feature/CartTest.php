@@ -19,7 +19,9 @@ class CartTest extends TestCase
     /** @test */
     public function tc1_customer_can_add_packages()
     {
-        $user = User::first();
+        $user = User::where('role', 'Customer')->firstOrFail();
+        $address = $user->addresses()->first();
+        session(['address_id' => $address->addressId]);
         $this->actingAs($user);
 
         $package = Package::with('vendor')->first();
@@ -116,6 +118,8 @@ class CartTest extends TestCase
     public function tc3_add_different_packages_with_meal_types()
     {
         $user = User::where('role', 'Customer')->firstOrFail();
+        $address = $user->addresses()->first();
+        session(['address_id' => $address->addressId]);
         $this->actingAs($user);
 
         // Find a vendor with at least 2 packages
@@ -615,8 +619,6 @@ class CartTest extends TestCase
 
         $response->assertStatus(200);
 
-        $user->refresh();
-
         $this->assertEquals($initialBalance + 100000, $user->wellpay);
     }
 
@@ -748,7 +750,6 @@ class CartTest extends TestCase
             'password' => 'password',
             'provinsi' => $address->provinsi,
             'kota' => $address->kota,
-            'kabupaten' => $address->kota, // Assuming 'kota' maps to 'kabupaten' in your validation
             'kecamatan' => $address->kecamatan,
             'kelurahan' => $address->kelurahan,
             'kode_pos' => $address->kode_pos,

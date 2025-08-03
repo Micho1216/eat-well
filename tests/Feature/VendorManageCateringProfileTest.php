@@ -27,6 +27,8 @@ class VendorManageCateringProfileTest extends TestCase
 
         $this->artisan('migrate:fresh');
 
+
+
         $this->vendorUser = User::factory()->create([
             'email' => 'vendor1@mail.com',
             'name' => 'Green Catering',
@@ -38,12 +40,12 @@ class VendorManageCateringProfileTest extends TestCase
             'userId' => $this->vendorUser->userId,
             'name' => 'Green Catering',
             'phone_number' => '0811111111',
-            'breakfast_delivery' => '06:30-08:00',
+            'breakfast_delivery' => '07:30-08:00',
             'lunch_delivery' => '11:30-13:00',
             'dinner_delivery' => '17:30-19:00',
             'provinsi' => 'DKI Jakarta',
             'kota' => 'Jakarta Selatan',
-            'kabupaten' => 'Setiabudi',
+            // 'kabupaten' => 'Setiabudi',
             'kecamatan' => 'Kuningan',
             'kelurahan' => 'Karet',
             'kode_pos' => '12940',
@@ -58,7 +60,7 @@ class VendorManageCateringProfileTest extends TestCase
         return array_merge([
             'nameInput' => 'Nusantara Delights',
             'telpInput' => '081234567890',
-            'breakfast_time_start' => '06:30',
+            'breakfast_time_start' => '07:30',
             'breakfast_time_end' => '08:00',
             'lunch_time_start' => '11:00',
             'lunch_time_end' => '13:00',
@@ -121,7 +123,7 @@ class VendorManageCateringProfileTest extends TestCase
             'dinner_delivery' => '17:30-19:00',
             'provinsi' => 'DKI Jakarta',
             'kota' => 'Jakarta Selatan',
-            'kabupaten' => 'Setiabudi',
+            // 'kabupaten' => 'Setiabudi',
             'kecamatan' => 'Kuningan',
             'kelurahan' => 'Karet',
             'kode_pos' => '12940',
