@@ -13,20 +13,25 @@ use App\Models\Vendor;
 
 class VendorFirstPage extends TestCase
 {
-    use RefreshDatabase;
+
 
     private function actingAsVendor()
     {
         /** @var \App\Models\User $user */
+        // ambil provinsi yang ada
+        $provinsi = \App\Models\Province::first();
+        $kota = \App\Models\City::first();
+        $kecamatan = \App\Models\District::first();
+        $kelurahan = \App\Models\Village::first();
+
 
         $user = \App\Models\User::factory()->create([
-            'userId' => '1',
             'role' => 'Vendor',
         ]);
 
         // ⬅ Buat vendor agar controller bisa update-nya, bukan insert
         \App\Models\Vendor::create([
-            'userId' => '1',
+            'userId' => $user->userId,
             'name' => 'Dummy',
             'breakfast_delivery' => '10:00 - 11:00',
             'lunch_delivery' => '12:00 - 13:00',
@@ -34,11 +39,10 @@ class VendorFirstPage extends TestCase
             'logo' => 'logo.jpg',
             'phone_number' => '081234567890',
             'rating' => 0,
-            'provinsi' => '1',
-            'kota' => '1',
-            'kabupaten' => '1',
-            'kecamatan' => '1',
-            'kelurahan' => '1',
+            'provinsi' => $provinsi->name,
+            'kota' => $kota->name,
+            'kecamatan' => $kecamatan->name,
+            'kelurahan' => $kelurahan->name,
             'kode_pos' => '12345',
             'jalan' => 'Jalan Dummy',
         ]);
@@ -52,19 +56,23 @@ class VendorFirstPage extends TestCase
 
     private function validPayload(array $overrides = []): array
     {
+        $provinsi = \App\Models\Province::first();
+        $kota = \App\Models\City::first();
+        $kecamatan = \App\Models\District::first();
+        $kelurahan = \App\Models\Village::first();
         return array_merge([
             'logo' => UploadedFile::fake()->image('logo.jpg'),
             'name' => 'Test Vendor',
-            'startBreakfast' => '07:00',
-            'closeBreakfast' => '08:00',
-            'startLunch' => '13:00',
-            'closeLunch' => '14:00',
+            'startBreakfast' => '08:00',
+            'closeBreakfast' => '09:00',
+            'startLunch' => '12:00',
+            'closeLunch' => '12:30',
             'startDinner' => '18:00',
             'closeDinner' => '19:00',
-            'provinsi' => '1',
-            'kota' => '1',
-            'kecamatan' => '1',
-            'kelurahan' => '1',
+            'provinsi_name' => $provinsi->name,
+            'kota_name' => $kota->name,
+            'kecamatan_name' => $kecamatan->name,
+            'kelurahan_name' => $kelurahan->name,
             'kode_pos' => '12345',
             'phone_number' => '081234567890',
             'jalan' => 'Jalan Vendor',
@@ -78,6 +86,8 @@ class VendorFirstPage extends TestCase
         Storage::fake('public');
 
         $response = $this->post(route('vendor.store'), $this->validPayload());
+
+        $response->dump();
 
         $response->assertRedirect('cateringHomePage');
         $this->assertDatabaseHas('vendors', ['name' => 'Test Vendor']);
@@ -148,7 +158,7 @@ class VendorFirstPage extends TestCase
         $response->assertSessionHasErrors(['closeLunch']);
     }
 
-        public function test_tc7_invalid_dinner_time()
+    public function test_tc7_invalid_dinner_time()
     {
         $this->actingAsVendor();
 
@@ -379,7 +389,7 @@ class VendorFirstPage extends TestCase
     // tambahan testcase logout 
     public function test_user_can_logout()
     {
-         /** @var \App\Models\User $user */
+        /** @var \App\Models\User $user */
         $user = User::factory()->create();
 
         $this->actingAs($user);
@@ -389,14 +399,4 @@ class VendorFirstPage extends TestCase
         $response->assertRedirect('/'); // diarahkan ke homepage
         $this->assertGuest(); // user tidak lagi login
     }
-
-
-
-
-
-
-
-
-
-
 }
