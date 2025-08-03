@@ -33,9 +33,14 @@ class CheckAuthenticatedUserPasswordResetToken
 
             $userResetToken = DB::table('password_reset_tokens')
                                 ->where('email','=',$userEmail)
-                                ->first()->token;  
+                                ->first();  
             
-            if(!Hash::check($token, $userResetToken))
+            if(!$userResetToken)
+            {
+                return redirect()->route('password.invalid');
+            }
+            
+            if(!Hash::check($token, $userResetToken->token))
             {
                 return redirect()->route('password.invalid');
             }
