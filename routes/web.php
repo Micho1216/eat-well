@@ -73,13 +73,6 @@ Route::middleware(['guest'])->group(function () {
         return view('landingPage');
     })->name('landingPage');
 
-    // Route::get('/about-us', function () {
-    //     if (Auth::check()) {
-    //         logActivity('Successfully', 'Visited', 'About Us Page');
-    //     }
-    //     return view('aboutUs');
-    // });
-
     Route::get('/login', [SessionController::class, 'create'])->name('login');
     Route::post('/login', [SessionController::class, 'store']);
 
@@ -139,20 +132,10 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
     Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::post('/topup', [UserController::class, 'topUpWellPay'])->middleware(EnsurePasswordExists::class)->name('wellpay.topup');
 
-    // Route::post('/logout', [SessionController::class, 'destroy'])->name('logout');
-
     // Favorite
     Route::post('favorite/{vendorId}', [FavoriteController::class, 'favorite'])->name('favorite');
     Route::post('unfavorite/{vendorId}', [FavoriteController::class, 'unfavorite'])->name('unfavorite');
     Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorite.show');
-
-    // Route::get('/manage-profile', function () {
-    //     return view('manageProfile');
-    // })->name('manage-profile');
-
-    // dipindahkan kebawah
-    // Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
-    // Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
 
     // Search Caterings
     Route::get('/caterings', [SearchCateringController::class, 'search'])->name('search');
@@ -165,38 +148,15 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
     Route::post('/update-order-summary', [CartController::class, 'updateOrderSummary'])->name('update.order.summary');
     Route::get('/load-cart', [CartController::class, 'loadCart'])->name('load.cart');
 
-    // Route::get('/catering-detail/rating-and-review', function () {
-    //     logActivity('Successfully', 'Visited', 'Rating and Review Page');
-    //     return view('ratingAndReview');
-    // })->name('rate-and-review');
-
     // Order History
     Route::get('/orders', [OrderController::class, 'index'])->name('order-history');
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('order-detail');
     Route::put('/orders/{id}/cancel', [OrderController::class, 'cancelOrder'])->name('order.cancel');
-    // Route::get('/order-detail', [OrderController::class, 'show'])->name('order-detail');
-    Route::post('/orders/{order}/review', [CustomerRatingController::class, 'store'])->middleware('auth');;
-
-    // Order Payment
-    // Route::get('/payment', function () {
-    //     logActivity('Successfully', 'Visited', 'Payment Page');
-    //     return view('payment');
-    // });
-    // Route::get('/payment', function () {
-    //     return view('payment');
-    // });
-
-    // Route::get('/vendor/{vendor}/payment', [OrderController::class, 'showPaymentPage'])->name('payment.show');
-    // Route::post('/checkout', [OrderController::class, 'processCheckout'])->name('checkout.process');
+    Route::post('/orders/{order}/review', [CustomerRatingController::class, 'store']);
 
     Route::get('/payment', [OrderController::class, 'showPaymentPage'])->name('payment.show');
     Route::post('/checkout', [OrderController::class, 'processCheckout'])->name('checkout.process');
     Route::get('/user/wellpay-balance', [OrderController::class, 'getUserWellpayBalance'])->name('user.wellpay.balance');
-
-    // Manage Address
-    // Route::get('/manage-address', function () {
-    //     return view('ManageAddress');
-    // });
 
     Route::get('/manage-address', [AddressController::class, 'index'])->name('manage-address');
     Route::post('/set-default-address', [AddressController::class, 'setDefaultAddress'])->name('set-default-address');
@@ -207,15 +167,6 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
     Route::patch('/edit-address/{address}', [AddressController::class, 'update'])->name('update-address');
 
     Route::delete('/delete-address/{address}', [AddressController::class, 'destroy'])->name('delete-address');
-    // Route::get('/manage-address', function () {
-    //     logActivity('Successfully', 'Visited', 'Manage Address Page');
-    //     return view('ManageAddress');
-    // });
-
-    // Route::get('/add-address', function () {
-    //     logActivity('Successfully', 'Visited', 'Add Address Page');
-    //     return view('addAddress');
-    // });
 
     Route::fallback(function () {
         return redirect()->route('home');

@@ -25,12 +25,13 @@ class CategoryController extends Controller
     {
         $validated = $request->validated();
 
-        PackageCategory::create([
+        $cat = PackageCategory::create([
             'categoryName' => $validated['categoryName'],
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
+        logActivity('Success', 'added category', $cat->categoryName);
         return redirect()->back()->with('success', __('admin/package_category.store_success'));
     }
 
@@ -42,9 +43,11 @@ class CategoryController extends Controller
         $category = PackageCategory::findOrFail($id);
 
         if ($category->packages()->exists()) {
+            logActivity('Failed', 'deleting category', $category->categoryName);
             return redirect()->back()->with('error',  __('admin/package_category.delete_failed'));
         }
-
+        
+        logActivity('Success', 'deleting category', $category->categoryName);
         $category->delete(); // Soft delete
 
         return redirect()->back()->with('success', __('admin/package_category.delete_success'));
