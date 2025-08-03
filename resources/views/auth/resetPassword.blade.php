@@ -9,7 +9,7 @@
 @endsection
 
 @section('content')
-    <div class="container-fluid p-5vh-100">
+    <div class="container-fluid">
         <div class="row p-5">
             <div class="col-12">
                 <div class="card p-5 rounded-3">

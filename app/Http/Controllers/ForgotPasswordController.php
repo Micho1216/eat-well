@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\View as FacadesView;
 
 class ForgotPasswordController extends Controller
 {
@@ -18,7 +19,6 @@ class ForgotPasswordController extends Controller
     {
         return view('auth.forgotPassword');
     }
-
     
     public function email(ForgotPasswordEmailRequest $request)
     {
@@ -61,5 +61,10 @@ class ForgotPasswordController extends Controller
         return $status === Password::PasswordReset
             ? redirect()->route('login')->with('status', __($status))
             : back()->withErrors(['email' => [__($status)]]);
+    }
+
+    public function invalid() : View
+    {
+        return view('auth/invalidResetPassword');
     }
 }
