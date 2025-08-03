@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Address;
+use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\City;
 use App\Models\District;
 use App\Models\Package;
@@ -169,51 +171,54 @@ class CustomerChangeAddressBeforeCheckoutTest extends TestCase
     /** @test */
     public function tc6_default_address_transfer_flow(): void
     {
-        Session::put('address_id', $this->defaultAddress->addressId);
-         // Step 1: Create a package.
+        $this->actingAs($this->customer);
+        App::setLocale('id');
+
+        $this->packageCategory = PackageCategory::factory()->create();
+        // Create package
         $package = Package::factory()->create([
             'vendorId' => $this->vendor->vendorId,
-            'categoryId' => $this->packageCategory->categoryId,
-            // Ensure this package has a breakfastPrice so the cart total isn't zero
-            'breakfastPrice' => 50000, 
+            'categoryId' => $this->packageCategory->id,
+            'name' => 'Paket Pagi',
+            'breakfastPrice' => 35000,
         ]);
 
-    // Step 2: Manually set up a complete and valid cart session.
-    // This bypasses the controller logic and gives you direct control.
-    Session::put('cart', [
-        'vendor_id' => $this->vendor->vendorId,
-        'items' => [
-            $package->packageId => [
-                'packageId' => $package->packageId,
-                'breakfastQty' => 1,
-                'lunchQty' => 0,
-                'dinnerQty' => 0,
-                'quantity' => 1, // Add this if your app checks for a 'quantity' key
-                'price' => $package->breakfastPrice,
-            ]
-        ],
-        // Also include a 'totalPrice' and 'totalItems' key if the middleware
-        // checks for the existence of these.
-        'totalPrice' => $package->breakfastPrice,
-        'totalItems' => 1,
-    ]);
-    
-    // Optional: Assert that the session was set correctly.
-    $this->assertNotNull(session('cart'));
+        // Create cart in DB
+        $cart = Cart::create([
+            'userId' => $this->customer->userId,
+            'vendorId' => $this->vendor->vendorId,
+        ]);
 
-    // Step 3: Now that a valid cart session exists, navigate to the payment page.
-    $response = $this->get(route('payment.show', [
-        'vendor_id' => $this->vendor->vendorId, 
-        'address_id' => $this->defaultAddress->addressId
-    ]));
+        // Create cart item in DB
+        CartItem::create([
+            'cartId' => $cart->cartId,
+            'packageId' => $package->packageId,
+            'breakfastQty' => 1,
+            'lunchQty' => 0,
+            'dinnerQty' => 0,
+            'price' => $package->breakfastPrice,
+        ]);
 
-    // Step 4: The request should now succeed.
-    $response->assertStatus(200);
+        // If your app expects `cart_id` in session (check your controller), set it:
+        $this->withSession([
+            'address_id' => $this->defaultAddress->addressId,
+            // 'cart_id' => $cart->cartId, // Uncomment if your app uses this
+        ]);
 
-    // Assert that the default address details are visible on the payment page.
-    $response->assertSeeText($this->defaultAddress->jalan);
-    $response->assertSeeText($this->defaultAddress->recipient_name);
+        // Hit the payment.show route
+        $response = $this->get(route('payment.show', [
+            'vendor_id' => $this->vendor->vendorId,
+            'address_id' => $this->defaultAddress->addressId,
+        ]));
+
+        // Assertions
+        $response->assertStatus(200);
+        $response->assertSeeText($this->defaultAddress->jalan);
+        $response->assertSeeText($this->defaultAddress->recipient_name);
     }
+
+
+
 }
 
 
