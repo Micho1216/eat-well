@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+
 use App\Exports\AdminOrderExport;
 use App\Models\Order;
 use App\Models\User;
@@ -14,11 +15,12 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class View_All_Orders_Test extends TestCase
 {
-    /**
-     * A basic feature test example.
-     */
+    // use RefreshDatabase;
+
+    /** @test */
     public function test_view_all_orders()
     {
+        $response = $this->get('/');
         // user role = Admin
 
         /** @var \App\Models\User $user */
@@ -66,7 +68,7 @@ class View_All_Orders_Test extends TestCase
         if ($orders->isEmpty() && app()->getLocale() === 'en') {
             $response->assertSeeText('No sales yet');
         } elseif ($orders->isEmpty() && app()->getLocale() === 'id') {
-            $response->assertDontSeeText('Belum ada penjualan');
+            $response->assertSeeText('Belum ada penjualan');
         }
         // $response->assertSeeText('No sales yet.');
         $response->assertStatus(200);
@@ -90,26 +92,31 @@ class View_All_Orders_Test extends TestCase
 
     public function test_admin_can_filter_orders_by_date_range()
     {
+        // Buat admin user
         $admin = User::factory()->create(['role' => 'Admin']);
         $this->actingAs($admin);
 
+        // Order diluar rentang filter
         Order::factory()->create([
             'created_at' => '2025-07-01',
         ]);
 
+        // Order dalam rentang filter
         $matchingOrder = Order::factory()->create([
             'created_at' => '2025-07-15',
         ]);
 
+        // Panggil route dengan parameter filter
         $response = $this->get(route('view-order-history', [
             'startDate' => '2025-07-10',
             'endDate' => '2025-07-20',
         ]));
 
         $response->assertStatus(200);
-        $response->assertSeeText($matchingOrder->orderId);
-        $response->assertDontSeeText('01 Jul 2025');
+        $response->assertSeeText($matchingOrder->orderId); // Order dalam range tampil
+        $response->assertDontSeeText('01 Jul 2025'); // Order di luar range tidak tampil
     }
+
 
     public function test_admin_can_reset_filter_to_see_all_orders()
     {
@@ -131,6 +138,8 @@ class View_All_Orders_Test extends TestCase
             'endDate' => '2025-07-20',
         ]));
 
+        dump($oldOrder->orderId);
+
         $response->assertStatus(200);
         $response->assertSeeText($filteredOrder->orderId);
         $response->assertDontSeeText($oldOrder->orderId);
@@ -139,7 +148,7 @@ class View_All_Orders_Test extends TestCase
 
         $response->assertStatus(200);
         $response->assertSeeText($filteredOrder->orderId);
-        $response->assertSeeText($oldOrder->orderId); 
+        $response->assertSeeText($oldOrder->orderId);
     }
 
     public function test_admin_can_export_orders_to_excel()
@@ -162,7 +171,9 @@ class View_All_Orders_Test extends TestCase
         $response->assertStatus(200);
 
         Excel::assertDownloaded('admin_order_export.xlsx', function (AdminOrderExport $export) {
-            return true; 
+            return true;
         });
     }
 }
+
+
