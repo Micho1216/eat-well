@@ -201,7 +201,7 @@ class CateringDetailTest extends TestCase
         $user = User::query()->where('role', 'like', 'Customer')->first();
         $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
-        $response->assertSee('Order Now');
+        $response->assertSeeText('Order Now');
     }
 
     /** @test */
