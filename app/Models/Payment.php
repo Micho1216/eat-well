@@ -34,11 +34,4 @@ class Payment extends Model
     {
         return $this->belongsTo(Order::class, 'orderId', 'orderId');
     }
-
-    // Based on your migration, 'payments' table does not have a direct 'userId'.
-    // If you intend for payments to be directly linked to users, you need to add 'userId' column to 'payments' table in your migration.
-    // public function user()
-    // {
-    //     return $this->belongsTo(User::class, 'userId', 'userId');
-    // }
 }
