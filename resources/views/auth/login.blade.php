@@ -12,7 +12,7 @@
     <div class="container-fluid mt-3">
         <div class="row content align-items-center justify-content-center ">
             <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-4 my-5">
-                <div class="card text-bg-light rounded-5 d-block" id="login-card">
+                <div class="card text-bg-light rounded-5 d-block border border-black" id="login-card">
                     <div class="card-body p-5 p-sm-5">
                         <div class="h5 card-title text-center mb-5">{{ __('auth/login.title') }}</div>
                         <form method="POST" action="login" novalidate>
@@ -28,6 +28,12 @@
                                 <label for="password" class="form-label m-0">{{ __('auth/login.password') }}</label>
                                 <div class="invalid-feedback">{{ $errors->first('password') }}</div>
                             </div>
+
+                            @if (session('use_provider'))
+                                <div class="alert alert-danger" role="alert">
+                                    {{ __('auth/login.provider') }}
+                                </div>                            
+                            @endif
 
                             <div class="d-flex flex-row justify-content-between w-100">
                                 <div class="form-check">

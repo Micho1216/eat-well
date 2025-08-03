@@ -23,6 +23,8 @@ return [
     'cta_order' => 'Pesan sekarang',
     'loading_topup' => 'Memproses penambahan saldo...',
     'topup' => 'Isi Saldo',
+    'no_password_title' => 'Kata sandi tidak ditemukan',
+    'no_password_desc' => 'Kata sandi diperlukan untuk menggunakan WellPay. Mohon untuk menambahkan kata sandi terlebih dahulu di profile.'
 ];
 
 /**

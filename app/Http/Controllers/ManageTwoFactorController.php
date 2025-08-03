@@ -12,6 +12,11 @@ class ManageTwoFactorController extends Controller
     {
         $userId = Auth::user()->userId;
         $user = User::find($userId);
+
+        if(!$user->password)
+        {
+            return redirect()->back()->with('no_password', true);
+        }
         $current_2fa_status = $user->enabled_2fa;
         $user->enabled_2fa = !$current_2fa_status; 
         $user->save();

@@ -6,9 +6,11 @@ use App\Http\Requests\ResendOTPRequest;
 use App\Http\Requests\VerifyOTPRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Notifications\OneTimePassword;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
+use PHPUnit\Event\TestData\MoreThanOneDataSetFromDataProviderException;
 
 class VerifyOtpController extends Controller
 {
@@ -52,15 +54,8 @@ class VerifyOtpController extends Controller
         $attrs = $request->validated();
         $email = $attrs['email'];
         $user = User::where('email', $email)->first();
-        $otp = rand(100000, 999999);
-        $user->update([
-            'otp' => $otp,
-            'otp_expires_at' => Carbon::now()->addMinutes(3),
-        ]);
 
-        Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($email){
-            $message->to($email)->subject('Your OTP');
-        });
+        $user->notify(new OneTimePassword($user));
 
         return back();
     }
