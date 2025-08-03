@@ -18,7 +18,7 @@ class EnsurePasswordExists
         $user = $request->user();
         if(!$user->password)
         {
-            return redirect()->back();
+            return redirect()->back()->withErrors('no_password');
         }
         return $next($request);
     }

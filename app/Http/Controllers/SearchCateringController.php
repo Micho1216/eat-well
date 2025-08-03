@@ -123,8 +123,9 @@ class SearchCateringController extends Controller
 
     public function setAddress(SetAddressRequest $request)
     {
+        $validated = $request->validated();
         $user = Auth::user();
-        $addressId = $request->input('address_id');
+        $addressId = $validated['address_id'];
 
         $address = Address::find($addressId);
 

@@ -10,5 +10,6 @@ return [
     'google' => 'Continue with Google',
     'customer_register_link' => 'Don\'t have an account? Register now!',
     'or' => 'or',
-    'vendor_register_link' => 'Join EatWell as a vendor'
+    'vendor_register_link' => 'Join EatWell as a vendor!',
+    'provider' => 'Please use google to log in to this account'
 ];

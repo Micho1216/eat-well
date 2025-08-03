@@ -5,7 +5,6 @@
 @section('css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="has-password" content="{{ $hasPassword }}">
-    <meta name="pressed-topup" content="{{ $pressedTopup }}">
 
     @vite(['resources/js/app.js', 'resources/sass/app.scss'])
     <link rel="stylesheet"
@@ -128,6 +127,25 @@
                                     id="backToCustomModal1">{{ __('customer/home.back') }}</button>
                                 <button class="btn btn-primary"
                                     id="confirmTopupBtn">{{ __('customer/home.confirm') }}</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="customModal3" class="custom-modal-overlay">
+                        <div class="custom-modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="customModal3Title">{{ __('customer/home.no_password_title') }}
+                                </h1>
+                                <button type="button" class="btn-close" id="closeCustomModal3" aria-label="Close">
+                                    <span class="material-symbols-outlined">close</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <p>{{ __('customer/home.no_password_desc') }}</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary"
+                                    id="closeCustomModal4">{{ __('customer/home.close') }}</button>
                             </div>
                         </div>
                     </div>

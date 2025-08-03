@@ -14,14 +14,14 @@
             <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-4 my-5">
                 <div class="card text-bg-light rounded-5 d-block" id="login-card">
                     <div class="card-body p-5 p-sm-5 vh-75">
-                        <div class="card-title text-center mb-3">OTP Verification</div>
-                        <p class="card-text mb-5 text-center fs-5 fw-semibold">OTP have been sent to<br>{{$email}}.<br>Please check your email.</p>
+                        <div class="card-title text-center mb-3">{{ __('auth/verify-otp.title') }}</div>
+                        <p class="card-text mb-5 text-center fs-5 fw-semibold">{{ __('auth/verify-otp.desc', ['email' => $email]) }}</p>
                         <form method="POST" action="{{ route('auth.check') }}" novalidate>
                             @csrf
                             <input type="hidden" name="email" value="{{$email}}">
                             <div class="form-floating">
                                 <input type="text" maxlength="6" inputmode="numeric" pattern="[0-9\s]*" name="otp" class="form-control m-0 @error('otp') is-invalid @enderror" id="otp" value="{{ old('otp') }}" placeholder="" >
-                                <label for="otp" class="form-label m-0">One Time Password</label>
+                                <label for="otp" class="form-label m-0">{{ __('auth/verify-otp.otp') }}</label>
                                 <div class="invalid-feedback my-2">{{ $errors->first('otp') }}</div>
                             </div>
 
@@ -29,7 +29,7 @@
                             <button type="submit" class="mb-0 mt-5 w-100 gsi-material-button w-100">
                                 <div class="gsi-material-button-state"></div>
                                 <div class="gsi-material-button-content-wrapper">
-                                    <span class="gsi-material-button-contents">Sign in</span>
+                                    <span class="gsi-material-button-contents">{{ __('auth/verify-otp.sign_in') }}</span>
                                 </div>
                             </button>
                         </form>
@@ -38,7 +38,7 @@
                             @csrf
                             <input type="hidden" name="email" value="{{$email}}">
                             <button type="submit" class="btn w-100">
-                                <p class="text-success fs-6 text-center">Didn't receive the code? <u>Resend the code!</u></p>
+                                <p class="text-success fs-6 text-center">{{ __('auth/verify-otp.resend') }}</p>
                             </button>
                         </form>
                     </div>

@@ -23,6 +23,8 @@ return [
     'cta_order' => 'Order Now',
     'loading_topup' => 'Memproses penambahan saldo...',
     'topup' => 'Top-up',
+    'no_password_title' => 'No password detected',
+    'no_password_desc' => 'Password is required to use WellPay. Please add new password from your profile.'
 ];
 
 /**

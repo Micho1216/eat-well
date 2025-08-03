@@ -25,15 +25,12 @@ class UserController extends Controller
             $amount = $request->input('amount');
             $password = $request->input('password');
 
-            // Verifikasi password
             if (!Hash::check($password, $user->password)) {
-                // Menggunakan ValidationException agar error bisa ditangkap di JavaScript pada `errors.password`
                 throw ValidationException::withMessages([
                     'password' => ['Incorrect password.'],
                 ]);
             }
 
-            // Periksa batas saldo maksimum setelah top-up
             $newBalance = $user->wellpay + $amount;
             $maxAllowedBalance = 1000000000;
 
@@ -42,7 +39,6 @@ class UserController extends Controller
                 return response()->json(['message' => 'Your balance cannot exceed Rp ' . number_format($maxAllowedBalance, 0, ',', '.') . '.'], 400);
             }
 
-            // Update saldo di database
             $user->wellpay = $newBalance;
             $user->save();
 
@@ -51,20 +47,18 @@ class UserController extends Controller
             $locale = App::getLocale();
             $prefix = $locale === 'id' ? 'Isi saldo Rp ' : 'Top-up of Rp ';
             $sufix = $locale === 'id' ? ' berhasil' : ' success';
-            // Berikan respons sukses
+
             return response()->json([
                 'message' => $prefix . number_format($amount, 0, ',', '.') . $sufix . '!',
-                'new_balance' => $newBalance, // Kirim saldo baru kembali ke frontend
+                'new_balance' => $newBalance,
             ], 200);
         } catch (ValidationException $e) {
-            // Tangkap error validasi dan kirimkan ke frontend
             logActivity('Failed', 'top-up', 'WellPay, Error : ' . $e->getMessage());
             return response()->json([
                 'message' => 'Validation Error',
                 'errors' => $e->errors()
-            ], 422); // Status code 422 Unprocessable Entity
+            ], 422); 
         } catch (\Exception $e) {
-            // Tangkap error lainnya (misalnya error database)
             logActivity('Failed', 'top-up', 'WellPay, Error : ' . $e->getMessage());
             return response()->json(['message' => 'An error occurred: ' . $e->getMessage()], 500);
         }

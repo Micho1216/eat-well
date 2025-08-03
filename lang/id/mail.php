@@ -28,5 +28,13 @@ return [
         'check_order_invitation' => 'Segera periksa pesanan kamu sekarang dengan memencet tombol dibawah ini!',
         'view_order' => 'Periksa Pesanan',
         'outro' => 'Terima kasih atas kerja samanya dengan EatWell.'
+    ],
+    'one_time_password' => [
+        'subject' => 'One Time Password Dikirim',
+        'greeting' => 'Halo!',
+        'content' => 'Kami telah mendeteksi upaya untuk masuk ke akun anda. Berikut OTP bisa digunakan.',
+        'otp' => ':otp',
+        'warning' => 'Kalau ini bukan anda, mohon ignore pesan ini!',
+        'outro' => 'Terima kasih telah menggunakan service kami!'
     ]
 ];

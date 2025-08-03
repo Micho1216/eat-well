@@ -40,6 +40,7 @@ use App\Http\Middleware\RoleMiddleware;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\VillageController;
 use App\Http\Middleware\CheckNoPasswordExist;
+use App\Models\User;
 
 Route::post('/lang', LanguageController::class);
 
@@ -47,15 +48,25 @@ use App\Http\Controllers\VerifyOtpController;
 use App\Http\Controllers\illageController;
 use App\Http\Middleware\AccountSetup\EnsureAddressExists;
 use App\Http\Middleware\AccountSetup\EnsureNoAddressExist;
+use App\Http\Middleware\CheckAuthenticatedUserPasswordResetToken;
+use App\Http\Middleware\CheckPasswordResetToken;
 use App\Http\Middleware\EnsureNoPasswordExist;
 use App\Http\Middleware\EnsurePasswordExists;
+use App\Notifications\OneTimePassword;
 
 /* --------------------
      GUEST ROUTES
 -------------------- */
 Route::post('/forgot-password', [ForgotPasswordController::class, 'email'])->name('password.email');
-Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'reset'])->name('password.reset');
-Route::post('/reset-password', [ForgotPasswordController::class, 'update'])->name('password.update');
+Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'reset'])->middleware([
+    CheckAuthenticatedUserPasswordResetToken::class,
+    CheckPasswordResetToken::class
+])->name('password.reset');
+Route::post('/reset-password', [ForgotPasswordController::class, 'update'])->middleware([
+    CheckAuthenticatedUserPasswordResetToken::class,
+    CheckPasswordResetToken::class
+])->name('password.update');
+Route::get('/invalid-reset-password', [ForgotPasswordController::class, 'invalid'])->name('password.invalid');
 
 Route::middleware(['guest'])->group(function () {
     Route::get('/', function () {
@@ -107,9 +118,6 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/manage-profile', [SessionController::class, 'destroy'])->name('logout');
 
     Route::post('/manage-two-factor', [ManageTwoFactorController::class, 'index'])->name('manage-two-factor');
-
-    Route::get('/add-password', [AddPasswordController::class, 'index'])->name('view-add-password')->middleware(EnsureNoPasswordExist::class);
-    Route::post('/add-password', [AddPasswordController::class, 'store'])->name('store-password')->middleware(EnsureNoPasswordExist::class);
 });
 /* ---------------------
     CUSTOMER ROUTES

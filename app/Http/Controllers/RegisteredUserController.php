@@ -5,8 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\RegisteredUserStoreRequest;
 use Illuminate\Support\Str;
 use App\Models\User;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Carbon;
+use App\Notifications\OneTimePassword;
 use Illuminate\Support\Facades\App;
 
 class RegisteredUserController extends Controller
@@ -28,19 +27,7 @@ class RegisteredUserController extends Controller
         $user->locale = App::currentLocale();
         $user->save();
 
-
-        $otp = rand(100000, 999999);
-        $email = $attrs['email'];
-
-        $user = User::where('email', $email)->first();
-        $user->update([
-            'otp' => $otp,
-            'otp_expires_at' => Carbon::now()->addMinutes(3),
-        ]);
-
-        Mail::send('emails.otp', ['otp' => $otp], function ($message) use ($email){
-            $message->to($email)->subject('Your OTP');
-        });
+        $user->notify(new OneTimePassword($user));
 
         logActivity('Successfully', 'Registered', $role . ' Account');
         session(['email' => $user->email, 'remember' => false]);

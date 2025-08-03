@@ -11,12 +11,17 @@ document.addEventListener("DOMContentLoaded", function () {
     const minTopup = 1000;
     const maxTopup = 20000000;
 
+    const hasPassword = document.querySelector('meta[name="has-password"]')?.content;
+
     // Custom Modal Elements
     const customModal1 = document.getElementById("customModal1");
     const customModal2 = document.getElementById("customModal2");
+    const customModal3 = document.getElementById("customModal3");
     const openCustomModal1Btn = document.getElementById("openCustomModal1");
     const closeCustomModal1Btn = document.getElementById("closeCustomModal1");
     const closeCustomModal2Btn = document.getElementById("closeCustomModal2");
+    const closeCustomModal3Btn = document.getElementById("closeCustomModal3");
+    const closeCustomModal4Btn = document.getElementById("closeCustomModal4");
     const nextCustomModalBtn = document.getElementById("nextCustomModalBtn");
     const backToCustomModal1Btn = document.getElementById("backToCustomModal1");
     const confirmTopupBtn = document.getElementById("confirmTopupBtn");
@@ -143,28 +148,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Event listener to open Custom Modal 1
     if (openCustomModal1Btn) {
-
-        var hasPassword = document.querySelector('meta[name="has-password"]')?.content;
-        var pressedTopup = document.querySelector('meta[name="pressed-topup"]')?.content;
-
-        if(pressedTopup == 1){
-            showModal(customModal1);
-            if (topupInput) {
-                topupInput.value = "";
-            }
-            if (topupError) {
-                topupError.style.display = "none";
-            }
-            if (currentBalanceModal1) {
-                currentBalanceModal1.textContent = `Rp ${currentBalance.toLocaleString('id-ID', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
-            }
-        }
-
         openCustomModal1Btn.addEventListener("click", function () {
             if(hasPassword != 1)
             {
-                let url = "/add-password"
-                document.location.href = url;
+                showModal(customModal3);
             }
             else{
                 showModal(customModal1);
@@ -194,6 +181,20 @@ document.addEventListener("DOMContentLoaded", function () {
             hideModal(customModal2);
             accountPasswordInput.value = "";
             passwordError.style.display = "none";
+        });
+    }
+
+    if(closeCustomModal3Btn)
+    {
+        closeCustomModal3Btn.addEventListener("click", function() {
+            hideModal(customModal3);
+        });
+    }
+
+    if(closeCustomModal4Btn)
+    {
+        closeCustomModal4Btn.addEventListener("click", function() {
+            hideModal(customModal3);
         });
     }
 

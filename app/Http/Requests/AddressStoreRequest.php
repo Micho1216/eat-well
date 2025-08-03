@@ -28,7 +28,7 @@ class AddressStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'provinsi_name' => [ // Tetap validasi nama untuk konsistensi, meskipun tidak digunakan secara langsung untuk penyimpanan
+            'provinsi_name' => [
                 'required',
                 'string',
                 'max:255',
