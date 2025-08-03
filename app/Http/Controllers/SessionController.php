@@ -49,6 +49,11 @@ class SessionController extends Controller
             ]);
         }
 
+        if(!$user->email_verified_at)
+        {
+            return redirect()->route('auth.verify');
+        }
+
         if($user->enabled_2fa){
             $user->notify(new OneTimePassword($user));
             return redirect()->route('auth.verify');
