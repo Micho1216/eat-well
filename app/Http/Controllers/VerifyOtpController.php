@@ -17,7 +17,30 @@ class VerifyOtpController extends Controller
     public function create()
     {
         $email = session('email');
-        return view('auth.verifyOtp', compact('email'));
+        if(!$email)
+        {
+            return redirect()->route('login');
+        }
+        $user = User::where('email', $email)->first();
+
+        if(!$user->otp_expires_at)
+        {
+            return redirect()->route('login');
+        }
+
+        $diff = Carbon::now()->diffInSeconds($user->otp_expires_at);
+
+        if ($diff < 0 || $diff > 180)
+        {
+            $minutes = 0;
+            $seconds = 0;
+        }
+        else{
+            $minutes = floor($diff/60);
+            $seconds = floor($diff - $minutes*60);
+        }
+        
+        return view('auth.verifyOtp', compact('email', 'minutes', 'seconds'));
     }
 
     public function check(VerifyOTPRequest $request)
