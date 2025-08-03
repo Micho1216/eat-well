@@ -38,5 +38,5 @@ return [
     'change_password' => 'Ubah Password',
     'add_password_button' => 'Tambah',
     'change_password_button' => 'Ubah',
-    'no_password' => 'You must have password to enable 2FA',
+    'no_password' => 'Anda harus punya password untuk mengaktifkan ini.',
 ];
