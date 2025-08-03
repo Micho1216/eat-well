@@ -26,10 +26,10 @@
             style="width: 100%; max-height: 350px; object-fit: cover;">
         <main class="container pt-3 pb-3 lexend">
             {{-- Untuk button ini jangan dihapus, untuk sementara button logout disini, menunggu UI logout beneran dibuat --}}
-            <form action="{{ route('logout') }}" method="post">
+            {{-- <form action="{{ route('logout') }}" method="post">
                 @csrf
                 <button type="submit"></button>
-            </form>
+            </form> --}}
             {{-- WellPay --}}
             <div class="wellpay-container mb-4">
                 <div class="d-flex align-items-center mb-2 lexend">

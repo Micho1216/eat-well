@@ -56,6 +56,8 @@ return [
     'retrieve_check_connection' => 'Gagal mendapatkan saldo WellPay. Mohon periksa koneksi internet Anda.',
     'wellpay_cancel' => 'Pembayaran menggunakan WellPay dibatalkan.',
     'continue' => 'Lanjutkan',
+    'processing' => 'Memproses...',
+    'see_my_order' => 'Lihat pesanan saya'
 
 
 ];

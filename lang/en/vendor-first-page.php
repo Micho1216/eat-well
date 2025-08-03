@@ -38,26 +38,11 @@ return[
     'zip_code_digits' => 'Zip code must be 5 digits',
 
     'phone_number_required' => 'Phone number is required',
-    'phone_number_regex' => 'Phone number must start with "08" and be 10-15 digits',
+    'phone_number_regex' => 'Phone number must be 10-15 digits',
 
     'address_required' => 'Address is required',
 
-    // Custom time validation messages
-    'time_invalid_format' => 'The :attribute is not a valid time format.',
-    'breakfast_time_range' => 'The :attribute must be between 00:00 and 10:29',
-    'breakfast_close_max_time' => 'The :attribute must be at or before 10:30',
-    'lunch_time_range' => 'The :attribute must be between 10:31 and 14:59',
-    'lunch_close_max_time' => 'The :attribute must be at or before 15:00',
-    'dinner_time_range' => 'The :attribute must be between 15:01 and 23:58',
-    'dinner_close_max_time' => 'The :attribute must be at or before 23:59',
-
     'attributes' => [
-        'startBreakfast' => 'start breakfast time',
-        'closeBreakfast' => 'close breakfast time',
-        'startLunch' => 'start lunch time',
-        'closeLunch' => 'close lunch time',
-        'startDinner' => 'start dinner time',
-        'closeDinner' => 'close dinner time',
         'provinsi' => 'province',
         'kota' => 'city',
         'kecamatan' => 'district',
@@ -68,4 +53,12 @@ return[
         'logo' => 'logo',
         'name' => 'name',
     ],
+
+    // Custom time validation messages
+    'breakfast_time_range' => 'The start breakfast time must be between 06:00 and 10:00',
+    'breakfast_close_max_time' => 'The close breakfast time must be at or before 10:00',
+    'lunch_time_range' => 'The start lunch time must be between 11:00 and 14:00',
+    'lunch_close_max_time' => 'The close lunch time must be at or before 14:00',
+    'dinner_time_range' => 'The start dinner time must be between 17:00 and 20:00',
+    'dinner_close_max_time' => 'The close dinner time must be at or before 20:00',
 ];

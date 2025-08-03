@@ -113,7 +113,7 @@ class VendorController extends Controller
 
         return view('ratingAndReviewVendor', compact('vendor', 'vendorReviews', 'numSold'));
     }
-    
+
     public function manageProfile()
     {
         $user = Auth::user();
@@ -197,19 +197,25 @@ class VendorController extends Controller
         ]);
 
         // upload logo
-        $logoPath = null;
+        // $file = $request->file('logo');
+
+        // $filename = time() . '_' . $file->getClientOriginalName();
+
+        // $file->move(public_path('asset/vendorLogo/', $filename));
 
         $file = $request->file('logo');
+        $filename = time() . '.' . $file->getClientOriginalExtension();
+        $file->move(public_path('asset/vendorLogo'), $filename);
+        $vendor->logo = $filename;
+        $vendor->save(); 
+        logActivity('Successfully', 'Added', 'Profile pict ');
 
-        $filename = time() . '_' . $file->getClientOriginalName();
 
-        $file->storeAs('public/vendor_logos', $filename);
+        // $vendor->update([
+        //     'logo' => $filename,
+        // ]);
 
-        $logoPath = 'vendor_logos/' . $filename;
-
-        $vendor->update([
-            'logo' => $logoPath,
-        ]);
+        // $vendor->save();
 
         // Convert and combine delivery times from 12-hour format (like "05:30 PM") to "HH:MM-HH:MM"
         $breakfast = $request->startBreakfast && $request->closeBreakfast
@@ -227,15 +233,14 @@ class VendorController extends Controller
         // Store the vendor
         $vendor->update([
             'name' => $request['name'],
-            'logo' => $logoPath,
             'phone_number' => $request['phone_number'],
             'breakfast_delivery' => $breakfast,
             'lunch_delivery' => $lunch,
             'dinner_delivery' => $dinner,
-            'provinsi' => $request['provinsi'],
-            'kota' => $request['kota'],
-            'kecamatan' => $request['kecamatan'],
-            'kelurahan' => $request['kelurahan'],
+            'provinsi' => $request['provinsi_name'],
+            'kota' => $request['kota_name'],
+            'kecamatan' => $request['kecamatan_name'],
+            'kelurahan' => $request['kelurahan_name'],
             'kode_pos' => $request['kode_pos'],
             'jalan' => $request['jalan'],
             'rating' => 0.0,

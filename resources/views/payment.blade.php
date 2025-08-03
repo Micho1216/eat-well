@@ -32,6 +32,7 @@
         data-enter-pass-text="{{ __('customer/payment.enter_pass')}}"
         data-wellpay-cancel-text="{{ __('customer/payment.wellpay_cancel') }}"
         data-continue-text="{{ __('customer/payment.continue')}}"
+        data-processing-text="{{ __('customer/payment.processing') }}"
         >
     </div>
     <div class="container">
@@ -244,7 +245,7 @@
             </p>
             <a href={{route('order-history')}} id="backHomeBtn" class="popup-button"
                 style="background:#E77133; color:white; border:none; border-radius:24px; padding:12px 32px; font-size:18px; font-weight:500; box-shadow:0 2px 6px #0001; text-decoration: none;">
-                See my order
+                {{ __('customer/payment.see_my_order') }}
             </a>
         </div>
     </div>

@@ -117,11 +117,11 @@ class AddressController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        $address->provinsi = Province::find($request->provinsi_id)->name;
-        $address->kota = City::find($request->kota_id)->name;
-        $address->kecamatan = District::find($request->kecamatan_id)->name;
-        $address->kelurahan = Village::find($request->kelurahan_id)->name;
-
+        // Ambil nama berdasarkan ID yang dikirim
+        $address->provinsi = $request->provinsi_name;
+        $address->kota = $request->kota_name;
+        $address->kecamatan = $request->kecamatan_name;
+        $address->kelurahan = $request->kelurahan_name;
         $address->jalan = $request->jalan;
         $address->kode_pos = $request->kode_pos;
         $address->notes = $request->notes;

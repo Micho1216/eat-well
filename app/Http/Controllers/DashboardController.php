@@ -18,7 +18,6 @@ class DashboardController extends Controller
             ->whereYear('created_at', Carbon::now()->year)
             ->get();
 
-        // ini total sales bulan ini
         $totalPrice = $orders->sum(function ($order) {
             return (float) $order->totalPrice;
         });
@@ -31,11 +30,7 @@ class DashboardController extends Controller
             return (float) $lastMonthOrder->totalPrice;
         });
 
-        // $lastMonthSale = 100000000000;
-        // perbedaan sales bulan ini dan bulan lalu
         $increment = $totalPrice - $lastMonthSale;
-
-        // $increment = -10000;
 
         $percentage = 0;
         if ($lastMonthSale == 0) {
@@ -43,10 +38,6 @@ class DashboardController extends Controller
         } else {
             $percentage = ($increment / $lastMonthSale) * 100;
         }
-
-        // dd($lastMonthSale);
-
-        // dd($totalPrice);
 
         $lmprofit = 0.05 * $lastMonthSale;
 
@@ -63,33 +54,27 @@ class DashboardController extends Controller
             $percentageprofit = (($profit - $lmprofit) / $lmprofit) * 100;
         }
 
-        // dd($lmprofit);
 
         $profit = number_format($profit, 0, ',', '.');
 
         $totalPrice = number_format($totalPrice, 0, ',', '.');
 
-        // Ambil total penjualan per bulan tahun ini
         $monthlySales = Order::selectRaw('MONTH(created_at) as month, SUM(totalPrice) as total')
             ->whereYear('created_at', Carbon::now()->year)
             ->groupBy(DB::raw('MONTH(created_at)'))
             ->orderBy(DB::raw('MONTH(created_at)'))
-            ->pluck('total', 'month'); // hasil: [1 => 12345, 2 => 23456, ...]
+            ->pluck('total', 'month'); 
 
-        // Format hasil agar semua bulan 1–12 terisi (meskipun 0)
         $allMonths = collect(range(1, 12))->map(function ($month) use ($monthlySales) {
-            return $monthlySales->get($month, 0); // isi 0 kalau tidak ada data
+            return $monthlySales->get($month, 0);
         });
 
-        // Contoh kirim ke Blade (dalam bentuk array biasa)
         $chartData = $allMonths->values()->toArray();
 
         $labels = collect(range(1, 12))->map(function ($month) {
             return Carbon::create()->month($month)->locale('id')->translatedFormat('F');
         })->toArray();
 
-
-        // $logs = UserActivity::all();
         $logs = UserActivity::query()->orderBy('accessed_at', 'desc')->limit(10)->get();
 
         logActivity('Successfully', 'Visited', 'Admin Dashboard Page');

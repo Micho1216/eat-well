@@ -29,7 +29,7 @@
                             <th scope="col-2-lg">Description</th>
                             <th scope="col-1-lg">IP</th>
                             <th scope="col-2-lg">Time</th>
-    
+
                         </tr>
                     </thead>
                     <tbody>
@@ -37,12 +37,14 @@
                             <div class="text-center mt-5">
                                 <h4>No Logs Available.</h4>
                             </div>
-    
+
                             <h1>No Data</h1>
                         @else
                             @foreach ($all_logs as $log)
                                 <tr>
-                                    <th scope="row">{{ ($all_logs->currentPage() - 1) * $all_logs->perPage() + $loop->iteration }}</th>
+                                    <th scope="row">
+                                        {{ ($all_logs->currentPage() - 1) * $all_logs->perPage() + $loop->iteration }}
+                                    </th>
                                     <td>{{ $log->name }}</td>
                                     <td>{{ $log->userId }}</td>
                                     <td>{{ $log->role }}</td>
@@ -59,25 +61,29 @@
                 </table>
             </div>
             @if ($all_logs->lastPage() > 1)
-                <ul class="catering-pagination pagination justify-content-center my-3">
-                    {{-- Previous Page Link --}}
-                    <li class="page-item {{ $all_logs->onFirstPage() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $all_logs->previousPageUrl() ?? '#' }}"
-                            tabindex="-1">&laquo;</a>
-                    </li>
+                <div class="d-flex justify-content-center mt-3">
+                    <nav aria-label="Activity log pagination">
+                        <ul class="pagination catering-pagination flex-wrap justify-content-center">
+                            {{-- Previous Page Link --}}
+                            <li class="page-item {{ $all_logs->onFirstPage() ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ $all_logs->previousPageUrl() ?? '#' }}"
+                                    tabindex="-1">&laquo;</a>
+                            </li>
 
-                    {{-- Pagination Elements --}}
-                    @for ($i = 1; $i <= $all_logs->lastPage(); $i++)
-                        <li class="page-item {{ $all_logs->currentPage() == $i ? 'active' : '' }}">
-                            <a class="page-link" href="{{ $all_logs->url($i) }}">{{ $i }}</a>
-                        </li>
-                    @endfor
+                            {{-- Pagination Elements --}}
+                            @for ($i = 1; $i <= $all_logs->lastPage(); $i++)
+                                <li class="page-item {{ $all_logs->currentPage() == $i ? 'active' : '' }}">
+                                    <a class="page-link" href="{{ $all_logs->url($i) }}">{{ $i }}</a>
+                                </li>
+                            @endfor
 
-                    {{-- Next Page Link --}}
-                    <li class="page-item {{ !$all_logs->hasMorePages() ? 'disabled' : '' }}">
-                        <a class="page-link" href="{{ $all_logs->nextPageUrl() ?? '#' }}">&raquo;</a>
-                    </li>
-                </ul>
+                            {{-- Next Page Link --}}
+                            <li class="page-item {{ !$all_logs->hasMorePages() ? 'disabled' : '' }}">
+                                <a class="page-link" href="{{ $all_logs->nextPageUrl() ?? '#' }}">&raquo;</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
             @endif
 
         </div>

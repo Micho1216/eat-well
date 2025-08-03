@@ -4,7 +4,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const cityTextTranslate = translationDataElement.dataset.cityText;
     const districtTextTranslate = translationDataElement.dataset.districtText;
     const villageTextTranslate = translationDataElement.dataset.villageText;
-
+    
+    const csrfToken = $('meta[name="csrf-token"]').attr('content');
+    if (csrfToken) {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': csrfToken
+            }
+        });
+    } else {
+        console.error('CSRF token not found! Please ensure <meta name="csrf-token" content="..."> is in your head.');
+    }
+    
     /* ------------ Logo preview ------------- */
     const fileInput  = document.getElementById('vendorLogoInput');
     const previewImg = document.getElementById('vendorLogoPreview');
@@ -28,92 +39,153 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ------------ Cascading selects ------------- */
-    const API_KEY = '543d80b3b490190006f5a670ce47292b0ebe9a3da6a097a0efc32b87096de8e4';
 
     const provSel = document.getElementById('provinsi');
     const kotaSel = document.getElementById('kota');
     const kecSel  = document.getElementById('kecamatan');
     const kelSel  = document.getElementById('kelurahan');
 
-    async function fetchData(url) {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error('Network error');
-        const json = await res.json();
-        return json.value || [];
-    }
-
     function resetSelect(sel, placeholder) {
-        sel.innerHTML = `<option value="">${placeholder}</option>`;
+        sel.disabled = true;
+        sel.innerHTML = `<option value="" selected>${placeholder}</option>`;
+        const hiddenInput = document.getElementById(`${sel.id}_name`);
+        if (hiddenInput) {
+            hiddenInput.value = '';
+        }
+    }
+    function openSelect(sel) {
+        sel.disabled = false;
     }
 
-    /* ---- 1. Load provinces on page load ---- */
-    (async () => {
-        resetSelect(provSel, `${provinceTextTranslate}`);
-        const provs = await fetchData(`https://api.binderbyte.com/wilayah/provinsi?api_key=${API_KEY}`);
-        provs.forEach(p => {
-            const selected = p.id === oldProv ? 'selected' : '';
-            provSel.insertAdjacentHTML('beforeend',
-                `<option value="${p.id}" ${selected}>${p.name}</option>`);
-        });
+    $.ajax({
+        url: "/api/fetch-provinces",
+        type: "POST",
+        dataType: 'JSON',
+        success: function(result) {
+            openSelect(provSel);
+            provSel.innerHTML = `<option value="">${provinceTextTranslate}</option>`;
+            $.each(result, function(key, value) {
+                const selected = value.id.toString() === oldProv ? 'selected' : '';
+                provSel.insertAdjacentHTML('beforeend', `<option value="${value.id}" ${selected}>${value.name}</option>`);
+            });
 
-        if (oldProv) await loadKota(oldProv);
-    })().catch(console.error);
+            // If an old province value exists, trigger the change event to load subsequent dropdowns
+            if (oldProv) {
+                provSel.dispatchEvent(new Event('change'));
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error("Error fetching provinces:", xhr, status, error);
+            alert("Gagal memuat data provinsi. Silakan coba lagi.");
+        }
+    });
+    provSel.addEventListener('change', async function() {
+        const selectedOption = this.options[this.selectedIndex];
+        document.getElementById('provinsi_name').value = selectedOption.text;
 
-    /* ---- 2. Province → cities ---- */
-    provSel.addEventListener('change', async () => {
-        resetSelect(kotaSel, `${cityTextTranslate}`);
-        resetSelect(kecSel, `${districtTextTranslate}`);
-        resetSelect(kelSel, `${villageTextTranslate}`);
-        if (!provSel.value) return;
-        await loadKota(provSel.value);
+        const provID = this.value;
+
+        resetSelect(kotaSel, cityTextTranslate);
+        resetSelect(kecSel, districtTextTranslate);
+        resetSelect(kelSel, villageTextTranslate);
+
+        if (provID) {
+            $.ajax({
+                url: "/api/fetch-cities",
+                type: "POST",
+                data: { province_id: provID },
+                dataType: 'JSON',
+                success: function(result) {
+                    openSelect(kotaSel);
+                    kotaSel.innerHTML = `<option value="">${cityTextTranslate}</option>`;
+                    $.each(result, function(key, value) {
+                        const selected = value.id.toString() === oldKota ? 'selected' : '';
+                        kotaSel.insertAdjacentHTML('beforeend', `<option value="${value.id}" ${selected}>${value.name}</option>`);
+                    });
+
+                    // If an old city value exists, trigger the change event
+                    if (oldKota) {
+                        kotaSel.dispatchEvent(new Event('change'));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching cities:", error);
+                    alert("Gagal memuat data kota. Silakan coba lagi.");
+                }
+            });
+        }
     });
 
-    async function loadKota(provId) {
-        resetSelect(kotaSel, `${cityTextTranslate}`);
-        const cities = await fetchData(`https://api.binderbyte.com/wilayah/kabupaten?api_key=${API_KEY}&id_provinsi=${provId}`);
-        cities.forEach(c => {
-            const selected = c.id === oldKota ? 'selected' : '';
-            kotaSel.insertAdjacentHTML('beforeend',
-                `<option value="${c.id}" ${selected}>${c.name}</option>`);
-        });
+    // --- Event listener for City change ---
+    kotaSel.addEventListener('change', async function() {
+        const selectedOption = this.options[this.selectedIndex];
+        document.getElementById('kota_name').value = selectedOption.text;
 
-        if (oldKota) await loadKec(oldKota);
-    }
+        const kotaID = this.value;
 
-    /* ---- 3. City → districts ---- */
-    kotaSel.addEventListener('change', async () => {
-        resetSelect(kecSel, `${districtTextTranslate}`);
-        resetSelect(kelSel, `${villageTextTranslate}`);
-        if (!kotaSel.value) return;
-        await loadKec(kotaSel.value);
+        resetSelect(kecSel, districtTextTranslate);
+        resetSelect(kelSel, villageTextTranslate);
+
+        if (kotaID) {
+            $.ajax({
+                url: "/api/fetch-districts",
+                type: "POST",
+                data: { city_id: kotaID },
+                dataType: 'JSON',
+                success: function(result) {
+                    openSelect(kecSel);
+                    kecSel.innerHTML = `<option value="">${districtTextTranslate}</option>`;
+                    $.each(result, function(key, value) {
+                        const selected = value.id.toString() === oldKec ? 'selected' : '';
+                        kecSel.insertAdjacentHTML('beforeend', `<option value="${value.id}" ${selected}>${value.name}</option>`);
+                    });
+
+                    // If an old district value exists, trigger the change event
+                    if (oldKec) {
+                        kecSel.dispatchEvent(new Event('change'));
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching districts:", error);
+                    alert("Gagal memuat data kecamatan. Silakan coba lagi.");
+                }
+            });
+        }
     });
 
-    async function loadKec(kotaId) {
-        resetSelect(kecSel, `${districtTextTranslate}`);
-        const dists = await fetchData(`https://api.binderbyte.com/wilayah/kecamatan?api_key=${API_KEY}&id_kabupaten=${kotaId}`);
-        dists.forEach(d => {
-            const selected = d.id === oldKec ? 'selected' : '';
-            kecSel.insertAdjacentHTML('beforeend',
-                `<option value="${d.id}" ${selected}>${d.name}</option>`);
-        });
+    // --- Event listener for District change ---
+    kecSel.addEventListener('change', async function() {
+        const selectedOption = this.options[this.selectedIndex];
+        document.getElementById('kecamatan_name').value = selectedOption.text;
 
-        if (oldKec) await loadKel(oldKec);
-    }
+        const kecID = this.value;
 
-    /* ---- 4. District → villages ---- */
-    kecSel.addEventListener('change', async () => {
-        resetSelect(kelSel, `${villageTextTranslate}`);
-        if (!kecSel.value) return;
-        await loadKel(kecSel.value);
+        resetSelect(kelSel, villageTextTranslate);
+
+        if (kecID) {
+            $.ajax({
+                url: "/api/fetch-villages",
+                type: "POST",
+                data: { district_id: kecID },
+                dataType: 'JSON',
+                success: function(result) {
+                    openSelect(kelSel);
+                    kelSel.innerHTML = `<option value="">${villageTextTranslate}</option>`;
+                    $.each(result, function(key, value) {
+                        const selected = value.id.toString() === oldKel ? 'selected' : '';
+                        kelSel.insertAdjacentHTML('beforeend', `<option value="${value.id}" ${selected}>${value.name}</option>`);
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error("Error fetching villages:", error);
+                    alert("Gagal memuat data kelurahan. Silakan coba lagi.");
+                }
+            });
+        }
     });
 
-    async function loadKel(kecId) {
-        resetSelect(kelSel, `${villageTextTranslate}`);
-        const vills = await fetchData(`https://api.binderbyte.com/wilayah/kelurahan?api_key=${API_KEY}&id_kecamatan=${kecId}`);
-        vills.forEach(v => {
-            const selected = v.id === oldKel ? 'selected' : '';
-            kelSel.insertAdjacentHTML('beforeend',
-                `<option value="${v.id}" ${selected}>${v.name}</option>`);
-        });
-    }
+    kelSel.addEventListener('change', async function() {
+        const selectedOption = this.options[this.selectedIndex];
+        document.getElementById('kelurahan_name').value = selectedOption.text;
+    });
 });

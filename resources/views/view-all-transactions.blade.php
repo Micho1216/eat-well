@@ -29,32 +29,34 @@
         @if ($payments->isEmpty())
             <h3 class="text-center fw-bold lexend mt-5" style="margin-bottom: 130px">{{ __('view-all-transactions.no_data') }}</h3>
         @else
-        <table class="table text-center" style="margin-bottom: 130px">
-            <thead>
-                <tr>
-                    <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-transactions.no') }}</th>
-                    <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-transactions.id') }}</th>
-                    <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-transactions.payment_method') }}</th>
-                    <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-transactions.customer') }}</th>
-                    <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-transactions.vendor') }}</th>
-                    <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-transactions.total_price') }}</th>
-                    <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-transactions.paid_at') }}</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($payments as $payment)
+        <div class="table-responsive">
+            <table class="table text-center" style="margin-bottom: 130px">
+                <thead>
                     <tr>
-                        <th scope="row">{{ $loop->iteration }}</th>
-                        <td>{{ $payment->paymentId }}</td>
-                        <td>{{ $payment->paymentMethod->name }}</td>
-                        <td>{{ $payment->order->user->name }}</td>
-                        <td>{{ $payment->order->vendor->name }}</td>
-                        <td>{{ 'Rp' . number_format($payment->order->orderItems->sum('price'), 2, ',', '.') }}</td>
-                        <td>{{ $payment->paid_at }}</td>
+                        <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-transactions.no') }}</th>
+                        <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-transactions.id') }}</th>
+                        <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-transactions.payment_method') }}</th>
+                        <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-transactions.customer') }}</th>
+                        <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-transactions.vendor') }}</th>
+                        <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-transactions.total_price') }}</th>
+                        <th scope="col" style="background-color: rgb(165, 203, 165) !important">{{ __('view-all-transactions.paid_at') }}</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    @foreach ($payments as $payment)
+                        <tr>
+                            <th scope="row">{{ $loop->iteration }}</th>
+                            <td>{{ $payment->paymentId }}</td>
+                            <td>{{ $payment->paymentMethod->name }}</td>
+                            <td>{{ $payment->order->user->name }}</td>
+                            <td>{{ $payment->order->vendor->name }}</td>
+                            <td>{{ 'Rp' . number_format($payment->order->orderItems->sum('price'), 2, ',', '.') }}</td>
+                            <td>{{ $payment->paid_at }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
 
         @if ($payments->lastPage() > 1)
             <ul class="catering-pagination pagination justify-content-center my-3">
