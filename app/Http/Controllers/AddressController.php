@@ -117,7 +117,6 @@ class AddressController extends Controller
             abort(403, 'Unauthorized action.');
         }
 
-        // Ambil nama berdasarkan ID yang dikirim
         $address->provinsi = $request->provinsi_name;
         $address->kota = $request->kota_name;
         $address->kecamatan = $request->kecamatan_name;
