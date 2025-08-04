@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AboutUsController;
 use App\Http\Controllers\AccountSetup\CustomerFirstPageController;
 use App\Http\Controllers\AddPasswordController;
 use App\Http\Controllers\AddressController;
@@ -7,6 +8,7 @@ use App\Http\Controllers\AdminViewOrderController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\LandingPageController;
 use App\Http\Controllers\LanguageController;
 use App\Http\Controllers\PackageController;
 use App\Http\Controllers\RegisteredUserController;
@@ -41,9 +43,6 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\VillageController;
 use App\Http\Middleware\CheckNoPasswordExist;
 use App\Models\User;
-
-Route::post('/lang', LanguageController::class);
-
 use App\Http\Controllers\VerifyOtpController;
 use App\Http\Controllers\illageController;
 use App\Http\Middleware\AccountSetup\EnsureAddressExists;
@@ -55,8 +54,9 @@ use App\Http\Middleware\EnsurePasswordExists;
 use App\Notifications\OneTimePassword;
 
 /* --------------------
-     GUEST ROUTES
+GUEST ROUTES
 -------------------- */
+Route::post('/lang', LanguageController::class);
 Route::post('/forgot-password', [ForgotPasswordController::class, 'email'])->name('password.email');
 Route::get('/reset-password/{token}', [ForgotPasswordController::class, 'reset'])->middleware([
     CheckAuthenticatedUserPasswordResetToken::class,
@@ -69,9 +69,7 @@ Route::post('/reset-password', [ForgotPasswordController::class, 'update'])->mid
 Route::get('/invalid-reset-password', [ForgotPasswordController::class, 'invalid'])->name('password.invalid');
 
 Route::middleware(['guest'])->group(function () {
-    Route::get('/', function () {
-        return view('landingPage');
-    })->name('landingPage');
+    Route::get('/', LandingPageController::class)->name('landingPage');
 
     Route::get('/login', [SessionController::class, 'create'])->name('login');
     Route::post('/login', [SessionController::class, 'store']);
@@ -93,9 +91,7 @@ Route::middleware(['guest'])->group(function () {
     });
 });
 
-Route::get('/about-us', function () {
-    return view('aboutUs');
-});
+Route::get('/about-us', AboutUsController::class);
 
 
 /* --------------------
@@ -107,7 +103,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('api/fetch-cities', [CityController::class, 'fetchCities'])->name('api-cities');
     Route::post('api/fetch-districts', [DistrictController::class, 'fetchDistricts'])->name('api-districts');
     Route::post('api/fetch-villages', [VillageController::class, 'fetchVillages'])->name('api-villages');
-    
+
     Route::post('/manage-profile', [SessionController::class, 'destroy'])->name('logout');
 
     Route::post('/manage-two-factor', [ManageTwoFactorController::class, 'index'])->name('manage-two-factor');
@@ -119,11 +115,11 @@ Route::middleware(['auth'])->group(function () {
 
 Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
     Route::get('/customer-first-page', [CustomerFirstPageController::class, 'index'])->middleware(EnsureNoAddressExist::class)
-            ->withoutMiddleware(['ensureAddress'])
-            ->name('account-setup.customer-view');
+        ->withoutMiddleware(['ensureAddress'])
+        ->name('account-setup.customer-view');
     Route::post('/customer-first-page', [CustomerFirstPageController::class, 'store'])->middleware(EnsureNoAddressExist::class)
-            ->withoutMiddleware(['ensureAddress'])
-            ->name('account-setup.customer-store');
+        ->withoutMiddleware(['ensureAddress'])
+        ->name('account-setup.customer-store');
 
     Route::get('/manage-profile', [UserController::class, 'showProfile'])->name('manage-profile');
     Route::patch('/manage-profile', [UserController::class, 'updateProfile'])->name('manage-profile.update');
@@ -173,15 +169,6 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
     });
 });
 
-
-
-
-
-
-
-/* ---------------------a
-     VENDOR ROUTES
----------------------- */
 /* ---------------------
      VENDOR ROUTES
 ---------------------- */
@@ -197,13 +184,6 @@ Route::middleware(['role:vendor'])->group(function () {
         // Catering dashboard
         Route::get('/cateringHomePage', [OrderVendorController::class, 'totalOrder'])->name('vendor.home');
         Route::get('/catering-detail', [VendorController::class, 'reviewVendor'])->name('vendor.review');
-        // Route::get('/cateringHomePage', function () {
-        //     // untuk yang log activity, kalau suatu saat buat controllernya mohon dimasukan
-        //     // masukan sebelum returen view / return redirect
-        //     logActivity('Successfully', 'Visited', 'Catering Home Page');
-        //     return view('cateringHomePage');
-        // });
-        // Route::post('/cateringHomePage', [SessionController::class, 'destroy'])->name('logout.vendor');
 
         // Manage Packages
         Route::get('/manageCateringPackage', [PackageController::class, 'index'])->name('manageCateringPackage');
@@ -212,36 +192,20 @@ Route::middleware(['role:vendor'])->group(function () {
         Route::delete('/packages/{id}', [PackageController::class, 'destroy'])->name('packages.destroy');
         Route::post('/packages/import', [PackageController::class, 'import'])->name('packages.import');
 
-        // Route::get('/manage-profile-2', [VendorController::class, 'manage_profile'])->name('manage-profile');
-        // Route::patch('/manage-profile-2', [VendorController::class, 'updateProfileUser'])->name('manage-profile.updateUser');
-        // // Route::post('/manage-profile-2', [SessionController::class, 'destroy'])->name('logout');
-
-
-
         // Manage Order
         Route::get('/manageOrder', [OrderVendorController::class, 'index'])
             ->name('orders.index');
-
-        // daftar/pengelolaan order
-        // Route::get('/vendor/orders', [OrderVendorController::class, 'index'])
-        //     ->name('vendor.orders');
 
         Route::post(
             '/delivery-status/{orderId}/{slot}',
             [OrderVendorController::class, 'updateStatus']
         )->name('delivery-status.update');
 
-
         Route::post(
             '/orders/{order}/cancel',
             [OrderVendorController::class, 'cancel']
-        )
-            ->name('orders.cancel');
+        )->name('orders.cancel');
 
-        // Route::get('/manageOrder', function () {
-        //     logActivity('Successfully', 'Visited', 'Manage Order Page');
-        //     return view('manageOrder');
-        // });
         Route::get('/manage-profile-vendor', [VendorController::class, 'manageProfile'])->name('manage-profile-vendor');
         Route::patch('/manage-profile-vendor', [VendorController::class, 'updateProfile'])->name('manage-profile-vendor.update');
 
@@ -257,18 +221,17 @@ Route::middleware(['role:vendor'])->group(function () {
 
         Route::get('/manage-profile-vendor-account', [VendorController::class, 'manage_profile'])->name('manage-profile-vendor-account');
         Route::patch('/manage-profile-vendor-account', [VendorController::class, 'updateProfileUser'])->name('manage-profile-vendor-account.updateUser');
+        
+        // Catering Sales
+        Route::get('/vendor/sales', [SalesController::class, 'index'])->name('sales.show');
+        Route::get('/vendor/sales/export', [SalesController::class, 'export_sales'])->name('sales.export');
+        
+        Route::fallback(function () {
+            return redirect()->route('cateringHomePage');
+        });
     });
 
-    // Catering Sales
-    Route::get('/vendor/sales', [SalesController::class, 'index'])->name('sales.show');
-    Route::get('/vendor/sales/export', [SalesController::class, 'export_sales'])->name('sales.export');
 
-    // Route::get('/manage-profile-catering', [VendorController::class, 'manageProfile'])->name('manage-profile-vendor');
-    // Route::patch('/manage-profile-catering', [VendorController::class, 'updateProfile'])->name('manage-profile-vendor.update');
-
-    Route::fallback(function () {
-        return redirect()->route('cateringHomePage');
-    });
 });
 /* ---------------------
      ADMIN ROUTES
@@ -290,22 +253,6 @@ Route::middleware(['role:admin'])->group(function () {
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.show');
     Route::post('/categories', [CategoryController::class, 'store'])->name('categories.store');
     Route::delete('/categories/{id}', [CategoryController::class, 'destroy'])->name('category.delete');
-
-
-    Route::get('/view-all-packages-cuisine', function () {
-        return view('view-all-packages-cuisine');
-    });
-
-    // Route::get('/view-all-payment', [AdminController::class, 'view_all_payment'])
-    //     ->name('view-all-payment');
-
-    // Route::delete('/view-all-payment/delete/{id}', [AdminController::class, 'delete_payment'])
-    //     ->name('delete-payment');
-
-    // Route::post('/view-all-payment', [AdminController::class, 'add_new_payment'])
-    //     ->name('add-new-payment');
-
-    // Route::post('/admin-dashboard', [SessionController::class, 'destroy'])->name('logout.admin');
 
     Route::get('/view-order-history', [AdminViewOrderController::class, 'index'])
         ->name('view-order-history');
