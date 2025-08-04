@@ -33,13 +33,6 @@ class VendorController extends Controller
 
     public function index()
     {
-        // dd(Auth()->user);
-        // $vendors = Vendor::all();
-        // $categories = PackageCategory::all();
-
-        // if(!$vendors->name){
-        //     return redirect('cateringHomePage');
-        // }
         return view('vendors.index', compact('vendors', 'categories'));
     }
 
@@ -99,16 +92,13 @@ class VendorController extends Controller
 
     public function reviewVendor()
     {
-        // Ambil vendor yang sedang login
-        $vendor = Auth::user()->vendor; // Pastikan user login adalah vendor
+        $vendor = Auth::user()->vendor;
 
-        // Ambil review dari vendor yang sedang login
         $vendorReviews = VendorReview::where('vendorId', $vendor->vendorId)
-            ->with(['user', 'order']) // Load relasi user dan order
+            ->with(['user', 'order'])
             ->orderBy('created_at', 'desc')
             ->get();
 
-        // Hitung jumlah order yang dijual oleh vendor
         $numSold = Order::where('vendorId', $vendor->vendorId)->count();
 
         return view('ratingAndReviewVendor', compact('vendor', 'vendorReviews', 'numSold'));
@@ -136,8 +126,6 @@ class VendorController extends Controller
         }
 
         $address = $vendor->provinsi . ' ' . $vendor->kota . ' ' . $vendor->kecamatan . ' ' . $vendor->kelurahan . ' ' . $vendor->jalan . ' ' . $vendor->kode_pos;
-        // logActivity('Successfully', 'Visited', 'Manage Profile Vendor Page');
-
         return view('manage-profile-vendors', compact(
             'user',
             'vendor',
@@ -154,8 +142,6 @@ class VendorController extends Controller
 
     public function updateProfile(UpdateProfileVendorRequest $request)
     {
-
-        // dd($request);
         $user = Auth::user();
         $userId = $user->userId;
         $vendor = Vendor::where('userId', $userId)->first();
@@ -188,28 +174,17 @@ class VendorController extends Controller
 
     public function store(VendorStoreRequest $request)
     {
-        // validating
         $userId = Auth::id();
 
         $vendor = Vendor::create([
             'userId' => $userId
         ]);
-
-        // upload logo
-        // $file = $request->file('logo');
-
-        // $filename = time() . '_' . $file->getClientOriginalName();
-
-        // $file->move(public_path('asset/vendorLogo/', $filename));
-
         $file = $request->file('logo');
         $originalName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $filename = $originalName . '_' . time() . '.' . $file->getClientOriginalExtension();
         if (app()->environment('testing')) {
-            // In test, use Storage::fake so the test doesn't fail
-            $file->storeAs('public/asset/vendorLogo', $filename);
+            $file->storeAs('public/asset/vendorLogo', $filename); // for testing
         } else {
-            // In normal use, move the file to public directory
             $destinationPath = public_path('asset/vendorLogo');
             if (!file_exists($destinationPath)) {
                 mkdir($destinationPath, 0755, true);
@@ -221,14 +196,6 @@ class VendorController extends Controller
         $vendor->save();
         logActivity('Successfully', 'Added', 'Profile pict ');
 
-
-        // $vendor->update([
-        //     'logo' => $filename,
-        // ]);
-
-        // $vendor->save();
-
-        // Convert and combine delivery times from 12-hour format (like "05:30 PM") to "HH:MM-HH:MM"
         $breakfast = $request->startBreakfast && $request->closeBreakfast
             ? $request->startBreakfast . '-' . $request->closeBreakfast
             : null;
@@ -241,7 +208,6 @@ class VendorController extends Controller
             ? $request->startDinner . '-' . $request->closeDinner
             : null;
 
-        // Store the vendor
         $vendor->update([
             'name' => $request['name'],
             'phone_number' => $request['phone_number'],
@@ -256,19 +222,13 @@ class VendorController extends Controller
             'jalan' => $request['jalan'],
             'rating' => 0.0,
         ]);
-        // ]);
 
         return redirect('cateringHomePage');
     }
 
-    // utk akun user vendor
     public function manage_profile()
     {
-        // Mengambil user yang sedang login
         $user = Auth::user();
-
-
-        // logActivity('Successfully', 'Visited', 'Manage Profile Page');
         return view('manageProfileVendorUser', compact('user'));
     }
 
@@ -298,11 +258,6 @@ class VendorController extends Controller
         $updated_user->genderMale = ($request->gender === 'male') ? 1 : 0;
 
         $updated_user->save();
-
-        // dd($updated_user->name);
-
-        // dd($oldName);
-
         logActivity('Successfully', 'Updated', "Profile to :  {$updated_user->name}");
 
         return redirect()->route('manage-profile-vendor-account')->with('success', 'Profile updated successfully!');

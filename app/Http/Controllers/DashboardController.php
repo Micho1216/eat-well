@@ -42,10 +42,6 @@ class DashboardController extends Controller
         $lmprofit = 0.05 * $lastMonthSale;
 
         $profit = 0.05 * $totalPrice;
-
-        $lmprofit = 0.05 * $lastMonthSale;;
-        
-
         
         $percentageprofit = 0;
         if ($lmprofit == 0) {
