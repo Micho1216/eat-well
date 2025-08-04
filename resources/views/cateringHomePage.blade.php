@@ -15,11 +15,6 @@
 @endsection
 
 @section('content')
-    {{-- Untuk button ini jangan dihapus, untuk sementara button logout disini, menunggu UI logout beneran dibuat --}}
-    <form action="{{ route('logout') }}" method="post">
-        @csrf
-        <button type="submit"></button>
-    </form>
     <div class="welcome-banner">
         <div class="logo-circle">
             <img src="{{ $vendor->logo ? asset('asset/vendorLogo/' . $vendor->logo) : asset('asset/profile/noPict.jpg') }}"
