@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\LoginRequest;
 use App\Http\Requests\SessionRequest;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
 use App\Models\User;
-use Illuminate\Support\Carbon;
 use App\Notifications\OneTimePassword;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 
 class SessionController extends Controller
 {
@@ -21,36 +19,28 @@ class SessionController extends Controller
     public function store(SessionRequest $request)
     {
         $attrs = $request->validated();
-
         $remember = request()->has('remember');
-        $user = User::where('email', $attrs['email'])->first();
-        
-        if(!$user){
-            loginLog($request->email, ' Login Failed : Error, user not found');
-            throw ValidationException::withMessages([
-                'email' => 'Credentials do not match',
-                'password' => 'Credentials do not match'
-            ]);
-        }
 
-        Session(['remember' => $remember]);
-        Session(['email' => $attrs['email']]);
+        $email = $attrs['email'];
+        $user = User::where('email', $email)->first();
         
         if(!$user->password && $user->provider_id)
         {
             return redirect()->back()->with('use_provider', true);
         }
 
-        if(!(Hash::check($attrs['password'], $user->password))){
+        if(!(Auth::attempt($attrs, $remember))){
             loginLog($request->email, ' Login Failed : Error, credentials do not match');
-            throw ValidationException::withMessages([
+            return redirect()->back()->withErrors([
                 'email' => 'Credentials do not match',
                 'password' => 'Credentials do not match'
             ]);
         }
-
+        
+        $request->session()->regenerate();
         if(!$user->email_verified_at)
         {
+            $user->notify(new OneTimePassword($user));
             return redirect()->route('auth.verify');
         }
 
@@ -59,15 +49,16 @@ class SessionController extends Controller
             return redirect()->route('auth.verify');
         }
 
-        Auth::login($user, $remember);
         loginLog($request->email, 'Successfully');
         return redirect()->route('home');
     }
 
-    public function destroy()
+    public function destroy(Request $request) : RedirectResponse
     {
         logActivity('Successfully', 'Logged out', 'Eat-well');
-        Auth::logout();
+        Auth::logout(); 
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect('/');
     }
 }

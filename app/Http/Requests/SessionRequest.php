@@ -15,7 +15,7 @@ class SessionRequest extends FormRequest
     {
         return [
             'email' => ['required', 'email', 'exists:users'],
-            'password' => ['required', 'min:8'],
+            'password' => ['required', 'min:8']
         ];
     }
 }

@@ -16,21 +16,11 @@ class VerifyOtpController extends Controller
 {
     public function create()
     {
-        $email = session('email');
-        if(!$email)
-        {
-            return redirect()->route('login');
-        }
-        $user = User::where('email', $email)->first();
-
-        if(!$user->otp_expires_at)
-        {
-            return redirect()->route('login');
-        }
-
+        $user = Auth::user();
+        $email = $user->email;
         $diff = Carbon::now()->diffInSeconds($user->otp_expires_at);
 
-        if ($diff < 0 || $diff > 180)
+        if ($diff <= 0 || $diff > 180)
         {
             $minutes = 0;
             $seconds = 0;
@@ -47,10 +37,9 @@ class VerifyOtpController extends Controller
     {
         $attrs = $request->validated();
         $otp = $attrs['otp'];
-        $email = $attrs['email'];
-        $remember = Session('remember');
 
-        $user = User::where('email', $email)->first();
+        $user = Auth::user();
+        
         if($otp !== $user->otp)
         {
             return back()->withErrors(['otp' => 'Invalid OTP, please try again']);
@@ -61,25 +50,23 @@ class VerifyOtpController extends Controller
             return back()->withErrors(['otp' => 'OTP has expired']);
         }
 
+        $user = User::find($user->userId);
         $user->update([
             'email_verified_at' => Carbon::now(),
             'otp' => null,
             'otp_expires_at' => null,
         ]);
 
-        Auth::login($user, $remember);
-
         return redirect()->route('home');
     }
 
-    public function resendOtp(ResendOTPRequest $request)
+    public function resendOtp()
     {
-        $attrs = $request->validated();
-        $email = $attrs['email'];
+        $email = Auth::user()->email;
         $user = User::where('email', $email)->first();
-
         $user->notify(new OneTimePassword($user));
 
-        return back();
+        return redirect()->back();
     }
+
 }

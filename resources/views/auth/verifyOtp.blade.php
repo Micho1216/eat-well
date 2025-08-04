@@ -5,6 +5,7 @@
 @section('css')
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet" />
     <link rel="stylesheet" href="{{ asset('css/login-register-verify.css') }}">
 @endsection
 
@@ -26,6 +27,12 @@
             <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-4 my-5">
                 <div class="card text-bg-light rounded-5 d-block" id="login-card">
                     <div class="card-body p-5 p-sm-5 vh-75">
+                        <form action="{{ route('logout') }}" method="post">
+                            @csrf
+                            <button type="submit" class="btn btn-default">
+                                <img src="{{ asset('asset/password/arrow_back_45dp_E3E3E3_FILL0_wght400_GRAD0_opsz48.png') }}" alt="">
+                            </button>
+                        </form>
                         <div class="card-title text-center mb-3">{{ __('auth/verify-otp.title') }}</div>
                         <p class="card-text text-center fs-5 fw-semibold">{{ __('auth/verify-otp.desc', ['email' => $email]) }}</p>
                         <p class="text-success mb-5 fs-6 text-center" id="timer"></p>

@@ -2,6 +2,7 @@
 
 use App\Http\Middleware\AccountSetup\EnsureAddressExists;
 use App\Http\Middleware\AccountSetup\EnsureNoAddressExist;
+use App\Http\Middleware\EnsureUserVerifiedOTP;
 use App\Http\Middleware\RoleMiddleware;
 use App\Http\Middleware\SetLocale;
 use Illuminate\Foundation\Application;
@@ -24,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
             'role' => RoleMiddleware::class,
             'ensureAddress' => EnsureAddressExists::class,
             'ensureNoAddress' => EnsureNoAddressExist::class,
+            'ensureUserVerifiedOtp' => EnsureUserVerifiedOTP::class,
         ]);
     })
 

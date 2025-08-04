@@ -26,7 +26,7 @@ class RegisteredUserStoreRequest extends FormRequest
             'name' => ['required'],
             'email' => ['required', 'email', 'unique:users'],
             'password' => ['required', Password::min(8)->letters()->numbers()->uncompromised(), 'confirmed'],
-            'password_confirmation' => ['required']
+            'password_confirmation' => ['required'],
         ];
     }
 }

@@ -77,10 +77,6 @@ Route::middleware(['guest'])->group(function () {
     Route::get('/register/{role}', [RegisteredUserController::class, 'create'])->name('register');
     Route::post('/register/{role}', [RegisteredUserController::class, 'store']);
 
-    Route::get('/verify-otp', [VerifyOtpController::class, 'create'])->name('auth.verify');
-    Route::post('/verify-otp', [VerifyOtpController::class, 'check'])->name('auth.check');
-    Route::post('/resend-otp', [VerifyOtpController::class, 'resendOtp'])->name('auth.resend-otp');
-
     Route::get('/auth/{provider}/redirect/{role?}', ProviderRedirectController::class)->name('auth.redirect');
     Route::get('/auth/{provider}/callback/', ProviderCallbackController::class)->name('auth.callback');
 
@@ -105,15 +101,18 @@ Route::middleware(['auth'])->group(function () {
     Route::post('api/fetch-villages', [VillageController::class, 'fetchVillages'])->name('api-villages');
 
     Route::post('/manage-profile', [SessionController::class, 'destroy'])->name('logout');
-
     Route::post('/manage-two-factor', [ManageTwoFactorController::class, 'index'])->name('manage-two-factor');
+
+    Route::get('/verify-otp', [VerifyOtpController::class, 'create'])->name('auth.verify');
+    Route::post('/verify-otp', [VerifyOtpController::class, 'check'])->name('auth.check');
+    Route::post('/resend-otp', [VerifyOtpController::class, 'resendOtp'])->name('auth.resend-otp');
 });
 /* ---------------------
     CUSTOMER ROUTES
 ---------------------- */
 // Customer Account Setup
 
-Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
+Route::middleware(['role:customer', 'ensureAddress', 'ensureUserVerifiedOtp'])->group(function () {
     Route::get('/customer-first-page', [CustomerFirstPageController::class, 'index'])->middleware(EnsureNoAddressExist::class)
         ->withoutMiddleware(['ensureAddress'])
         ->name('account-setup.customer-view');
@@ -172,7 +171,7 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
 /* ---------------------
      VENDOR ROUTES
 ---------------------- */
-Route::middleware(['role:vendor'])->group(function () {
+Route::middleware(['role:vendor', 'ensureUserVerifiedOtp'])->group(function () {
     Route::middleware(NoCateringDataMiddleware::class)->group(function () {
         Route::get('/vendor-first-page', function () {
             return view('vendorFirstPage');
@@ -236,7 +235,7 @@ Route::middleware(['role:vendor'])->group(function () {
 /* ---------------------
      ADMIN ROUTES
 ---------------------- */
-Route::middleware(['role:admin'])->group(function () {
+Route::middleware(['role:admin', 'ensureUserVerifiedOtp'])->group(function () {
     Route::get('/view-all-vendors', [AdminController::class, 'viewAllVendors'])->name('view-all-vendors');
     Route::post('/view-all-vendors', [AdminController::class, 'search'])->name('view-all-vendors.search');
 
