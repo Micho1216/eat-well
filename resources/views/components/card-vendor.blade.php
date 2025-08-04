@@ -33,6 +33,10 @@
                     <span class="material-symbols-outlined star-icon me-1">star</span>
                     <span class="fw-semibold">{{ $vendor->rating }}</span>
                 </div>
+            @else
+                <div class="catering-slots mb-1">
+                    <span class="badge badge-breakfast">{{ __('slot.new') }}</span>
+                </div>
             @endif
         </div>
     </div>

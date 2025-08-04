@@ -71,7 +71,8 @@ class VendorController extends Controller
         }
 
         $tooFar = false;
-        if ($vendor->provinsi !== $selectedAddress->provinsi) $tooFar = true;
+        if ($vendor->provinsi !== $selectedAddress->provinsi)
+            $tooFar = true;
 
         // logActivity('Successfully', 'Visited', 'Catering Detail Page');
         return view('cateringDetail', compact('vendor', 'packages', 'numSold', 'selectedAddress', 'tooFar'));
@@ -153,9 +154,21 @@ class VendorController extends Controller
         $vendor->name = $request->nameInput;
         $vendor->phone_number = $request->telpInput;
 
-        $vendor->breakfast_delivery = $request->breakfast_time_start . '-' . $request->breakfast_time_end;
-        $vendor->lunch_delivery = $request->lunch_time_start . '-' . $request->lunch_time_end;
-        $vendor->dinner_delivery = $request->dinner_time_start . '-' . $request->dinner_time_end;
+        if ($request->breakfast_time_start) {
+            $vendor->breakfast_delivery = $request->breakfast_time_start . '-' . $request->breakfast_time_end;
+        } else {
+            $vendor->breakfast_delivery = null;
+        }
+        if ($request->lunch_time_start) {
+            $vendor->lunch_delivery = $request->lunch_time_start . '-' . $request->lunch_time_end;
+        } else {
+            $vendor->lunch_delivery = null;
+        }
+        if ($request->dinner_time_start) {
+            $vendor->dinner_delivery = $request->dinner_time_start . '-' . $request->dinner_time_end;
+        } else {
+            $vendor->dinner_delivery = null;
+        }
 
 
         if ($request->hasFile('profilePicInput')) {
@@ -192,7 +205,7 @@ class VendorController extends Controller
 
             $file->move($destinationPath, $filename);
         }
-        $vendor->logo = 'asset/vendorLogo/' . $filename;
+        $vendor->logo = $filename;
         $vendor->save();
         logActivity('Successfully', 'Added', 'Profile pict ');
 

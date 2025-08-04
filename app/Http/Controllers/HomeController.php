@@ -31,11 +31,9 @@ class HomeController extends Controller
         $slotMap = $this->getOrderSlotMap($order);
         $wellpay = $user->wellpay ?? 0;
 
-        if($user->password)
-        {
+        if ($user->password) {
             $hasPassword = true;
-        }
-        else{
+        } else {
             $hasPassword = false;
         }
         return view('customer.home', compact('vendors', 'favVendors', 'order', 'slotMap', 'wellpay', 'hasPassword'));
@@ -52,6 +50,7 @@ class HomeController extends Controller
     {
         if ($address) {
             $nearVendors = Vendor::where('provinsi', $address->provinsi)
+                ->whereHas('packages')
                 ->inRandomOrder()
                 ->take(6)
                 ->get();

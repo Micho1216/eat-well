@@ -7,4 +7,5 @@ return [
     'lunch' => 'Lunch',
     'evening' => 'Dinner',
     'dinner' => 'Dinner',
+    'new' => 'New',
 ];
