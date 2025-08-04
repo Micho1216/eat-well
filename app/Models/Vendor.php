@@ -12,22 +12,20 @@ class Vendor extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'vendors';
-    protected $primaryKey = 'vendorId'; // Matches your migration
+    protected $primaryKey = 'vendorId'; 
 
     protected $fillable = [
         'userId',
-        // 'addressId',
-        'name', // Added based on your migration
+        'name', 
         'breakfast_delivery',
         'lunch_delivery',
         'dinner_delivery',
-        // 'description',
         'logo',
-        'phone_number', // Added based on your migration
-        'rating', // Added based on your migration
-        'provinsi', // Added based on your migration
+        'phone_number', 
+        'rating', 
+        'provinsi', 
         'kota',
-        'kabupaten', // Added based on your migration
+        'kabupaten', 
         'kecamatan',
         'kelurahan',
         'kode_pos',
@@ -35,7 +33,7 @@ class Vendor extends Model
     ];
 
     protected $casts = [
-        'rating' => 'decimal:1', // Matches your migration
+        'rating' => 'decimal:1',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -44,11 +42,6 @@ class Vendor extends Model
     {
         return $this->belongsTo(User::class, 'userId', 'userId');
     }
-
-    // public function address()
-    // {
-    //     return $this->hasOne(Address::class, 'addressId', 'addressId');
-    // }
 
     public function packages()
     {

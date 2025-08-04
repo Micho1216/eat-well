@@ -24,14 +24,11 @@ class OrderHistoryTest extends TestCase
         $user = User::factory()->create(['role' => 'Customer']);
         $this->actingAs($user); // Log in the user
 
-        // Create vendors
         $vendorA = Vendor::factory()->create(['name' => 'Alpha Catering']);
         $vendorB = Vendor::factory()->create(['name' => 'Beta Catering']);
 
-        // Create a PackageCategory before creating any Packages (as PackageFactory depends on it)
         $category = PackageCategory::first();
 
-        // Create orders for the user with different vendors
         $orderA = Order::factory()->create([
             'userId' => $user->userId,
             'vendorId' => $vendorA->vendorId,
@@ -52,45 +49,39 @@ class OrderHistoryTest extends TestCase
             'name' => 'Deluxe Dinner'
         ]);
 
-        // Create order items with all required fields
         OrderItem::create([
             'orderId' => $orderA->orderId,
             'packageId' => $packageA->packageId,
-            'name' => $packageA->name, // Store the actual package name here for searchability
+            'name' => $packageA->name, 
             'packageTimeSlot' => 'Afternoon',
             'price' => 30000,
             'quantity' => 3,
-            'mealType' => 'Lunch', // Added mealType for completeness
+            'mealType' => 'Lunch',
         ]);
         OrderItem::create([
             'orderId' => $orderB->orderId,
             'packageId' => $packageB->packageId,
-            'name' => $packageB->name, // Store the actual package name here
+            'name' => $packageB->name, 
             'packageTimeSlot' => 'Evening',
             'price' => 50000,
             'quantity' => 4,
-            'mealType' => 'Dinner', // Added mealType for completeness
+            'mealType' => 'Dinner', 
         ]);
 
         return compact('user', 'vendorA', 'vendorB', 'orderA', 'orderB', 'packageA', 'packageB');
     }
 
     /** @test */
-    /** @test */
-    // Fix test method
     public function tc3_order_history_page_shows_existing_orders()
     {
-        // Arrange: Buat user dan login
         $user = User::where('email', 'customer1@gmail.com')->first();
         $this->actingAs($user);
 
-        // Buat vendor & package
         $vendor = Vendor::factory()->create();
         $package = Package::factory()->create([
             'vendorId' => $vendor->vendorId,
         ]);
 
-          // Buat order dengan field lengkap
         $order = Order::factory()->create([
             'userId' => $user->userId,
             'vendorId' => $vendor->vendorId,
@@ -108,7 +99,6 @@ class OrderHistoryTest extends TestCase
             'recipient_phone' => '08123456789',
         ]);
 
-        // Buat order item dengan field lengkap
         OrderItem::factory()->create([
             'orderId' => $order->orderId,
             'packageId' => $package->packageId,
@@ -117,11 +107,9 @@ class OrderHistoryTest extends TestCase
             'quantity' => 2,
         ]);
 
-        // Act
         $response = $this->get(route('order-history'));
         dump($response->headers->get('Location'));
 
-        // Assert
         $response->assertStatus(200);
         $response->assertSee($order->orderId);
         $response->assertSee($vendor->name);
@@ -132,7 +120,6 @@ class OrderHistoryTest extends TestCase
     /** @test */
     public function tc4_catering_detail_shows_no_package_selected_message_and_disables_checkout()
     {
-        // 1. Log in as a customer (ensure their cart is empty for this test)
         $user = User::query()->where('role', 'like', 'Customer')->first();
         if (!$user) {
             $user = User::factory()->create(['role' => 'Customer']);
@@ -183,7 +170,6 @@ class OrderHistoryTest extends TestCase
             'is_default' => true,
         ]);
 
-        // Search by vendor name "Alpha"
         $response = $this->actingAs($user)->get('/orders?query=Alpha');
         $response->assertStatus(200);
         $response->assertSee('Alpha Catering');
@@ -199,11 +185,10 @@ class OrderHistoryTest extends TestCase
             'is_default' => true,
         ]);
 
-        // Search by package name "Deluxe"
         $response = $this->actingAs($user)->get('/orders?query=Deluxe');
         $response->assertStatus(200);
-        $response->assertSee('Beta Catering'); // Vendor of Deluxe Dinner
-        $response->assertSee('Deluxe Dinner'); // Package name
+        $response->assertSee('Beta Catering'); 
+        $response->assertSee('Deluxe Dinner'); 
         $response->assertDontSee('Alpha Catering');
         $response->assertDontSee('Special Lunch');
     }
@@ -217,7 +202,7 @@ class OrderHistoryTest extends TestCase
             'provinsi' => 'DKI Jakarta',
             'is_default' => true,
         ]);
-        // Search with a keyword that matches nothing
+        
         $response = $this->actingAs($user)->get('/orders?query=NotExist');
         $response->assertStatus(200);
 
@@ -231,7 +216,6 @@ class OrderHistoryTest extends TestCase
     /** @test */
     public function tc8_view_catering_button_redirects_to_vendor_detail()
     {
-        // 1. Get the first user with role "customer" (deterministic creation for the test)
         /**
         * @var User|Authenticatable $customer
         */
@@ -244,7 +228,6 @@ class OrderHistoryTest extends TestCase
             'is_default' => true,
         ]);
 
-        // Create a vendor that the "view catering" button would link to
        $vendor = Vendor::factory()->create([
             'name' => 'Delicious Bites Catering',
             'phone_number' => '0897765443321',
@@ -254,10 +237,9 @@ class OrderHistoryTest extends TestCase
             'kelurahan' => 'Karet',
             'kode_pos' => '12920',
             'jalan' => 'Jl. Sudirman No. 1',
-            'logo' => 'vendor_logo.jpg', // assume your seeder or logic handles fake image
+            'logo' => 'vendor_logo.jpg',
         ]);;
 
-        // 2. Procedure: Simulate clicking on the "view catering" button.
         $response = $this->actingAs($customer)->get(route('catering-detail', $vendor));
         $response->assertStatus(200); 
         $response->assertSeeText($vendor->name);
@@ -277,7 +259,7 @@ class OrderHistoryTest extends TestCase
             'kelurahan' => 'Karet',
             'kode_pos' => '12920',
             'jalan' => 'Jl. Sudirman No. 1',
-            'logo' => 'vendor_logo.jpg', // assume your seeder or logic handles fake image
+            'logo' => 'vendor_logo.jpg',
         ]);
 
         $order = Order::factory()->create([
@@ -297,7 +279,8 @@ class OrderHistoryTest extends TestCase
             'recipient_phone' => '08123456789',
         ]);
 
-        // Buat order item dengan field lengkap
+        $package = $vendor->packages()->first();
+
         OrderItem::factory()->create([
             'orderId' => $order->orderId,
             'packageId' => $package->packageId,
@@ -306,12 +289,8 @@ class OrderHistoryTest extends TestCase
             'quantity' => 2,
         ]);
 
-        // Act
         $response = $this->get(route('order-history'));
 
-
-
-        // Assert
         $response->assertStatus(200);
         $response->assertSee($order->orderId);
         $response->assertSee($vendor->name);
