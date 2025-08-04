@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use App\Enums\UserRole;
+use Illuminate\Auth\Passwords\CanResetPassword as PasswordsCanResetPassword;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Contracts\Translation\HasLocalePreference;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -14,7 +15,7 @@ use Illuminate\Contracts\Auth\CanResetPassword;
 
 class User extends Authenticatable implements HasLocalePreference, MustVerifyEmail, CanResetPassword
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, PasswordsCanResetPassword;
 
     protected $table = 'users'; // Matches your migration
 
@@ -106,21 +107,6 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
         return $this->belongsToMany(Vendor::class, 'favorite_vendors','userId', 'vendorId')->withTimestamps();
     }
 
-    // Renamed from cuisineReviews to match ERD if any, but ERD shows 'cuisine_reviews' having 'cuisineId' and 'userId'
-    // It's a Many-to-Many through 'package_cuisine', so a User wouldn't directly have cuisine reviews in this structure.
-    // If 'cuisine_reviews' is meant for user reviews of cuisine types, then the ERD doesn't show a direct link from user.
-    // Assuming 'cuisine_reviews' from ERD is 'package_cuisine' in migrations for now.
-    // If 'cuisine_reviews' table exists for user reviews, you'd need a model for it and link it.
-    // Based on your provided 'cuisine_reviews' table in the ERD with `cuisineId` and `userId` only,
-    // and no corresponding migration for it, I'll omit a direct `cuisineReviews` relationship on User.
-    // If the 'package_cuisine' table in your migration was meant to be 'cuisine_reviews', please clarify.
-
-    // INI UDAH GA DIPAKE
-    // public function relationCustomerAddresses()
-    // {
-    //     return $this->hasMany(RelationCustomerAddress::class, 'customerId', 'userId'); // customerId in relation_customer_addresses links to userId in users
-    // }
-
     public function vendor()
     {
         return $this->hasOne(Vendor::class, 'userId', 'userId');
@@ -129,17 +115,6 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
     public function orders()
     {
         return $this->hasMany(Order::class, 'userId', 'userId');
-    }
-
-    public function payments()
-    {
-        // ERD shows payments linked to userId. Your payment migration only has orderId and methodId, no userId directly.
-        // If payments should be directly linked to user, you need to add userId to payments migration.
-        // Based on current payment migration, user has many payments via order, but not directly.
-        // I'll add this assuming you might add userId to payments table later.
-        // For now, removing direct user->payments relationship based on your migrations.
-        // If a userId column is added to 'payments' table, uncomment and adjust:
-        // return $this->hasMany(Payment::class, 'userId', 'userId');
     }
 
     public function vendorReviews()

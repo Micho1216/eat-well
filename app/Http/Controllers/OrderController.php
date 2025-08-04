@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Models\PaymentMethod;
-// use Illuminate\Container\Attributes\Auth;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
@@ -68,9 +67,8 @@ class OrderController extends Controller
         return view('customer.orderHistory', compact('orders', 'status'));
     }
 
-    public function showPaymentPage() // Menggunakan Route Model Binding untuk Vendor
+    public function showPaymentPage()
     {
-        // User should be authorized from middleware
         $user = Auth::user();
         $userId = $user->userId;
         $vendorId = session('selected_vendor_id');
@@ -85,24 +83,19 @@ class OrderController extends Controller
             return redirect()->back();
         }
 
-        // Ambil cart user untuk vendor tertentu
-        $cart = Cart::with(['cartItems.package']) // Eager load cartItems dan package untuk performa
+        $cart = Cart::with(['cartItems.package'])
             ->where('userId', $userId)
             ->where('vendorId', $vendor->vendorId)
             ->first();
 
-        // Jika tidak ada cart atau cart kosong, arahkan kembali
         if (!$cart || $cart->cartItems->isEmpty()) {
             return redirect()->back()->with('warning', 'Your cart is empty. Please add items before proceeding to payment.');
         }
 
         $orderDateTime = Carbon::now();
-        // startDate: Selalu Senin minggu depan dari waktu order
         $startDate = $orderDateTime->copy()->next(Carbon::MONDAY)->toDateString();
-        // endDate: Minggu seminggu setelah startDate (yaitu Minggu dari minggu depannya)
         $endDate = Carbon::parse($startDate)->copy()->next(Carbon::SUNDAY)->toDateString();
 
-        // Data yang akan diteruskan ke view
         $cartDetails = [];
         $totalOrderPrice = 0;
 
@@ -128,11 +121,9 @@ class OrderController extends Controller
             }
         }
 
-        // $selectedAddressId = $request->query('address_id');
         $selectedAddressId = session('address_id');
         $selectedAddress = null;
 
-        // dd($selectedAddressId);
         if ($selectedAddressId) {
             $selectedAddress = Address::find($selectedAddressId);
             if ($selectedAddress && $userId && $selectedAddress->userId !== $userId) {
@@ -160,8 +151,6 @@ class OrderController extends Controller
             return redirect()->back()->with('error', 'Alamat pengiriman tidak valid atau tidak dipilih.');
         }
 
-        // logActivity('Successfully', 'Visited', 'Vendor Payment Page');
-
         $paymentMethod = PaymentMethod::all();
 
         return view('payment', compact('vendor', 'cart', 'cartDetails', 'totalOrderPrice', 'startDate', 'endDate', 'selectedAddress', 'paymentMethod'));
@@ -173,13 +162,9 @@ class OrderController extends Controller
         if (!$user) {
             return response()->json(['message' => 'User not authenticated.'], 401);
         }
-        // logActivity('Successfully', 'Viewed', 'Wellpay Balance');
-        return response()->json(['wellpay' => $user->wellpay]); // <-- Menggunakan 'wellpay'
+        return response()->json(['wellpay' => $user->wellpay]);
     }
 
-    /**
-     * Proses Checkout: Memindahkan data dari Cart ke Order dan OrderItems, termasuk validasi Wellpay.
-     */
     public function processCheckout(ProcessCheckoutRequest $request)
     {
         /** @var \App\Models\User $user */
@@ -219,14 +204,11 @@ class OrderController extends Controller
 
             $orderTotalPrice = $cart->totalPrice;
 
-            // Dapatkan WellPay methodId dari database
             $wellpayMethod = PaymentMethod::where('name', 'WellPay')->first();
             $wellpayMethodId = $wellpayMethod ? $wellpayMethod->methodId : null;
 
-            // Pastikan WellPay method ditemukan
             if (is_null($wellpayMethodId)) {
                 DB::rollBack();
-                Log::error('Payment method "WellPay" not found in database.');
                 return response()->json(['message' => 'Payment method configuration error. Please try again later.'], 500);
             }
 
@@ -244,7 +226,6 @@ class OrderController extends Controller
 
             // Delete Cart
             $cart->delete();
-            Log::info('Cart ' . $cart->cartId . ' deleted after successful checkout.');
 
             // Notify vendor
             $this->notifyVendor($vendorId, $order);
@@ -254,23 +235,17 @@ class OrderController extends Controller
             logActivity('Successfully', 'Processed', 'Checkout for Order ID: ' . $order->orderId);
 
             return response()->json(['message' => 'Checkout successful!', 'orderId' => $order->orderId], 200);
-
         } catch (ValidationException $e) {
             DB::rollBack();
-            Log::error('Validation failed for checkout:', $e->errors());
             logActivity('Failed', 'Process', 'Checkout');
             return response()->json(['message' => 'Validation Error', 'errors' => $e->errors()], 422);
         } catch (\Exception $e) {
             DB::rollBack();
-            Log::error('Checkout failed (General Error): ' . $e->getMessage(), ['exception' => $e]);
             logActivity('Failed', 'Processed', 'Checkout');
             return response()->json(['message' => 'Checkout failed. Please try again.', 'error' => $e->getMessage()], 500);
         }
     }
 
-    /**
-     * Extracts address and recipient data from validated request data.
-     */
     private function extractOrderAddressData(Address $address): array
     {
         return [
@@ -286,19 +261,17 @@ class OrderController extends Controller
     }
 
     /**
-     * Handles Wellpay payment logic, including password check and balance deduction.
      *
-     * @param User $user The authenticated user.
-     * @param int $selectedPaymentMethodId The ID of the payment method selected by the user.
-     * @param float $orderTotalPrice The total price of the order.
-     * @param string|null $password The user's password (for WellPay).
-     * @param int|null $wellpayMethodId The actual methodId for WellPay from the database.
-     * @throws \Illuminate\Validation\ValidationException If password is incorrect.
-     * @throws \Exception If Wellpay balance is insufficient.
+     * @param User $user
+     * @param int $selectedPaymentMethodId
+     * @param float $orderTotalPrice
+     * @param string|null $password
+     * @param int|null $wellpayMethodId
+     * @throws \Illuminate\Validation\ValidationException
+     * @throws \Exception
      */
     private function handleWellpayPayment(User $user, int $selectedPaymentMethodId, float $orderTotalPrice, ?string $password, ?int $wellpayMethodId): void
     {
-        // Gunakan $wellpayMethodId yang sudah dicari dari database
         if ($selectedPaymentMethodId === $wellpayMethodId) {
             if (!Hash::check($password, $user->getAuthPassword())) {
                 logActivity('Failed', 'Processed', 'Checkout due to incorrect Wellpay password');
@@ -314,13 +287,9 @@ class OrderController extends Controller
 
             $user->wellpay -= $orderTotalPrice;
             $user->save();
-            Log::info('Wellpay balance updated for user ' . $user->userId . '. New balance: ' . $user->wellpay);
         }
     }
 
-    /**
-     * Creates a new Order record in the database.
-     */
     private function createOrder(
         int $userId,
         int $vendorId,
@@ -339,13 +308,9 @@ class OrderController extends Controller
             'isCancelled' => false,
             'notes' => $notes,
         ], $addressData));
-        Log::info('Order created. Order ID: ' . $order->orderId);
         return $order;
     }
 
-    /**
-     * Processes cart items to create order items and corresponding delivery statuses.
-     */
     private function processOrderItemsAndDeliveryStatuses(Order $order, Cart $cart): void
     {
         $selectedTimeSlots = [];
@@ -384,17 +349,12 @@ class OrderController extends Controller
                 }
             }
         }
-        Log::info('OrderItems created for Order ID: ' . $order->orderId);
 
         $this->generateDeliveryStatuses($order, $selectedTimeSlots);
     }
 
-    /**
-     * Generates delivery status entries for a given order and selected time slots.
-     */
     private function generateDeliveryStatuses(Order $order, array $selectedTimeSlots): void
     {
-        Log::info('Inserting Delivery Statuses for Order ID: ' . $order->orderId);
         $countDeliveryStatuses = 0;
 
         foreach (array_keys($selectedTimeSlots) as $slot) {
@@ -410,12 +370,8 @@ class OrderController extends Controller
                 $countDeliveryStatuses++;
             }
         }
-        Log::info('Total Delivery Statuses created: ' . $countDeliveryStatuses);
     }
 
-    /**
-     * Creates a new Payment record in the database.
-     */
     private function createPaymentEntry(int $orderId, int $paymentMethodId): void
     {
         Payment::create([
@@ -423,12 +379,8 @@ class OrderController extends Controller
             'orderId' => $orderId,
             'paid_at' => Carbon::now(),
         ]);
-        Log::info('Payment recorded for Order ID: ' . $orderId);
     }
 
-    /**
-     * Notifies the vendor about a new order.
-     */
     private function notifyVendor(int $vendorId, Order $order): void
     {
         $vendor = Vendor::find($vendorId);
@@ -437,7 +389,6 @@ class OrderController extends Controller
 
         if ($vendorUser) {
             $vendorUser->notify(new CustomerSubscribed($order));
-            Log::info('Vendor user ' . $vendorUser->userId . ' notified for Order ID: ' . $order->orderId);
         }
     }
     /**

@@ -28,5 +28,14 @@ return [
         'check_order_invitation' => 'Quick! Check your orders now by clicking on the button below.',
         'view_order' => 'Check Orders',
         'outro' => 'Thank you for partnering with EatWell.'
+    ],
+    'one_time_password' => [
+        'subject' => 'One Time Password Sent',
+        'greeting' => 'Hello!',
+        'content' => 'We have detected a login attempt onto your account. Please use this OTP to proceed.',
+        'otp' => ':otp',
+        'warning' => 'If this is not you, please ignore this email',
+        'outro' => 'Thank you for using this service'
     ]
+
 ];

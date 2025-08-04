@@ -28,6 +28,7 @@ class CategoryStoreRequest extends FormRequest
         return [
             'categoryName' => [
                 'required',
+                'string',
                 Rule::unique('package_categories', 'categoryName')
             ]
         ];

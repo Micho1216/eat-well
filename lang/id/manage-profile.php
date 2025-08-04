@@ -23,7 +23,9 @@ return [
     'security_subtitle' => 'Di sinilah kami mengunci keamanan dengan perlindungan terbaik. Tempat paling aman! Kelola keamanan akun Anda di sini.',
     'mfa_management' => 'Manajemen MFA',
     'mfa_warning' => 'Akun Anda belum sepenuhnya terlindungi, kami sarankan mengaktifkan 2FA!',
-    'enable_mfa' => 'Aktifkan Autentikasi Dua Faktor',
+    'mfa_activated' => 'Akun anda sudah terlindungi sepenuhnya. Kerja bagus!',
+    'enable_mfa' => 'Aktifkan Keamanan Otentikasi Multi Faktor',
+    'disable_mfa' => 'Matikan Keamanan Otentikasi Multi Faktor',
     'mfa_description' => 'Autentikasi Dua Faktor bekerja dengan mengirimkan OTP ke email Anda dan membutuhkannya setiap kali login.',
     'change_password' => 'Ubah Kata Sandi',
     'old_password' => 'Kata Sandi Lama',
@@ -31,5 +33,10 @@ return [
     'verify_password' => 'Verifikasi Kata Sandi Baru',
     'change' => 'Ubah',
     'logout' => 'Keluar',
-    'success_msg' => 'Berhasil mengubah profile !'
+    'success_msg' => 'Berhasil mengubah profile !',
+    'add_password' => 'Tambah Password',
+    'change_password' => 'Ubah Password',
+    'add_password_button' => 'Tambah',
+    'change_password_button' => 'Ubah',
+    'no_password' => 'Anda harus punya password untuk mengaktifkan ini.',
 ];

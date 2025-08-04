@@ -9,27 +9,39 @@
 @endsection
 
 @section('content')
+    <div id="translation-data"
+        data-timer-text="{{ __('auth/verify-otp.timer') }}"
+        data-minute-text="{{ __('auth/verify-otp.minute') }}"
+        data-second-text="{{ __('auth/verify-otp.second') }}"
+        data-expired-text="{{ __('auth/verify-otp.expired') }}">
+    </div>
+
+    <div id="time-data"
+        data-minutes-text="{{ $minutes }}"
+        data-seconds-text="{{ $seconds }}">
+    </div>
+
     <div class="container-fluid mt-3">
         <div class="row content align-items-center justify-content-center ">
             <div class="col-12 col-sm-8 col-md-6 col-lg-6 col-xl-4 my-5">
                 <div class="card text-bg-light rounded-5 d-block" id="login-card">
                     <div class="card-body p-5 p-sm-5 vh-75">
-                        <div class="card-title text-center mb-3">OTP Verification</div>
-                        <p class="card-text mb-5 text-center fs-5 fw-semibold">OTP have been sent to<br>{{$email}}.<br>Please check your email.</p>
+                        <div class="card-title text-center mb-3">{{ __('auth/verify-otp.title') }}</div>
+                        <p class="card-text text-center fs-5 fw-semibold">{{ __('auth/verify-otp.desc', ['email' => $email]) }}</p>
+                        <p class="text-success mb-5 fs-6 text-center" id="timer"></p>
                         <form method="POST" action="{{ route('auth.check') }}" novalidate>
                             @csrf
                             <input type="hidden" name="email" value="{{$email}}">
                             <div class="form-floating">
                                 <input type="text" maxlength="6" inputmode="numeric" pattern="[0-9\s]*" name="otp" class="form-control m-0 @error('otp') is-invalid @enderror" id="otp" value="{{ old('otp') }}" placeholder="" >
-                                <label for="otp" class="form-label m-0">One Time Password</label>
+                                <label for="otp" class="form-label m-0">{{ __('auth/verify-otp.otp') }}</label>
                                 <div class="invalid-feedback my-2">{{ $errors->first('otp') }}</div>
                             </div>
 
-                            
                             <button type="submit" class="mb-0 mt-5 w-100 gsi-material-button w-100">
                                 <div class="gsi-material-button-state"></div>
                                 <div class="gsi-material-button-content-wrapper">
-                                    <span class="gsi-material-button-contents">Sign in</span>
+                                    <span class="gsi-material-button-contents">{{ __('auth/verify-otp.sign_in') }}</span>
                                 </div>
                             </button>
                         </form>
@@ -37,8 +49,8 @@
                         <form action="{{route('auth.resend-otp')}}" method="post" novalidate>
                             @csrf
                             <input type="hidden" name="email" value="{{$email}}">
-                            <button type="submit" class="btn w-100">
-                                <p class="text-success fs-6 text-center">Didn't receive the code? <u>Resend the code!</u></p>
+                            <button type="submit" class="btn w-100" id="resend">
+                                <p class="text-success fs-6 text-center">{{ __('auth/verify-otp.resend') }}</p>
                             </button>
                         </form>
                     </div>
@@ -55,4 +67,5 @@
 @section('scripts')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
     <script src="{{asset('js/login-register.js') }}"></script>
+    <script src="{{asset('js/auth/verify-otp.js') }}"></script>
 @endsection

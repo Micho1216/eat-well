@@ -366,3 +366,4 @@ class OrderHistoryTest extends TestCase
     }
 
 }
+

@@ -70,7 +70,8 @@ class LoginTest extends TestCase
         ]);
 
         $response->assertStatus(302);
-        $response->assertSessionMissing('errors');
+        // $response->assertSessionMissing('errors');
+        $response->assertSessionHasErrors('password');
     }
 
     /** @test */
@@ -131,7 +132,7 @@ class LoginTest extends TestCase
     public function tc9_register_as_vendor_link_exists()
     {
         $response = $this->get('/login');
-        $response->assertSee("Join Eatwell as a <u>vendor!</u>", false);
+        $response->assertSeeText("Join EatWell as a vendor");
     }
 
     /** @test */

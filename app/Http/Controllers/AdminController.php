@@ -56,7 +56,6 @@ class AdminController extends Controller
     {
         $all_logs = UserActivity::orderBy('accessed_at', 'desc')->paginate(25);
 
-        // logActivity('Successfully', 'Visited', 'View All Logs Page');
         return view('view-all-logs', compact('all_logs'));
     }
 
