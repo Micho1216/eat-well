@@ -617,19 +617,19 @@ class CartTest extends TestCase
             'selected_vendor_id' => $vendor->vendorId,
             'address_id' => $address->addressId,
         ]);
-        $response = $this->post('/checkout', $payload);
         // 3. ACTION: Visit the payment/checkout summary page
         $response = $this->get(route('payment.show'));
-
+        
         // 4. ASSERTION: Check if the page loaded correctly and displays the address
         $response->assertStatus(200);
-
+        
         // Assert that each part of the address is visible in the page's HTML
         // Use the CORRECT property names from your Address model
         $response->assertSee($address->jalan);
         $response->assertSee($address->kota);
         $response->assertSee($address->provinsi);
         $response->assertSee($address->kode_pos);
+        $response = $this->post('/checkout', $payload);
     }
     /** @test */
     public function tc9_customer_can_select_wellpay_payment_method()

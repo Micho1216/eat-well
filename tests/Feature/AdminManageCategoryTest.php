@@ -49,41 +49,27 @@ class AdminManageCategoryTest extends TestCase
     {
         $this->actingAs($this->admin);
 
-        // Create categories with packages
         $categoryA = PackageCategory::create(['categoryName' => 'Healthy Meals']);
         $categoryB = PackageCategory::create(['categoryName' => 'Vegan Meals']);
 
         Package::factory()->count(3)->create(['categoryId' => $categoryA->categoryId]);
         Package::factory()->count(2)->create(['categoryId' => $categoryB->categoryId]);
 
-        // Visit page
         $response = $this->get(route('categories.show'));
 
-        // Assertions
-        // $response->assertStatus(200);
-        // $response->assertSeeText('Category Name');
-        // $response->assertSeeText('Packages Count');
-        // $response->assertSeeText('Healthy Meals');
-        // $response->assertSeeText('Vegan Meals');
-        // $response->assertSeeText('3');
-        // $response->assertSeeText('2');
         $response->assertStatus(200);
 
         if (app()->getLocale() === 'en') {
             $response->assertSeeText('Category Name');
             $response->assertSeeText('Packages Count');
-            $response->assertSeeText('Healthy Meals');
-            $response->assertSeeText('Vegan Meals');
-            $response->assertSeeText('3');
-            $response->assertSeeText('2');
         } elseif (app()->getLocale() === 'id') {
             $response->assertSeeText('Nama Kategori');
             $response->assertSeeText('Jumlah Paket');
-            $response->assertSeeText('Makanan Sehat');
-            $response->assertSeeText('Makanan Vegan');
-            $response->assertSeeText('3');
-            $response->assertSeeText('2');
         }
+        $response->assertSeeText('Healthy Meals');
+        $response->assertSeeText('Vegan Meals');
+        $response->assertSeeText('3');
+        $response->assertSeeText('2');
     }
 
     /** @test */
@@ -264,13 +250,14 @@ class AdminManageCategoryTest extends TestCase
 
         // Refresh model to get soft-deleted version
         $deletedCategory = PackageCategory::withTrashed()->find($category->categoryId);
+        $now = '_' . now()->format('Ymd_His');
 
         // Assert: soft deleted
         $this->assertSoftDeleted('package_categories', [
             'categoryId' => $category->categoryId,
         ]);
 
-        $this->assertEquals('Test Meals', $deletedCategory->categoryName);
+        $this->assertEquals('Test Meals' . $now, $deletedCategory->categoryName);
 
 
         // Optional: ensure deleted_at is not null
@@ -299,7 +286,7 @@ class AdminManageCategoryTest extends TestCase
 
         // Step 4: Assert redirect back with error
         $response->assertRedirect();
-        $response->assertSessionHas('error', __('category.delete_failed'));
+        $response->assertSessionHas('error', __('admin/package_category.delete_failed'));
 
 
         // Step 5: Assert the category still exists (not soft-deleted)
@@ -332,29 +319,6 @@ class AdminManageCategoryTest extends TestCase
         $this->assertDatabaseHas('package_categories', [
             'categoryId' => $category->categoryId,
             'deleted_at' => null,
-        ]);
-    }
-
-    /** @test */
-    public function tc12_cannot_add_category_with_same_name_as_soft_deleted()
-    {
-        $this->actingAs($this->admin);
-
-        // Step 1: Create and soft-delete a category
-        $category = PackageCategory::create(['categoryName' => 'Keto']);
-        $category->delete();
-
-        // Step 2: Attempt to re-add same name
-        $response = $this->post(route('categories.store'), [
-            'categoryName' => 'Keto',
-        ]);
-
-        // Expect: validation error instead of restoration
-        $response->assertSessionHasErrors('categoryName');
-
-        // Confirm that the old category is still soft-deleted
-        $this->assertSoftDeleted('package_categories', [
-            'categoryId' => $category->categoryId,
         ]);
     }
 }

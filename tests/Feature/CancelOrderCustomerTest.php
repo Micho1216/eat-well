@@ -14,12 +14,8 @@ class CancelOrderCustomerTest extends TestCase
     // use RefreshDatabase;
 
     /** @test */
-    /** @test */
     public function test_user_can_cancel_existing_order()
     {
-       
-        // dump($user);
-
         $order = Order::where('isCancelled', false)->first();
         
         $iduser = $order->userId;

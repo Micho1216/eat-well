@@ -349,7 +349,7 @@ class CustomerAddressTest extends TestCase
         $response->assertSessionHasNoErrors();
 
         $response->assertStatus(302);
-        $response->assertSessionHas('update_success', 'Alamat berhasil diperbarui');
+        $response->assertSessionHas('update_success', 'Alamat berhasil diperbaharui');
         $response->assertRedirect(route('manage-address'));
 
 

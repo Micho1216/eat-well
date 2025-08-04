@@ -7,7 +7,7 @@ return [
 
     // table headers
     'th_cat' => 'Nama Kategori',
-    'th_pkgcount' => 'Paket Terasosiasi',
+    'th_pkgcount' => 'Jumlah Paket',
     'th_created' => 'Waktu Dibuat',
     'th_action' => 'Aksi',
     'delete' => 'Hapus',
