@@ -16,11 +16,6 @@
     <x-admin-nav></x-admin-nav>
 
     <div style="margin: 2vw">
-        <form action="{{ route('logout') }}" method="post">
-            @csrf
-            <button type="submit"></button>
-        </form>
-
         <h1 class="text-center mt-3 fw-bold lexend">EAT-WELL</h1>
 
         <div class="lexend" style="margin: 4vw">
