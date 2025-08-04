@@ -12,6 +12,8 @@ class SearchCateringTest extends TestCase
     public function tc1_filter_catering_by_price(){
         /** @var User|Authenticatable $user */
         $user = User::query()->where('role', 'like', 'Customer')->first();
+        $address = $user->addresses()->first();
+        session(['address_id' => $address->addressId]);
         $response = $this->actingAs($user)->get(route('search', [
             'min_price' => 100000,
             'max_price' => 250000,
@@ -239,12 +241,13 @@ class SearchCateringTest extends TestCase
     /** @test */
     public function tc12_user_can_remove_vendor_from_favorites()
     {
-        /** @var User|Authenticatable $user */
-        $user = User::factory()->create();
-        $vendor = Vendor::factory()->create();
+         /** @var User|Authenticatable $user */
+        $user = User::query()->where('role', 'like', 'Customer')->first();
+        $vendor = Vendor::first();
 
-        // Pre-attach favorite
-        $user->favoriteVendors()->attach($vendor->vendorId);
+        // Simulate the user being logged in and posting to favorite route
+        $response = $this->actingAs($user)->post("/favorite/{$vendor->vendorId}");
+
 
         // Act
         $response = $this->actingAs($user)->post("/unfavorite/{$vendor->vendorId}");
@@ -345,7 +348,8 @@ class SearchCateringTest extends TestCase
         $user = User::query()->where('role', 'like', 'Customer')->first();
         $response = $this->actingAs($user)->get('/caterings?rating=6');
 
-        $response->assertStatus(200);
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors(['rating']);
     }
 
     /** @test */

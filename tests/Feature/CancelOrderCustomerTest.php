@@ -25,14 +25,18 @@ class CancelOrderCustomerTest extends TestCase
         $iduser = $order->userId;
 
         $user = User::find($iduser);
+        dump($user->wellpay);
         $this->actingAs($user);
 
         $wellpay = $user->wellpay;
         $this->assertNotNull($order);
+        dump($order->totalPrice);
 
         $totalPrice = $order->totalPrice;
 
         $corectWellpay = $wellpay + $totalPrice;
+        dump($corectWellpay);
+
 
         $response = $this->put(route('order.cancel', ['id' => $order->orderId]));
         $response->assertRedirect();
@@ -43,6 +47,6 @@ class CancelOrderCustomerTest extends TestCase
         ]);
 
         $user->refresh();
-        $this->assertGreaterThan($corectWellpay, $user->wellpay);
+        $this->assertEquals($corectWellpay, $user->wellpay);
     }
 }

@@ -9,17 +9,21 @@ use App\Models\Province;
 use App\Models\User;
 use App\Models\Village;
 use Database\Seeders\AddressSeeder;
+use Database\Seeders\CitySeeder;
 use Database\Seeders\CuisineTypeSeeder;
+use Database\Seeders\DistrictSeeder;
 use Database\Seeders\OrderItemSeeder;
 use Database\Seeders\OrderSeeder;
 use Database\Seeders\PackageCategorySeeder;
 use Database\Seeders\PackageCuisineSeeder;
 use Database\Seeders\PackageSeeder;
 use Database\Seeders\PaymentMethodSeeder;
+use Database\Seeders\ProvinceSeeder;
 use Database\Seeders\UserSeeder;
 use Database\Seeders\VendorPreviewSeeder;
 use Database\Seeders\VendorReviewSeeder;
 use Database\Seeders\VendorSeeder;
+use Database\Seeders\VillageSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -60,6 +64,7 @@ class CustomerRateOrderTest extends TestCase
             ->inRandomOrder()
             ->first();
 
+
         return $order;
     }
     public function getOneUpcomingOrderForSpecificCustomer(String $id)
@@ -78,6 +83,8 @@ class CustomerRateOrderTest extends TestCase
     {
         // Step 1: Get first customer
         $customer = User::where('role', 'Customer')->first();
+        $address = $customer->addresses()->first();
+        session(['address_id' => $address->addressId]);
 
         // Step 2: Get an existing order for that customer
         $order = $this->getOneFinishedOrderForSpecificCustomer($customer->userId);
@@ -86,7 +93,7 @@ class CustomerRateOrderTest extends TestCase
         $this->actingAs($customer);
 
         // Step 4: Submit rating
-        $response = $this->post("/orders/{$order->orderId}/review", [
+        $response = $this->post("/orders/{$order}/review", [
             'rating' => 5,
             'review' => 'Excellent!',
         ])->assertStatus(200);
@@ -119,7 +126,7 @@ class CustomerRateOrderTest extends TestCase
         $this->actingAs($customer);
 
         // Step 4: Submit rating
-        $response = $this->post("/orders/{$order->orderId}/review", [
+        $response = $this->post("/orders/{$order}/review", [
             'rating' => 5,
             'review' => '',
         ]);
@@ -157,7 +164,7 @@ class CustomerRateOrderTest extends TestCase
         $this->actingAs($customer);
 
         // Step 4: Submit review without rating
-        $response = $this->postJson("/orders/{$order->orderId}/review", [
+        $response = $this->postJson("/orders/{$order}/review", [
             // 'rating' is intentionally omitted
             'review' => 'Good',
         ]);
@@ -188,7 +195,7 @@ class CustomerRateOrderTest extends TestCase
         $this->actingAs($customer);
 
         // Step 5: Try to submit rating = 0
-        $response = $this->postJson("/orders/{$order->orderId}/review", [
+        $response = $this->postJson("/orders/{$order}/review", [
             'rating' => 0,
             'review' => 'Too bad',
         ]);
@@ -224,7 +231,7 @@ class CustomerRateOrderTest extends TestCase
         $this->actingAs($customer);
 
         // Step 5: Submit invalid rating (6)
-        $response = $this->postJson("/orders/{$order->orderId}/review", [
+        $response = $this->postJson("/orders/{$order}/review", [
             'rating' => 6,
             'review' => 'Too perfect',
         ]);
@@ -257,7 +264,7 @@ class CustomerRateOrderTest extends TestCase
         $this->actingAs($customer);
 
         // Step 4: Try to submit a rating
-        $response = $this->post("/orders/{$order->orderId}/review", [
+        $response = $this->post("/orders/{$order}/review", [
             'rating' => 4,
             'review' => 'Looks good so far',
         ]);
@@ -282,7 +289,7 @@ class CustomerRateOrderTest extends TestCase
         $this->actingAs($customer);
 
         // Step 4: Submit the first review
-        $firstResponse = $this->post("/orders/{$order->orderId}/review", [
+        $firstResponse = $this->post("/orders/{$order}/review", [
             'rating' => 4,
             'review' => 'Nice experience',
         ]);
@@ -290,7 +297,7 @@ class CustomerRateOrderTest extends TestCase
         $firstResponse->assertJson(['success' => true]);
 
         // Step 6: Try submitting a second review for the same order
-        $secondResponse = $this->post("/orders/{$order->orderId}/review", [
+        $secondResponse = $this->post("/orders/{$order}/review", [
             'rating' => 5,
             'review' => 'Actually, perfect!',
         ]);
@@ -317,7 +324,7 @@ class CustomerRateOrderTest extends TestCase
         $this->actingAs($nonCustomer);
 
         // Step 4: Attempt to submit a rating
-        $response = $this->post("/orders/{$order->orderId}/review", [
+        $response = $this->post("/orders/{$order}/review", [
             'rating' => 5,
             'review' => 'Trying to review as non-customer',
         ]);
@@ -358,7 +365,7 @@ class CustomerRateOrderTest extends TestCase
         // Step 4: Submit rating with long review (e.g., 350 characters)
         $longReview = str_repeat('A', 350);
 
-        $response = $this->post("/orders/{$order->orderId}/review", [
+        $response = $this->post("/orders/{$order}/review", [
             'rating' => 5,
             'review' => $longReview,
         ]);
@@ -392,7 +399,7 @@ class CustomerRateOrderTest extends TestCase
         $this->actingAs($customer);
 
         // Step 4: Try to submit a 0-star rating (invalid)
-        $response = $this->post("/orders/{$order->orderId}/review", [
+        $response = $this->post("/orders/{$order}/review", [
             'rating' => 0,
             'review' => 'Trying to submit zero star',
         ], [

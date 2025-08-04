@@ -96,7 +96,7 @@ class VendorUpdateDeliveryStatusTest extends TestCase
             // Flattened address fields from address factory
             'provinsi' => $address->provinsi,
             'kota' => $address->kota,
-            'kabupaten' => $address->kabupaten,
+            // 'kabupaten' => $address->kabupaten,
             'kecamatan' => $address->kecamatan,
             'kelurahan' => $address->kelurahan,
             'kode_pos' => $address->kode_pos,
@@ -256,7 +256,12 @@ class VendorUpdateDeliveryStatusTest extends TestCase
 
         $response = $this->post("/delivery-status/{$order->orderId}/Morning", []); // Missing 'status'
 
-        $response->assertStatus(422); // Validation error
+
+        $response->assertStatus(302); // Redirect due to validation error
+
+        // assert see has validation error
+        $response->assertSessionHasErrors(['status']);
+
         $this->assertDatabaseMissing('delivery_statuses', [
             'orderId' => $order->orderId,
             'slot' => 'Morning',
@@ -305,7 +310,8 @@ class VendorUpdateDeliveryStatusTest extends TestCase
             'status' => 'DeliveredWrong', // Invalid
         ]);
 
-        $response->assertStatus(422); // Validation error
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors(['status']);
         $this->assertDatabaseMissing('delivery_statuses', [
             'orderId' => $order->orderId,
             'slot' => 'Morning',

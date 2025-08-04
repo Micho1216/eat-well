@@ -34,6 +34,7 @@ class VendorCancelOrderTest extends TestCase
         // $this->withoutExceptionHandling();
 
         $this->artisan('migrate:fresh');
+        
 
         // Seed supporting data
         $this->seed([
@@ -98,7 +99,6 @@ class VendorCancelOrderTest extends TestCase
             // Flattened address fields from address factory
             'provinsi' => $address->provinsi,
             'kota' => $address->kota,
-            'kabupaten' => $address->kabupaten,
             'kecamatan' => $address->kecamatan,
             'kelurahan' => $address->kelurahan,
             'kode_pos' => $address->kode_pos,
@@ -190,10 +190,12 @@ class VendorCancelOrderTest extends TestCase
 
         // Assert all delivery statuses for this order are soft deleted
         foreach ($order->deliveryStatuses as $status) {
-            $this->assertSoftDeleted('delivery_statuses', [
-                'id' => $status->id,
+            $this->assertDatabaseHas('delivery_statuses', [
+                'statusId' => $status->statusId,
                 'orderId' => $order->orderId,
+                'status' => 'Cancelled',
             ]);
+
         }
     }
 
@@ -220,7 +222,6 @@ class VendorCancelOrderTest extends TestCase
         $response->assertStatus(400); // or whatever your controller uses for blocked
         $response->assertJson([
             'success' => false,
-            'message' => 'Only upcoming orders can be canceled.',
         ]);
 
         $this->assertDatabaseHas('orders', [

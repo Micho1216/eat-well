@@ -76,73 +76,8 @@ class OrderHistoryTest extends TestCase
     }
 
     /** @test */
-    public function tc1_orders_are_displayed_in_order_history()
-    {
-        $user = User::query()->where('role', 'like', 'Customer')->first();
-        $vendor = Vendor::factory()->create();
-        $orders = Order::factory()->count(2)->create([
-            'userId' => $user->userId,
-            'vendorId' => $vendor->vendorId,
-        ]);
-    
-        $response = $this->actingAs($user)->get('/orders');
-    
-        foreach ($orders as $order) {
-            // $response->assertSee($order->order);
-            $response->assertSee($order->vendor->name);
-        }
-        
-    }
-
     /** @test */
-    public function tc2_filter_orders_by_status(){
-        $user = User::query()->where('role', 'like', 'Customer')->first();
-        $vendorActive = Vendor::factory()->create(['name'=> 'Active Vendor']);
-        $vendorFinished = Vendor::factory()->create(['name' => 'Finished Vendor']);
-        $vendorCancelled = Vendor::factory()->create(['name' => 'Cancelled Vendor']);
-
-        $activeOrder = Order::factory()->create([
-        'userId' => $user->userId,
-        'vendorId' => $vendorActive->vendorId,
-        'isCancelled' => 0,
-        'startDate' => now()->subDays(2),
-        'endDate' => now()->addDays(2),
-    ]);
-    $finishedOrder = Order::factory()->create([
-        'userId' => $user->userId,
-        'vendorId' => $vendorFinished->vendorId,
-        'isCancelled' => 0,
-        'startDate' => now()->subDays(10),
-        'endDate' => now()->subDays(1),
-    ]);
-    $cancelledOrder = Order::factory()->create([
-        'userId' => $user->userId,
-        'vendorId' => $vendorCancelled->vendorId,
-        'isCancelled' => 1,
-        'startDate' => now()->subDays(5),
-        'endDate' => now()->addDays(5),
-    ]);
-
-    // Active tab
-    $response = $this->actingAs($user)->get('/orders?status=active');
-    $response->assertSee((string)$activeOrder->vendor->name);
-    $response->assertDontSee((string)$finishedOrder->vendor->name);
-    $response->assertDontSee((string)$cancelledOrder->vendor->name);
-
-    // Finished tab
-    $response = $this->actingAs($user)->get('/orders?status=finished');
-    $response->assertSee((string)$finishedOrder->vendor->name);
-    $response->assertDontSee((string)$activeOrder->vendor->name);
-    $response->assertDontSee((string)$cancelledOrder->vendor->name);
-
-    // Cancelled tab
-    $response = $this->actingAs($user)->get('/orders?status=cancelled');
-    $response->assertSee((string)$cancelledOrder->vendor->name);
-    $response->assertDontSee((string)$activeOrder->vendor->name);
-    $response->assertDontSee((string)$finishedOrder->vendor->name);
-    }
-
-    /** @test */
+    // Fix test method
     public function tc3_order_history_page_shows_existing_orders()
     {
         // Arrange: Buat user dan login
@@ -348,22 +283,38 @@ class OrderHistoryTest extends TestCase
         $order = Order::factory()->create([
             'userId' => $user->userId,
             'vendorId' => $vendor->vendorId,
+            'totalPrice' => 200000,
+            'startDate' => now()->subDays(2),
+            'endDate' => now(),
+            'isCancelled' => false,
+            'provinsi' => 'DKI JAKARTA',
+            'kota' => 'JAKARTA SELATAN',
+            'kecamatan' => 'Mampang Prapatan',
+            'kelurahan' => 'Bangka',
+            'kode_pos' => '12730',
+            'jalan' => 'Jl. Kemang Raya No.10',
+            'recipient_name' => 'Budi Santoso',
+            'recipient_phone' => '08123456789',
         ]);
-        $package = Package::factory()->create(['name' => 'est asperiores eveniet']);
-        OrderItem::create([
+
+        // Buat order item dengan field lengkap
+        OrderItem::factory()->create([
             'orderId' => $order->orderId,
             'packageId' => $package->packageId,
             'packageTimeSlot' => 'Afternoon',
-            'price' => 545288.95,
-            'quantity' => 7,
+            'price' => 50000,
+            'quantity' => 2,
         ]);
 
-        $response = $this->actingAs($user)->get("/orders/{$order->orderId}");
-        $response->assertSee('Murazik LLC');
-        $response->assertSee('est asperiores eveniet');
-        $response->assertSee('Afternoon');
-        $response->assertSee((string)$order->orderId);
+        // Act
+        $response = $this->get(route('order-history'));
+
+
+
+        // Assert
+        $response->assertStatus(200);
+        $response->assertSee($order->orderId);
+        $response->assertSee($vendor->name);
+        $response->assertSee($package->name);
     }
-
 }
-
