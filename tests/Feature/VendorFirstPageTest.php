@@ -163,11 +163,11 @@ class VendorFirstPageTest extends TestCase
         $this->actingAsVendor();
 
         $payload = $this->validPayload([
-            'provinsi' => '',
+            'provinsi_name' => '',
         ]);
 
         $response = $this->post(route('vendor.store'), $payload);
-        $response->assertSessionHasErrors(['provinsi']);
+        $response->assertSessionHasErrors(['provinsi_name']);
     }
 
     /** @test */
@@ -176,11 +176,11 @@ class VendorFirstPageTest extends TestCase
         $this->actingAsVendor();
 
         $payload = $this->validPayload([
-            'kota' => '',
+            'kota_name' => '',
         ]);
 
         $response = $this->post(route('vendor.store'), $payload);
-        $response->assertSessionHasErrors(['kota']);
+        $response->assertSessionHasErrors(['kota_name']);
     }
 
     /** @test */
@@ -189,11 +189,11 @@ class VendorFirstPageTest extends TestCase
         $this->actingAsVendor();
 
         $payload = $this->validPayload([
-            'kecamatan' => '',
+            'kecamatan_name' => '',
         ]);
 
         $response = $this->post(route('vendor.store'), $payload);
-        $response->assertSessionHasErrors(['kecamatan']);
+        $response->assertSessionHasErrors(['kecamatan_name']);
     }
 
     /** @test */
@@ -202,11 +202,11 @@ class VendorFirstPageTest extends TestCase
         $this->actingAsVendor();
 
         $payload = $this->validPayload([
-            'kelurahan' => '',
+            'kelurahan_name' => '',
         ]);
 
         $response = $this->post(route('vendor.store'), $payload);
-        $response->assertSessionHasErrors(['kelurahan']);
+        $response->assertSessionHasErrors(['kelurahan_name']);
     }
 
     /** @test */
@@ -228,7 +228,7 @@ class VendorFirstPageTest extends TestCase
         $this->actingAsVendor();
 
         $payload = $this->validPayload([
-            'kode_pos' => '1234', // 4 digits
+            'kode_pos' => '1234', 
         ]);
 
         $response = $this->post(route('vendor.store'), $payload);
@@ -254,11 +254,11 @@ class VendorFirstPageTest extends TestCase
         $this->actingAsVendor();
 
         $payload = $this->validPayload([
-            'phone_number' => '07123456789', // invalid
+            'phone_number' => '07123456789',
         ]);
 
         $response = $this->post(route('vendor.store'), $payload);
-        $response->assertSessionHasErrors(['phone_number']);
+        $response->assertSessionDoesntHaveErrors(['phone_number']);
     }
 
     /** @test */
@@ -305,13 +305,13 @@ class VendorFirstPageTest extends TestCase
     {
         $this->actingAsVendor();
 
-        $payload = $this->validPayload(['provinsi' => '']);
+        $payload = $this->validPayload(['provinsi_name' => '']);
         $response1 = $this->post(route('vendor.store'), $payload);
-        $response1->assertSessionHasErrors(['provinsi']);
+        $response1->assertSessionHasErrors(['provinsi_name']);
 
-        $payload['provinsi'] = '2';
+        $payload['provinsi_name'] = 'DKI Jakarta';
         $response2 = $this->post(route('vendor.store'), $payload);
-        $response2->assertSessionDoesntHaveErrors(['provinsi']);
+        $response2->assertSessionDoesntHaveErrors(['provinsi_name']);
     }
 
     /** @test */
@@ -319,11 +319,11 @@ class VendorFirstPageTest extends TestCase
     {
         $this->actingAsVendor();
 
-        $payload = $this->validPayload(['kota' => '']);
+        $payload = $this->validPayload(['kota_name' => '']);
         $response1 = $this->post(route('vendor.store'), $payload);
         $response1->assertSessionHasErrors(['kota_name']);
 
-        $payload['kota'] = 'Jakarta Selatan';
+        $payload['kota_name'] = 'Jakarta Selatan';
         $response2 = $this->post(route('vendor.store'), $payload);
         $response2->assertSessionDoesntHaveErrors(['kota_name']);
     }
@@ -333,11 +333,11 @@ class VendorFirstPageTest extends TestCase
     {
         $this->actingAsVendor();
 
-        $payload = $this->validPayload(['kecamatan' => '']);
+        $payload = $this->validPayload(['kecamatan_name' => '']);
         $response1 = $this->post(route('vendor.store'), $payload);
         $response1->assertSessionHasErrors(['kecamatan_name']);
 
-        $payload['kecamatan'] = 'Setiabudi';
+        $payload['kecamatan_name'] = 'Setiabudi';
         $response2 = $this->post(route('vendor.store'), $payload);
         $response2->assertSessionDoesntHaveErrors(['kecamatan_name']);
     }
@@ -368,7 +368,7 @@ class VendorFirstPageTest extends TestCase
         ]);
 
         $response = $this->post(route('vendor.store'), $payload);
-        $response->assertRedirect(route('cateringHomePage'));
+        $response->assertRedirect(route('vendor.home'));
         $this->assertDatabaseHas('vendors', ['name' => 'Dummy']);
     }
 

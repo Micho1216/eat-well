@@ -3,9 +3,14 @@
 namespace Tests\Feature;
 
 use App\Enums\UserRole;
+use App\Models\Address;
+use App\Models\City;
+use App\Models\District;
 use App\Models\Package;
 use App\Models\PackageCategory;
+use App\Models\Province;
 use App\Models\User;
+use App\Models\Village;
 use Database\Seeders\AddressSeeder;
 use Database\Seeders\CuisineTypeSeeder;
 use Database\Seeders\PackageCategorySeeder;
@@ -13,15 +18,22 @@ use Database\Seeders\PaymentMethodSeeder;
 use Database\Seeders\VendorSeeder;
 use Tests\TestCase;
 
-class AdminManageCategoryTest extends TestCase{
+class AdminManageCategoryTest extends TestCase
+{
 
     protected $admin;
 
-    protected function setUp(): void{
+    protected function setUp(): void
+    {
         parent::setUp();
         $this->artisan('migrate:fresh');
 
-        $this->admin = User::factory()->create(['role'=>'Admin']);
+        $province = Province::create(['name' => 'Jawa Barat']);
+        $city = City::create(['name' => 'Bandung', 'province_id' => $province->id]);
+        $district = District::create(['name' => 'Coblong', 'city_id' => $city->id]);
+        $village = Village::create(['name' => 'Dago', 'district_id' => $district->id]);
+
+        $this->admin = User::factory()->create(['role' => 'Admin']);
         $this->seed([
             AddressSeeder::class,
             PackageCategorySeeder::class,
@@ -31,30 +43,47 @@ class AdminManageCategoryTest extends TestCase{
         ]);
     }
 
-    //CHECK ADMIN CAN VIEW CATEGORY LIST
+
     /** @test */
     public function tc1_admin_views_all_package_categories()
     {
         $this->actingAs($this->admin);
-    
+
         // Create categories with packages
         $categoryA = PackageCategory::create(['categoryName' => 'Healthy Meals']);
         $categoryB = PackageCategory::create(['categoryName' => 'Vegan Meals']);
-    
+
         Package::factory()->count(3)->create(['categoryId' => $categoryA->categoryId]);
         Package::factory()->count(2)->create(['categoryId' => $categoryB->categoryId]);
-    
+
         // Visit page
         $response = $this->get(route('categories.show'));
-    
+
         // Assertions
+        // $response->assertStatus(200);
+        // $response->assertSeeText('Category Name');
+        // $response->assertSeeText('Packages Count');
+        // $response->assertSeeText('Healthy Meals');
+        // $response->assertSeeText('Vegan Meals');
+        // $response->assertSeeText('3');
+        // $response->assertSeeText('2');
         $response->assertStatus(200);
-        $response->assertSeeText('Category Name');
-        $response->assertSeeText('Packages count');
-        $response->assertSeeText('Healthy Meals');
-        $response->assertSeeText('Vegan Meals');
-        $response->assertSeeText('3'); 
-        $response->assertSeeText('2');
+
+        if (app()->getLocale() === 'en') {
+            $response->assertSeeText('Category Name');
+            $response->assertSeeText('Packages Count');
+            $response->assertSeeText('Healthy Meals');
+            $response->assertSeeText('Vegan Meals');
+            $response->assertSeeText('3');
+            $response->assertSeeText('2');
+        } elseif (app()->getLocale() === 'id') {
+            $response->assertSeeText('Nama Kategori');
+            $response->assertSeeText('Jumlah Paket');
+            $response->assertSeeText('Makanan Sehat');
+            $response->assertSeeText('Makanan Vegan');
+            $response->assertSeeText('3');
+            $response->assertSeeText('2');
+        }
     }
 
     /** @test */
@@ -62,16 +91,21 @@ class AdminManageCategoryTest extends TestCase{
     {
         $guestResponse = $this->get(route('categories.show'));
         $guestResponse->assertRedirect(route('login'));
-         /**
+        /**
          * @var User|\Illuminate\Contracts\Auth\Authenticatable $customer
          */
         $customer = User::factory()->create(['role' => 'Customer']);
+        $address = Address::factory()->create([
+            'userId' => $customer->userId,
+            'provinsi' => 'DKI Jakarta',
+            'is_default' => true,
+        ]);
         $this->actingAs($customer);
 
         $customerResponse = $this->get(route('categories.show'));
         $customerResponse->assertRedirect(route('home'));
 
-         /**
+        /**
          * @var User|\Illuminate\Contracts\Auth\Authenticatable $vendor
          */
 
@@ -80,7 +114,7 @@ class AdminManageCategoryTest extends TestCase{
 
 
         $vendorResponse = $this->get(route('categories.show'));
-        $vendorResponse->assertRedirect('/cateringHomePage'); 
+        $vendorResponse->assertRedirect('/cateringHomePage');
     }
 
     /** @test */
@@ -89,17 +123,28 @@ class AdminManageCategoryTest extends TestCase{
         $this->actingAs($this->admin);
 
         // Step 2: Ensure the category table is empty
-        Package::query()->delete();        
-        PackageCategory::query()->delete(); 
+        Package::query()->delete();
+        PackageCategory::query()->delete();
 
         // Step 3: Visit the category page
         $response = $this->get(route('categories.show'));
 
         // Step 4: Assertions
+
         $response->assertStatus(200);
-        $response->assertDontSeeHtml('<th scope="col">Category Name</th>'); // column header
-        $response->assertDontSee('Packages count'); // column header
-        $response->assertSeeText('No categories available'); // empty message
+        // $response->assertDontSeeHtml('<th scope="col">Category Name</th>'); // column header
+        // $response->assertDontSee('Packages count'); // column header
+        // $response->assertSeeText('No categories available'); // empty message
+
+        if (app()->getLocale() === 'en') {
+            $response->assertDontSeeHtml('<th scope="col">Category Name</th>');
+            $response->assertDontSee('Packages count');
+            $response->assertSeeText('No categories available');
+        } elseif (app()->getLocale() === 'id') {
+            $response->assertDontSeeHtml('<th scope="col">Nama Kategori</th>');
+            $response->assertDontSee('Jumlah Paket');
+            $response->assertSeeText('Tidak ada kategori');
+        }
     }
 
     //ADMIN ADD NEW CATEGORY
@@ -115,7 +160,7 @@ class AdminManageCategoryTest extends TestCase{
 
         // Step 4: Assertions
         $response->assertRedirect();
-        $response->assertSessionHas('success', 'Category added successfully!');
+        $response->assertSessionHas('success');
 
         // Step 5: Check that category exists in DB
         $this->assertDatabaseHas('package_categories', ['categoryName' => 'Healthy Food']);
@@ -133,7 +178,7 @@ class AdminManageCategoryTest extends TestCase{
         ]);
 
         $response->assertRedirect();
-        $response->assertSessionHasErrors(['categoryName']);
+        $response->assertSessionHasErrors('categoryName');
 
         $categoryName = 'Snack Meals';
         $snackMealCount = PackageCategory::where('categoryName', $categoryName)->count();
@@ -211,11 +256,11 @@ class AdminManageCategoryTest extends TestCase{
 
         $category = PackageCategory::create(['categoryName' => 'Test Meals']);
 
-        $response = $this->delete(route('category.delete',$category->categoryId));
+        $response = $this->delete(route('category.delete', $category->categoryId));
 
         // Assert: success redirect with success message
         $response->assertRedirect();
-        $response->assertSessionHas('success', 'Category deleted successfully.');
+        $response->assertSessionHas('success');
 
         // Refresh model to get soft-deleted version
         $deletedCategory = PackageCategory::withTrashed()->find($category->categoryId);
@@ -254,7 +299,8 @@ class AdminManageCategoryTest extends TestCase{
 
         // Step 4: Assert redirect back with error
         $response->assertRedirect();
-        $response->assertSessionHas('error', 'Cannot delete category with associated packages.');
+        $response->assertSessionHas('error', __('category.delete_failed'));
+
 
         // Step 5: Assert the category still exists (not soft-deleted)
         $this->assertDatabaseHas('package_categories', [
@@ -270,7 +316,7 @@ class AdminManageCategoryTest extends TestCase{
          * @var User|\Illuminate\Contracts\Auth\Authenticatable $vendorUser
          */
         $vendorUser = User::factory()->create([
-            'role' => UserRole::Vendor, 
+            'role' => UserRole::Vendor,
         ]);
 
         $category = PackageCategory::create([
@@ -304,18 +350,11 @@ class AdminManageCategoryTest extends TestCase{
         ]);
 
         // Expect: validation error instead of restoration
-        $response->assertSessionHasErrors(['categoryName' => 'The category name has already been taken.']);
+        $response->assertSessionHasErrors('categoryName');
 
         // Confirm that the old category is still soft-deleted
         $this->assertSoftDeleted('package_categories', [
             'categoryId' => $category->categoryId,
         ]);
     }
-
-
-
-
-
-
 }
-

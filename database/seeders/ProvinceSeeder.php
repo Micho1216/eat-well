@@ -30,7 +30,7 @@ class ProvinceSeeder extends Seeder
 
             $provinces = $provinces->json('value');
             // Command line berikut untuk menggenerate semua provinsi yang ada
-            $provinces = array_slice($provinces, 0, 2);
+            $provinces = array_slice($provinces, 0, 1);
             $provincesCount = count($provinces);
             # Because seeding provinces, cities, districts, villages took so long, i made a progress bar
 

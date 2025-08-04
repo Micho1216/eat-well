@@ -47,6 +47,7 @@ class CategoryController extends Controller
 
         $category->delete(); // Soft delete
 
+        logActivity('Successfully', 'Deleted', 'Category');
         return redirect()->back()->with('success', __('category.delete_success'));
     }
 }

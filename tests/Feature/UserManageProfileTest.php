@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Address;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Contracts\Auth\Authenticatable;
@@ -44,12 +45,17 @@ class UserManageProfileTest extends TestCase
     }
 
     /** @test */
-    public function test_tc1_profile_page_shows_correct_data()
+    public function tc1_profile_page_shows_correct_data()
     {
         $user = $this->createCompleteCustomerUser([
             'name' => 'Alice',
             'dateOfBirth' => '1995-06-20 00:00:00',
             'genderMale' => false,
+        ]);
+        $address = Address::factory()->create([
+            'userId' => $user->userId,
+            'provinsi' => 'DKI Jakarta',
+            'is_default' => true,
         ]);
 
         $this->actingAs($user);
@@ -62,10 +68,15 @@ class UserManageProfileTest extends TestCase
     }
 
     /** @test */
-    public function test_tc2_valid_profile_update()
+    public function tc2_valid_profile_update()
     {
 
         $user = $this->createCompleteCustomerUser();
+        $address = Address::factory()->create([
+            'userId' => $user->userId,
+            'provinsi' => 'DKI Jakarta',
+            'is_default' => true,
+        ]);
         $this->actingAs($user);
 
         $payload = [
@@ -88,9 +99,14 @@ class UserManageProfileTest extends TestCase
 
 
     /** @test */
-    public function test_tc3_name_is_left_blank()
+    public function tc3_name_is_left_blank()
     {
         $user = $this->createBasicCustomerUser();
+        $address = Address::factory()->create([
+            'userId' => $user->userId,
+            'provinsi' => 'DKI Jakarta',
+            'is_default' => true,
+        ]);
         $this->actingAs($user);
 
         $payload = ['nameInput' => ''];
@@ -100,9 +116,14 @@ class UserManageProfileTest extends TestCase
     }
 
     /** @test */
-    public function test_tc4_date_of_birth_in_future()
+    public function tc4_date_of_birth_in_future()
     {
         $user = $this->createBasicCustomerUser();
+        $address = Address::factory()->create([
+            'userId' => $user->userId,
+            'provinsi' => 'DKI Jakarta',
+            'is_default' => true,
+        ]);
         $this->actingAs($user);
 
         $tomorrow = now()->addDay();
@@ -118,9 +139,14 @@ class UserManageProfileTest extends TestCase
     }
 
     /** @test */
-    public function test_tc5_gender_not_selected()
+    public function tc5_gender_not_selected()
     {
         $user = $this->createBasicCustomerUser();
+        $address = Address::factory()->create([
+            'userId' => $user->userId,
+            'provinsi' => 'DKI Jakarta',
+            'is_default' => true,
+        ]);
         $this->actingAs($user);
 
         $payload = [
@@ -136,9 +162,14 @@ class UserManageProfileTest extends TestCase
     }
 
     /** @test */
-    public function test_tc6_script_injection_in_name_field()
+    public function tc6_script_injection_in_name_field()
     {
         $user = $this->createBasicCustomerUser();
+        $address = Address::factory()->create([
+            'userId' => $user->userId,
+            'provinsi' => 'DKI Jakarta',
+            'is_default' => true,
+        ]);
         $this->actingAs($user);
 
         $maliciousName = "<script>alert('XSS')</script>";

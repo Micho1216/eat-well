@@ -13,6 +13,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
+// Admin view all vendors
 class AdminVendorsTest extends TestCase
 {
     /**
@@ -59,7 +60,14 @@ class AdminVendorsTest extends TestCase
         $response = $this->get('/view-all-vendors');
 
         $response->assertStatus(200);
-        $response->assertSee('All Vendors');
+       
+        if (app()->getLocale() === 'en') {
+            $response->assertSee('All Vendor');
+        } elseif (app()->getLocale() === 'id') {
+            $response->assertSeeText('Semua Vendor');
+        }
+        
+
     }
     /** @test */
     public function tc2_check_no_vendor_exist()
@@ -69,7 +77,12 @@ class AdminVendorsTest extends TestCase
         $response = $this->get('/view-all-vendors');
 
         $response->assertStatus(200);
-        $response->assertSee('No vendor found');
+        if (app()->getLocale() === 'en') {
+            $response->assertSee('No vendor found');
+        } elseif (app()->getLocale() === 'id') {
+            $response->assertSeeText('Tidak menemukan vendor!');
+        }
+        
     }
 
     /** @test */

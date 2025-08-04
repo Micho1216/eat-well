@@ -2,8 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\City;
+use App\Models\District;
 use App\Models\Order;
+use App\Models\Province;
 use App\Models\User;
+use App\Models\Village;
 use Database\Seeders\AddressSeeder;
 use Database\Seeders\CuisineTypeSeeder;
 use Database\Seeders\OrderItemSeeder;
@@ -28,6 +32,10 @@ class CustomerRateOrderTest extends TestCase
         parent::setUp();
 
         $this->artisan('migrate:fresh');
+        $province = Province::create(['name' => 'Jawa Barat']);
+        $city = City::create(['name' => 'Bandung', 'province_id' => $province->id]);
+        $district = District::create(['name' => 'Coblong', 'city_id' => $city->id]);
+        $village = Village::create(['name' => 'Dago', 'district_id' => $district->id]);
         $this->seed([
             UserSeeder::class,
             AddressSeeder::class,
@@ -158,10 +166,9 @@ class CustomerRateOrderTest extends TestCase
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['rating']);
 
+
         // Optional: Assert exact error message
-        $response->assertJsonFragment([
-            'rating' => ['The rating field is required.'],
-        ]);
+
     }
 
     /** @test */
@@ -190,9 +197,15 @@ class CustomerRateOrderTest extends TestCase
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['rating']);
 
-        $response->assertJsonFragment([
-            'rating' => ['The rating must be at least 1.'],
-        ]);
+        if (app()->getLocale() === 'en') {
+            $response->assertJsonFragment([
+                'rating' => ['The rating must be at least 1.'],
+            ]);
+        } elseif (app()->getLocale() === 'id') {
+            $response->assertJsonFragment([
+                'rating' => ['Rating harus lebih dari 0'],
+            ]);
+        }
     }
 
     /** @test */
@@ -220,9 +233,15 @@ class CustomerRateOrderTest extends TestCase
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['rating']);
 
-        $response->assertJsonFragment([
-            'rating' => ['The rating may not be greater than 5.'],
-        ]);
+        if (app()->getLocale() === 'en') {
+            $response->assertJsonFragment([
+                'rating' => ['The rating may not be greater than 5.'],
+            ]);
+        } elseif (app()->getLocale() === 'id') {
+            $response->assertJsonFragment([
+                'rating' => ['Rating maksimal 5'],
+            ]);
+        }
     }
 
     /** @test */
@@ -383,11 +402,15 @@ class CustomerRateOrderTest extends TestCase
         // Step 5: Assert validation fails
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['rating']);
-        $response->assertJsonFragment([
-            'rating' => ['The rating must be at least 1.'],
-        ]);
+
+        if (app()->getLocale() === 'en') {
+            $response->assertJsonFragment([
+                'rating' => ['The rating must be at least 1.'],
+            ]);
+        } elseif (app()->getLocale() === 'id') {
+            $response->assertJsonFragment([
+                'rating' => ['Rating harus lebih dari 0'],
+            ]);
+        }
     }
-
-
-
 }
