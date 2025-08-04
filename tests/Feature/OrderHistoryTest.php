@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Address;
 use Illuminate\Support\Facades\App;
 use Tests\TestCase;
 use App\Models\User;
@@ -11,6 +12,7 @@ use App\Models\Package;
 use App\Models\OrderItem;
 use App\Models\PackageCategory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Session;
 
 class OrderHistoryTest extends TestCase
 {
@@ -143,51 +145,53 @@ class OrderHistoryTest extends TestCase
     /** @test */
     public function tc3_order_history_page_shows_existing_orders()
     {
-        // 1. Get or create a customer user
-        $user = User::query()->where('role', 'like', 'Customer')->first();
+        // Arrange: Buat user dan login
+        $user = User::where('email', 'customer1@gmail.com')->first();
+        $this->actingAs($user);
 
-        // If no customer exists, create one for the test
-        if (!$user) {
-            $user = User::factory()->create(['role' => 'Customer']);
-        }
+        // Buat vendor & package
+        $vendor = Vendor::factory()->create();
+        $package = Package::factory()->create([
+            'vendorId' => $vendor->vendorId,
+        ]);
 
-        // 2. Ensure the user has at least one order for this test
-        // If the user already has orders, this will simply not create a new one.
-        // If not, it creates a new order for the user.
-        if ($user->orders->isEmpty()) {
-            // Assuming you have Order and Vendor factories set up
-            $vendor = Vendor::factory()->create(); // Create a vendor if needed
-            $order = Order::factory()->create([
-                'userId' => $user->userId,
-                'vendorId' => $vendor->vendorId,
-                // ... any other required order fields
-            ]);
-            // Also create some order items for the order
-            OrderItem::factory()->count(2)->create([
-                'orderId' => $order->orderId,
-                // ... other item specific fields
-            ]);
-        } else {
-            // If user already has orders, pick the first one for consistency
-            $order = $user->orders->first();
-        }
+          // Buat order dengan field lengkap
+        $order = Order::factory()->create([
+            'userId' => $user->userId,
+            'vendorId' => $vendor->vendorId,
+            'totalPrice' => 200000,
+            'startDate' => now()->subDays(2),
+            'endDate' => now(),
+            'isCancelled' => false,
+            'provinsi' => 'DKI JAKARTA',
+            'kota' => 'JAKARTA SELATAN',
+            'kecamatan' => 'Mampang Prapatan',
+            'kelurahan' => 'Bangka',
+            'kode_pos' => '12730',
+            'jalan' => 'Jl. Kemang Raya No.10',
+            'recipient_name' => 'Budi Santoso',
+            'recipient_phone' => '08123456789',
+        ]);
 
+        // Buat order item dengan field lengkap
+        OrderItem::factory()->create([
+            'orderId' => $order->orderId,
+            'packageId' => $package->packageId,
+            'packageTimeSlot' => 'Afternoon',
+            'price' => 50000,
+            'quantity' => 2,
+        ]);
 
-        // 3. Act as the user and visit the order detail page
-        /**
-         * @var User|Authenticatable $user
-         */
-        $response = $this->actingAs($user)->get("/orders/{$order->orderId}");
+        // Act
+        $response = $this->get(route('order-history'));
+        dump($response->headers->get('Location'));
 
-        // 4. Assert the response contains the expected details
-        $response->assertSee($order->vendor->name);
-        foreach ($order->orderItems as $item) {
-            $response->assertSee($item->name);
-        }
+        // Assert
+        $response->assertStatus(200);
+        $response->assertSee($order->orderId);
+        $response->assertSee($vendor->name);
+        $response->assertSee($package->name);
 
-        // You can also add more general assertions about the page
-        $response->assertStatus(200); // Verify the page loaded successfully
-        $response->assertSee('Order Detail'); // Or some other common page element
     }
 
     /** @test */
@@ -198,26 +202,38 @@ class OrderHistoryTest extends TestCase
         if (!$user) {
             $user = User::factory()->create(['role' => 'Customer']);
         }
+        $address = Address::factory()->create([
+            'userId' => $user->userId,
+            'provinsi' => 'DKI Jakarta',
+            'is_default' => true,
+        ]);
+        Session::put('address_id', $address->addressId);
 
 
         if ($user->cart) {
-            $user->cart->cartItems()->delete(); // Delete all items in the cart
-            $user->cart->delete(); // Delete the cart itself
+            $user->cart->cartItems()->delete();
+            $user->cart->delete(); 
         }
 
-        // 2. Assuming there's a catering/vendor detail page (e.g., catering-detail/{vendor_id})
-        // Get an existing vendor or create one if necessary
-        $vendor = Vendor::first() ?: Vendor::factory()->create();
+        $vendor = Vendor::factory()->create([
+            'name' => 'Delicious Bites Catering',
+            'phone_number' => '0897765443321',
+            'provinsi' => 'DKI Jakarta',
+            'kota' => 'Jakarta Selatan',
+            'kecamatan' => 'Setiabudi',
+            'kelurahan' => 'Karet',
+            'kode_pos' => '12920',
+            'jalan' => 'Jl. Sudirman No. 1',
+            'logo' => 'vendor_logo.jpg',
+        ]);
         App::setLocale('en');
 
-        // 3. Navigate to the catering detail page for a specific vendor
         /**
         * @var User|Authenticatable $user
         */
         $response = $this->actingAs($user)->get("/catering-detail/{$vendor->vendorId}");
 
-        // 4. Assert the "No Package Selected Yet." message is displayed
-        $response->assertStatus(200); // Ensure the page loaded
+        $response->assertStatus(200);
         $response->assertSeeText('No Package Selected Yet.');
     }
 
@@ -226,6 +242,11 @@ class OrderHistoryTest extends TestCase
     public function tc5_search_orders_by_vendor_name()
     {
         ['user' => $user, 'vendorA' => $vendorA, 'vendorB' => $vendorB] = $this->setupSearchOrdersTest();
+        $address = Address::factory()->create([
+            'userId' => $user->userId,
+            'provinsi' => 'DKI Jakarta',
+            'is_default' => true,
+        ]);
 
         // Search by vendor name "Alpha"
         $response = $this->actingAs($user)->get('/orders?query=Alpha');
@@ -237,6 +258,11 @@ class OrderHistoryTest extends TestCase
     /** @test */
     public function tc6_search_orders_by_package_name(){
         ['user' => $user, 'vendorA' => $vendorA, 'vendorB' => $vendorB, 'packageA' => $packageA, 'packageB' => $packageB] = $this->setupSearchOrdersTest();
+        $address = Address::factory()->create([
+            'userId' => $user->userId,
+            'provinsi' => 'DKI Jakarta',
+            'is_default' => true,
+        ]);
 
         // Search by package name "Deluxe"
         $response = $this->actingAs($user)->get('/orders?query=Deluxe');
@@ -249,13 +275,22 @@ class OrderHistoryTest extends TestCase
 
     /** @test */
     public function tc7_search_orders_by_unmatched_keyword(){
-        ['user' => $user] = $this->setupSearchOrdersTest();
         App::setLocale('en');
+        ['user' => $user] = $this->setupSearchOrdersTest();
+        $address = Address::factory()->create([
+            'userId' => $user->userId,
+            'provinsi' => 'DKI Jakarta',
+            'is_default' => true,
+        ]);
         // Search with a keyword that matches nothing
         $response = $this->actingAs($user)->get('/orders?query=NotExist');
         $response->assertStatus(200);
 
-        $response->assertSeeText('No orders found');
+        if (app()->getLocale() === 'en') {
+            $response->assertSeeText('No orders found');
+        } elseif (app()->getLocale() === 'id') {
+            $response->assertSeeText('Pesanan tidak ditemukan');
+        }
     }
 
     /** @test */
@@ -268,11 +303,27 @@ class OrderHistoryTest extends TestCase
         $customer = User::factory()->create(['role' => 'Customer']);
         $this->actingAs($customer); // Log in the customer
 
+        $address = Address::factory()->create([
+            'userId' => $customer->userId,
+            'provinsi' => 'DKI Jakarta',
+            'is_default' => true,
+        ]);
+
         // Create a vendor that the "view catering" button would link to
-        $vendor = Vendor::factory()->create(['name' => 'Delicious Bites Catering']);
+       $vendor = Vendor::factory()->create([
+            'name' => 'Delicious Bites Catering',
+            'phone_number' => '0897765443321',
+            'provinsi' => 'DKI Jakarta',
+            'kota' => 'Jakarta Selatan',
+            'kecamatan' => 'Setiabudi',
+            'kelurahan' => 'Karet',
+            'kode_pos' => '12920',
+            'jalan' => 'Jl. Sudirman No. 1',
+            'logo' => 'vendor_logo.jpg', // assume your seeder or logic handles fake image
+        ]);;
 
         // 2. Procedure: Simulate clicking on the "view catering" button.
-        $response = $this->actingAs($customer)->get(route('catering-detail', $vendor->vendorId));
+        $response = $this->actingAs($customer)->get(route('catering-detail', $vendor));
         $response->assertStatus(200); 
         $response->assertSeeText($vendor->name);
    }
@@ -282,7 +333,18 @@ class OrderHistoryTest extends TestCase
     public function tc9_order_detail_page_shows_package_details()
     {
         $user = User::query()->where('role', 'like', 'Customer')->first();
-        $vendor = Vendor::factory()->create(['name' => 'Murazik LLC']);
+        $vendor = Vendor::factory()->create([
+            'name' => 'Murazik LLC',
+            'phone_number' => '0897765443321',
+            'provinsi' => 'DKI Jakarta',
+            'kota' => 'Jakarta Selatan',
+            'kecamatan' => 'Setiabudi',
+            'kelurahan' => 'Karet',
+            'kode_pos' => '12920',
+            'jalan' => 'Jl. Sudirman No. 1',
+            'logo' => 'vendor_logo.jpg', // assume your seeder or logic handles fake image
+        ]);
+
         $order = Order::factory()->create([
             'userId' => $user->userId,
             'vendorId' => $vendor->vendorId,

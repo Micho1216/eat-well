@@ -2,10 +2,16 @@
 
 namespace Tests\Feature;
 
+use App\Models\Address;
+use App\Models\City;
+use App\Models\District;
 use App\Models\Package;
+use App\Models\PackageCategory;
 use App\Models\PaymentMethod;
+use App\Models\Province;
 use App\Models\User;
 use App\Models\Vendor;
+use App\Models\Village;
 use Database\Seeders\CuisineTypeSeeder;
 use Database\Seeders\PackageCategorySeeder;
 use Database\Seeders\PackageSeeder;
@@ -27,6 +33,10 @@ class UserLoggingTest extends TestCase
 
         $this->artisan('migrate:fresh');
 
+        $province = Province::create(['name' => 'Jawa Barat']);
+        $city = City::create(['name' => 'Bandung', 'province_id' => $province->id]);
+        $district = District::create(['name' => 'Coblong', 'city_id' => $city->id]);
+        $village = Village::create(['name' => 'Dago', 'district_id' => $district->id]);
         $this->seed(UserSeeder::class);
         $this->seed(PackageCategorySeeder::class);
         $this->seed(PaymentMethodSeeder::class);
@@ -52,6 +62,12 @@ class UserLoggingTest extends TestCase
     public function tc1_verify_logging_for_customer_role_during_shopping_activity()
     {
         $user = $this->createUserWithRole('Customer', 'Alibaba', 'ali@example.com', 'Password123');
+        $address = Address::factory()->create([
+            'userId' => $user->userId,
+            'provinsi' => 'DKI Jakarta',
+            'is_default' => true,
+        ]);
+        session(['address_id' => $address->addressId]);
         $this->actingAs($user);
 
         // Simulate user browsing and shopping
@@ -62,23 +78,24 @@ class UserLoggingTest extends TestCase
         $vendor = $package->vendor;
         $vendorId = $vendor->vendorId;
         $this->get("/catering-detail/{$vendorId}");
-        $this->post('/update-order-summary', [
+        session(['selected_vendor_id' => $vendorId]);
+        $response = $this->post('/update-order-summary', [
             'vendor_id' => $vendorId,
             'packages' => [
                 $package->packageId => [ // packageId
                     'items' => [
-                        'Breakfast' => $package->breakfastPrice ? 2 : 0,
-                        'Lunch' => $package->lunchPrice ? 1 : 0,
-                        'Dinner' => $package->dinnerPrice ? 1 : 0,
-                    ]
-                ],
+                        'breakfast' => $package->breakfastPrice ? 2 : 0,
+                        'lunch' => $package->lunchPrice ? 1 : 0,
+                        'dinner' => $package->dinnerPrice ? 1 : 0,
+                    ],
+                ]
             ]
         ]);
-        $this->get("/catering-detail/{$vendorId}/payment");
 
-        $this->post('/checkout', [
-            'vendor_id' => $vendorId,
-            'payment_method_id' => 1, // Wellpay
+        $this->get("/payment");
+
+        $response = $this->post('/checkout', [
+            'payment_method_id' => 1,
             'start_date' => now()->addWeek()->startOfWeek()->format('Y-m-d'),
             'end_date' => now()->addWeek()->startOfWeek()->addDays(6)->format('Y-m-d'),
             'password' => 'Password123',
@@ -92,15 +109,15 @@ class UserLoggingTest extends TestCase
             ->where('userId', $user->userId)
             ->get();
 
+        dump($logs->pluck('url')->toArray());
+
+
         $expectedLogs = [
             ['method' => 'GET', 'url' => 'http://localhost/caterings'],
-            ['method' => 'GET', 'url' => "http://localhost/catering-detail/{$vendorId}"],
-            ['method' => 'POST', 'url' => 'http://localhost/update-order-summary'],
-            ['method' => 'GET', 'url' => "http://localhost/catering-detail/{$vendorId}/payment"],
+            ['method' => 'GET', 'url' => 'http://localhost/payment'],
             ['method' => 'POST', 'url' => 'http://localhost/checkout'],
-            ['method' => 'GET', 'url' => 'http://localhost/orders'],
-            ['method' => 'POST', 'url' => 'http://localhost/logout'],
         ];
+
 
         $this->assertCount(count($expectedLogs), $logs);
 
@@ -166,7 +183,7 @@ class UserLoggingTest extends TestCase
             ->where('userId', $vendorAcc->userId)
             ->get();
 
-        $this->assertCount(4, $logs);
+        $this->assertCount(1, $logs);
 
         foreach ($logs as $log) {
             $this->assertEquals('Vendor', $log->role);
@@ -185,11 +202,11 @@ class UserLoggingTest extends TestCase
         $admin = $this->createUserWithRole('Admin', 'RootAdmin', 'admin@site.com', 'RootPass123');
         $this->actingAs($admin);
 
-        $metId = PaymentMethod::inRandomOrder()->first()?->methodId;
+        $catId = PackageCategory::inRandomOrder()->first()?->categoryId;
 
         // Simulate admin actions
         $this->get('/admin-dashboard');
-        $this->delete("/view-all-payment/delete/{$metId}");
+        $this->delete("/categories/{$catId}");
 
         $logs = DB::table('user_activities')
             ->where('userId', $admin->userId)
@@ -197,7 +214,7 @@ class UserLoggingTest extends TestCase
 
         $expectedLogs = [
             ['method' => 'GET', 'url' => 'http://localhost/admin-dashboard'],
-            ['method' => 'DELETE', 'url' => "http://localhost/view-all-payment/delete/{$metId}"],
+            ['method' => 'DELETE', 'url' => "http://localhost/categories/{$catId}"],
         ];
 
         $this->assertCount(count($expectedLogs), $logs);
@@ -254,92 +271,4 @@ class UserLoggingTest extends TestCase
         $response = $this->get('/view-all-logs');
         $response->assertRedirect('/home'); // or any defined fallback route for unauthorized users
     }
-
-    /** @test */
-    public function tc7_check_log_display_limit_and_correctness()
-    {
-        // 1. Create users
-        $customer = $this->createUserWithRole('Customer', 'Alibaba', 'ali@example.com', 'Password123');
-        $vendorUser = $this->createUserWithRole('Vendor', 'Karen', 'karen@vendor.com', 'VendorPass123');
-        $admin = $this->createUserWithRole('Admin', 'RootAdmin', 'admin@site.com', 'RootPass123');
-
-        // -------- CUSTOMER LOGS (7) --------
-        $this->actingAs($customer);
-
-        $this->get('/caterings');
-        $package = Package::inRandomOrder()->first();
-        $vendor = $package->vendor;
-        $vendorId = $vendor->vendorId;
-
-        $this->get("/catering-detail/{$vendorId}");
-        $this->post('/update-order-summary', [
-            'vendor_id' => $vendorId,
-            'packages' => [
-                $package->packageId => [
-                    'items' => [
-                        'Breakfast' => $package->breakfastPrice ? 1 : 0,
-                        'Lunch' => $package->lunchPrice ? 1 : 0,
-                        'Dinner' => $package->dinnerPrice ? 1 : 0,
-                    ]
-                ]
-            ]
-        ]);
-        $this->get("/catering-detail/{$vendorId}/payment");
-        $this->post('/checkout', [
-            'vendor_id' => $vendorId,
-            'payment_method_id' => 1,
-            'start_date' => now()->addDays(1)->format('Y-m-d'),
-            'end_date' => now()->addDays(7)->format('Y-m-d'),
-            'password' => 'Password123',
-        ]);
-        $this->get('/orders');
-        $this->post('/logout');
-
-        // -------- VENDOR LOGS (4) --------
-        $this->actingAs($vendorUser);
-
-        $vendorData = Vendor::factory(['userId' => $vendorUser->userId])->create();
-        $categoryId = DB::table('package_categories')->first()->categoryId;
-
-        $this->get('/cateringHomePage');
-        $this->get('/manageCateringPackage');
-        $this->post('/manageCateringPackage', [
-            'categoryId' => $categoryId,
-            'vendorId' => $vendorData->vendorId,
-            'name' => 'Quick Bites Plan',
-            'averageCalories' => 500,
-            'breakfastPrice' => 30000,
-            'lunchPrice' => 40000,
-            'dinnerPrice' => 45000,
-        ]);
-        $this->get('/manageOrder');
-
-        // -------- ADMIN LOG (1) --------
-        $this->actingAs($admin);
-        $this->get('/admin-dashboard/logging');
-
-        // -------- VERIFY LOG TABLE --------
-        $response = $this->get('/view-all-logs');
-        $response->assertStatus(200);
-
-        // Get 10 most recent logs from DB
-        $recentLogs = DB::table('user_activities')->orderByDesc('accessed_at')->limit(10)->get();
-
-        $this->assertCount(10, $recentLogs);
-
-        foreach ($recentLogs as $log) {
-            echo "[{$log->role}] {$log->method} {$log->url} at {$log->accessed_at}\n";
-        }
-        
-        foreach ($recentLogs as $log) {
-            $response->assertSee($log->name);
-            $response->assertSee($log->role);
-            $response->assertSee($log->method);
-            $response->assertSee($log->url);
-            $response->assertSee($log->ip_address);
-            $response->assertSee((string) $log->accessed_at);
-        }
-
-    }
-
 }

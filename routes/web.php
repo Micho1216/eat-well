@@ -103,10 +103,10 @@ Route::get('/about-us', function () {
 ---------------------*/
 
 Route::middleware(['auth'])->group(function () {
-    Route::post('api/fetch-provinces', [ProvinceController::class, 'fetchProvinces']);
-    Route::post('api/fetch-cities', [CityController::class, 'fetchCities']);
-    Route::post('api/fetch-districts', [DistrictController::class, 'fetchDistricts']);
-    Route::post('api/fetch-villages', [VillageController::class, 'fetchVillages']);
+    Route::post('api/fetch-provinces', [ProvinceController::class, 'fetchProvinces'])->name('api-provinces');
+    Route::post('api/fetch-cities', [CityController::class, 'fetchCities'])->name('api-cities');
+    Route::post('api/fetch-districts', [DistrictController::class, 'fetchDistricts'])->name('api-districts');
+    Route::post('api/fetch-villages', [VillageController::class, 'fetchVillages'])->name('api-villages');
     
     Route::post('/manage-profile', [SessionController::class, 'destroy'])->name('logout');
 
@@ -179,7 +179,7 @@ Route::middleware(['role:customer', 'ensureAddress'])->group(function () {
 
 
 
-/* ---------------------
+/* ---------------------a
      VENDOR ROUTES
 ---------------------- */
 /* ---------------------

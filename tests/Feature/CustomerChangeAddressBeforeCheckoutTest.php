@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Models\Address;
+use App\Models\Cart;
+use App\Models\CartItem;
 use App\Models\City;
 use App\Models\District;
 use App\Models\Package;
@@ -149,70 +151,178 @@ class CustomerChangeAddressBeforeCheckoutTest extends TestCase
         $response->assertSeeText($this->otherAddress->jalan);
     }
 
-    /** @test */
-    public function tc4_address_transfer_to_catering_detail(): void
+   /** @test */
+    public function tc4_address_transfer_with_non_default_address_loads_successfully(): void
     {
-        Session::put('address_id', $this->otherAddress->addressId);
-        $response = $this->get(route('catering-detail', $this->vendor->userId));
-        $response->assertStatus(404);
+        $this->actingAs($this->customer);
+        App::setLocale('id');
+
+        $this->packageCategory = PackageCategory::create(['categoryName' => 'Kategori Test']);
+
+        // Create package
+        $package = Package::factory()->create([
+            'vendorId' => $this->vendor->vendorId,
+            'categoryId' => $this->packageCategory->categoryId,
+            'name' => 'Paket Siang',
+            'lunchPrice' => 40000,
+        ]);
+
+        // Create cart and cart item
+        $cart = Cart::create([
+            'userId' => $this->customer->userId,
+            'vendorId' => $this->vendor->vendorId,
+            'totalPrice' => $package->lunchPrice,
+        ]);
+
+        CartItem::create([
+            'cartId' => $cart->cartId,
+            'packageId' => $package->packageId,
+            'breakfastQty' => 0,
+            'lunchQty' => 1,
+            'dinnerQty' => 0,
+            'price' => $package->lunchPrice,
+        ]);
+
+        // Make sure the other address belongs to the same customer
+        $this->otherAddress->update(['userId' => $this->customer->userId]);
+
+        $this->withSession([
+            'address_id' => $this->otherAddress->addressId,
+            'selected_vendor_id' => $this->vendor->vendorId,
+        ]);
+
+        $response = $this->get(route('payment.show', [
+            'vendor_id' => $this->vendor->vendorId,
+            'address_id' => $this->otherAddress->addressId,
+        ]));
+
+        $response->assertStatus(200);
+        $response->assertSeeText($this->otherAddress->jalan);
     }
 
     /** @test */
     public function tc5_address_transfer_to_payment_page(): void
     {
-        Session::put('address_id', $this->otherAddress->addressId);
+        $this->actingAs($this->customer);
+        App::setLocale('id');
 
-        $response = $this->get(route('payment.show', $this->vendor->userId));
-        $response->assertStatus(302);
+        // Create category and package
+        $this->packageCategory = PackageCategory::create(['categoryName' => 'Kategori Siang']);
+        $package = Package::factory()->create([
+            'vendorId' => $this->vendor->vendorId,
+            'categoryId' => $this->packageCategory->categoryId,
+            'name' => 'Paket Siang',
+            'lunchPrice' => 40000,
+        ]);
+
+        // Create cart and cart item in DB
+        $cart = Cart::create([
+            'userId' => $this->customer->userId,
+            'vendorId' => $this->vendor->vendorId,
+            'totalPrice' => $package->lunchPrice,
+        ]);
+
+        CartItem::create([
+            'cartId' => $cart->cartId,
+            'packageId' => $package->packageId,
+            'breakfastQty' => 0,
+            'lunchQty' => 1,
+            'dinnerQty' => 0,
+            'price' => $package->lunchPrice,
+        ]);
+
+        // Use an address that belongs to this customer
+        $this->otherAddress->update(['userId' => $this->customer->userId]);
+
+        // Simulate session data
+        $this->withSession([
+            'address_id' => $this->otherAddress->addressId,
+            'selected_vendor_id' => $this->vendor->vendorId,
+            'cart' => [
+                'vendor_id' => $this->vendor->vendorId,
+                'items' => [
+                    $package->packageId => [
+                        'packageId' => $package->packageId,
+                        'breakfastQty' => 0,
+                        'lunchQty' => 1,
+                        'dinnerQty' => 0,
+                        'quantity' => 1,
+                        'price' => $package->lunchPrice,
+                    ],
+                ],
+                'totalPrice' => $package->lunchPrice,
+                'totalItems' => 1,
+            ],
+        ]);
+
+        $response = $this->get(route('payment.show', [
+            'vendor_id' => $this->vendor->vendorId,
+            'address_id' => $this->otherAddress->addressId,
+        ]));
+
+        $response->assertStatus(200);
+        $response->assertSeeText($this->otherAddress->jalan);
     }
+
 
     /** @test */
     public function tc6_default_address_transfer_flow(): void
     {
-        Session::put('address_id', $this->defaultAddress->addressId);
-         // Step 1: Create a package.
+        $this->actingAs($this->customer);
+        App::setLocale('id');
+
+        $this->packageCategory = PackageCategory::create(['categoryName'=>'new category']);
+        // Create package
         $package = Package::factory()->create([
             'vendorId' => $this->vendor->vendorId,
             'categoryId' => $this->packageCategory->categoryId,
-            // Ensure this package has a breakfastPrice so the cart total isn't zero
-            'breakfastPrice' => 50000, 
+            'name' => 'Paket Pagi',
+            'breakfastPrice' => 35000,
+        ]);
+          // Create cart in DB
+        $cart = Cart::create([
+            'userId' => $this->customer->userId,
+            'vendorId' => $this->vendor->vendorId,
+            'totalPrice' => $package->breakfastPrice,
         ]);
 
-    // Step 2: Manually set up a complete and valid cart session.
-    // This bypasses the controller logic and gives you direct control.
-    Session::put('cart', [
-        'vendor_id' => $this->vendor->vendorId,
-        'items' => [
-            $package->packageId => [
-                'packageId' => $package->packageId,
-                'breakfastQty' => 1,
-                'lunchQty' => 0,
-                'dinnerQty' => 0,
-                'quantity' => 1, // Add this if your app checks for a 'quantity' key
-                'price' => $package->breakfastPrice,
+        // Create cart item in DB
+        CartItem::create([
+            'cartId' => $cart->cartId,
+            'packageId' => $package->packageId,
+            'breakfastQty' => 1,
+            'lunchQty' => 0,
+            'dinnerQty' => 0,
+            'price' => $package->breakfastPrice,
+        ]);
+
+        $this->withSession([
+            'address_id' => $this->defaultAddress->addressId,
+            'selected_vendor_id' => $this->vendor->vendorId,
+            'cart' => [
+                'vendor_id' => $this->vendor->vendorId,
+                'items' => [
+                    $package->packageId => [
+                        'packageId' => $package->packageId,
+                        'breakfastQty' => 1,
+                        'lunchQty' => 0,
+                        'dinnerQty' => 0,
+                        'quantity' => 1,
+                        'price' => $package->breakfastPrice,
+                    ]
+                ],
+                'totalPrice' => $package->breakfastPrice,
+                'totalItems' => 1,
             ]
-        ],
-        // Also include a 'totalPrice' and 'totalItems' key if the middleware
-        // checks for the existence of these.
-        'totalPrice' => $package->breakfastPrice,
-        'totalItems' => 1,
-    ]);
-    
-    // Optional: Assert that the session was set correctly.
-    $this->assertNotNull(session('cart'));
+        ]);
 
-    // Step 3: Now that a valid cart session exists, navigate to the payment page.
-    $response = $this->get(route('payment.show', [
-        'vendor_id' => $this->vendor->vendorId, 
-        'address_id' => $this->defaultAddress->addressId
-    ]));
+        $response = $this->get(route('payment.show', [
+            'vendor_id' => $this->vendor->vendorId,
+            'address_id' => $this->defaultAddress->addressId,
+        ]));
 
-    // Step 4: The request should now succeed.
-    $response->assertStatus(200);
-
-    // Assert that the default address details are visible on the payment page.
-    $response->assertSeeText($this->defaultAddress->jalan);
-    $response->assertSeeText($this->defaultAddress->recipient_name);
+        $response->assertStatus(200);
+        $response->assertSeeText($this->defaultAddress->jalan);
     }
 }
 

@@ -34,7 +34,7 @@ class CustomerAddressTest extends TestCase
 
         /**
          *  @var User | Authenticatable
-        */
+         */
         $this->customer = User::factory()->create(['role' => 'Customer']);
         $this->actingAs($this->customer);
         // $request = 
@@ -68,7 +68,7 @@ class CustomerAddressTest extends TestCase
             'recipient_phone' => '081298765432',
             'jalan' => 'Jl. Kenangan Indah No. 5',
             'kode_pos' => '40124',
-            'notes' => null, 
+            'notes' => null,
             'is_default' => false,
             'provinsi' => $this->province->name,
             'kota' => $this->city->name,
@@ -99,24 +99,24 @@ class CustomerAddressTest extends TestCase
     public function tc1_1_add_address_page_loads_with_required_fields()
     {
         // Request the page for adding a NEW address
-        $response = $this->actingAs($this->customer)->get(route('add-address')); 
+        $response = $this->actingAs($this->customer)->get(route('add-address'));
 
         $response->assertStatus(200);
 
         // Assert all input fields are visible and dropdowns are in their default state
         $response->assertSee('name="kode_pos"', false);
-        $response->assertSee('name="notes"', false);    
-        $response->assertSee('name="recipient_name"', false); 
-        $response->assertSee('name="recipient_phone"', false); 
+        $response->assertSee('name="notes"', false);
+        $response->assertSee('name="recipient_name"', false);
+        $response->assertSee('name="recipient_phone"', false);
 
-        $response->assertSee('name="provinsi_name"', false); 
-        $response->assertSee('name="kota_name"', false); 
-        $response->assertSee('name="kecamatan_name"', false); 
-        $response->assertSee('name="kelurahan_name"', false); 
+        $response->assertSee('name="provinsi_name"', false);
+        $response->assertSee('name="kota_name"', false);
+        $response->assertSee('name="kecamatan_name"', false);
+        $response->assertSee('name="kelurahan_name"', false);
 
         // Assert the default option for a new form
-        $response->assertSee('<option value="">Pilih Provinsi</option>', false);
-        $response->assertSee('name="kota_id" required disabled', false); 
+        $response->assertSee('<option value="">Select Province</option>', false);
+        $response->assertSee('name="kota_id" required disabled', false);
         $response->assertSee('name="kecamatan_id" required disabled', false);
         $response->assertSee('name="kelurahan_id" required disabled', false);
     }
@@ -124,7 +124,7 @@ class CustomerAddressTest extends TestCase
     /** @test */
     public function tc1_2_to_1_4_regional_dropdown_apis_work()
     {
-        $response = $this->post(route('api-cities'), ['province_id'=>$this->province->id]);
+        $response = $this->post(route('api-cities'), ['province_id' => $this->province->id]);
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
             $json->has(1); // At least one city (the one we created)
@@ -134,7 +134,7 @@ class CustomerAddressTest extends TestCase
         });
 
         // Test API for districts based on city selection
-        $response = $this->post(route('api-districts'), ['city_id'=>$this->city->id]);
+        $response = $this->post(route('api-districts'), ['city_id' => $this->city->id]);
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
             $json->has(1);
@@ -144,7 +144,7 @@ class CustomerAddressTest extends TestCase
         });
 
         // Test API for villages based on district selection
-        $response = $this->post(route('api-villages'), ['district_id'=>$this->district->id]);
+        $response = $this->post(route('api-villages'), ['district_id' => $this->district->id]);
         $response->assertStatus(200);
         $response->assertJson(function (AssertableJson $json) {
             $json->has(1);
@@ -183,9 +183,9 @@ class CustomerAddressTest extends TestCase
             'jalan' => $addressData['jalan'],
             'kode_pos' => $addressData['kode_pos'],
             'notes' => $addressData['notes'],
-            'provinsi' => $this->province->name, 
-            'kota' => $this->city->name,         
-            'kecamatan' => $this->district->name, 
+            'provinsi' => $this->province->name,
+            'kota' => $this->city->name,
+            'kecamatan' => $this->district->name,
             'kelurahan' => $this->village->name,
             'userId' => $this->customer->userId,
         ]);
@@ -205,7 +205,7 @@ class CustomerAddressTest extends TestCase
             'kecamatan_name' => '',
             'kelurahan_name' => '',
             'notes' => 'Some optional notes',
-            'is_default'=>false,
+            'is_default' => false,
         ];
 
         $response = $this->post(route('store-address'), $input);
@@ -213,8 +213,14 @@ class CustomerAddressTest extends TestCase
         // Server-side validation errors should be displayed
         $response->assertStatus(302);
         $response->assertSessionHasErrors([
-            'recipient_name', 'recipient_phone', 'jalan', 'kode_pos',
-            'provinsi_name', 'kota_name', 'kecamatan_name', 'kelurahan_name'
+            'recipient_name',
+            'recipient_phone',
+            'jalan',
+            'kode_pos',
+            'provinsi_name',
+            'kota_name',
+            'kecamatan_name',
+            'kelurahan_name'
         ]);
     }
 
@@ -225,7 +231,7 @@ class CustomerAddressTest extends TestCase
             'recipient_name' => 'Test User',
             'recipient_phone' => '081234567890',
             'jalan' => 'Jl. Test',
-            'kode_pos' => '123', 
+            'kode_pos' => '123',
             'provinsi' => $this->province->id,
             'kota' => $this->city->id,
             'kecamatan' => $this->district->id,
@@ -268,10 +274,10 @@ class CustomerAddressTest extends TestCase
         $response = $this->get(route('add-address'));
         $response->assertStatus(200);
 
-        $response = $this->get(route('manage-address')); 
+        $response = $this->get(route('manage-address'));
         $response->assertStatus(200);
 
-        $this->assertDatabaseCount('addresses', 1); 
+        $this->assertDatabaseCount('addresses', 1);
     }
 
     // --- 2. Edit Address ---
@@ -341,7 +347,7 @@ class CustomerAddressTest extends TestCase
 
         $response = $this->patch(route('update-address', $this->address->addressId), $updatedData);
         $response->assertSessionHasNoErrors();
-        
+
         $response->assertStatus(302);
         $response->assertSessionHas('update_success', 'Alamat berhasil diperbarui');
         $response->assertRedirect(route('manage-address'));
@@ -360,7 +366,7 @@ class CustomerAddressTest extends TestCase
             'kelurahan' => $newVillage->name,
             'is_default' => true,
         ]);
-        
+
         $this->assertDatabaseMissing('addresses', ['addressId' => $this->address->addressId, 'recipient_name' => 'Original Name']);
     }
 
@@ -378,18 +384,24 @@ class CustomerAddressTest extends TestCase
         $response = $this->patchJson(route('update-address', $address), [
             'recipient_name' => '',
             'recipient_phone' => '123',
-            'jalan' => '',  
-            'kode_pos' => 'abc',  
-            'provinsi_name' => '',   
+            'jalan' => '',
+            'kode_pos' => 'abc',
+            'provinsi_name' => '',
             'kota_name' => '',
             'kecamatan_name' => '',
             'kelurahan_name' => '',
         ]);
 
-        $response->assertStatus(422);
-        $response->assertJsonValidationErrors([
-            'recipient_name', 'recipient_phone', 'jalan', 'kode_pos',
-            'provinsi_name', 'kota_name', 'kecamatan_name', 'kelurahan_name'
+        $response->assertStatus(302);
+        $response->assertSessionHasErrors([
+            'recipient_name',
+            'recipient_phone',
+            'jalan',
+            'kode_pos',
+            'provinsi_name',
+            'kota_name',
+            'kecamatan_name',
+            'kelurahan_name',
         ]);
     }
 
@@ -435,7 +447,7 @@ class CustomerAddressTest extends TestCase
 
         // Assert AJAX request successful
         $response->assertStatus(200);
-        $response->assertJson(['success'=>true, 'message' => 'Alamat utama berhasil diatur.']); // Assert success modal message
+        $response->assertJson(['success' => true, 'message' => 'Alamat utama berhasil diatur.']); // Assert success modal message
 
         // Verify database reflects the change
         $this->assertDatabaseHas('addresses', ['addressId' => $newMainAddress->addressId, 'is_default' => true]);
@@ -444,7 +456,7 @@ class CustomerAddressTest extends TestCase
         $response->assertStatus(200);
         $response->assertSeeText($newMainAddress->recipient_name);
         $defaultAddressText = __('address.main_address');
-        $response->assertSeeText($defaultAddressText); 
+        $response->assertSeeText($defaultAddressText);
         $response->assertDontSeeText($defaultAddress->recipient_name . ' Main Address'); // Old main should not have badge (text specific)
     }
 
@@ -452,7 +464,7 @@ class CustomerAddressTest extends TestCase
     public function tc3_4_setting_default_with_only_one_address_shows_warning()
     {
         // Create only one address, which is implicitly default
-        $singleAddress = Address::factory()->create(['userId' => $this->customer->userId, 'is_default' =>false]);
+        $singleAddress = Address::factory()->create(['userId' => $this->customer->userId, 'is_default' => false]);
 
         // Simulate clicking the toggle switch for the single address
         $response = $this->post(route('set-default-address'), ['address_id' => $singleAddress->addressId]);
@@ -465,7 +477,7 @@ class CustomerAddressTest extends TestCase
         $this->assertDatabaseHas('addresses', ['addressId' => $singleAddress->addressId, 'is_default' => true]);
     }
 
- 
+
     /** @test */
     public function tc3_5_handle_missing_or_invalid_address_id_on_set_default_address()
     {
@@ -525,7 +537,7 @@ class CustomerAddressTest extends TestCase
     {
         $response = $this->delete(route('delete-address', $this->address->addressId));
 
-        
+
         $response->assertSessionHas('error', 'Tidak dapat menghapus alamat utama. Silakan atur alamat lain sebagai utama terlebih dahulu.');
         $response->assertRedirect('/manage-address');
 
