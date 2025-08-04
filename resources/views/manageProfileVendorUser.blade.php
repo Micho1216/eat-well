@@ -1,4 +1,4 @@
-@extends('master')
+@extends('components.vendor-nav')
 
 @section('title', 'Manage Profile')
 @section('css')
