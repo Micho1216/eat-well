@@ -11,25 +11,25 @@ class Package extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'packages';
-    protected $primaryKey = 'packageId'; // Matches your migration
+    protected $primaryKey = 'packageId';
 
     protected $fillable = [
-        'categoryId', // Matches your migration
-        'vendorId', // Matches your migration
+        'categoryId',
+        'vendorId',
         'name',
-        'menuPDFPath', // Matches your migration
-        'imgPath', // Matches your migration
-        'averageCalories', // Matches your migration
-        'breakfastPrice', // Matches your migration
-        'lunchPrice', // Matches your migration
-        'dinnerPrice', // Matches your migration
+        'menuPDFPath',
+        'imgPath',
+        'averageCalories',
+        'breakfastPrice',
+        'lunchPrice',
+        'dinnerPrice',
     ];
 
     protected $casts = [
-        'averageCalories' => 'decimal:2', // Matches your migration
-        'breakfastPrice' => 'decimal:2', // Matches your migration
-        'lunchPrice' => 'decimal:2', // Matches your migrationz
-        'dinnerPrice' => 'decimal:2', // Matches your migration
+        'averageCalories' => 'decimal:2',
+        'breakfastPrice' => 'decimal:2',
+        'lunchPrice' => 'decimal:2',
+        'dinnerPrice' => 'decimal:2',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -56,7 +56,6 @@ class Package extends Model
 
     public function cuisineTypes()
     {
-        // This is a many-to-many relationship with CuisineType through 'package_cuisine'
         return $this->belongsToMany(CuisineType::class, 'package_cuisine', 'packageId', 'cuisineId');
     }
 

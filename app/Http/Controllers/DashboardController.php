@@ -11,7 +11,6 @@ use SebastianBergmann\CodeCoverage\Util\Percentage;
 
 class DashboardController extends Controller
 {
-    //
     public function index()
     {
         $orders = Order::whereMonth('created_at', Carbon::now()->month)

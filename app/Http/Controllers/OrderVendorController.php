@@ -42,9 +42,6 @@ class OrderVendorController extends Controller
         $order->isCancelled = 1;
         $order->save();
 
-        // $order->orderItems()->delete();
-        // $order->deliveryStatuses()->delete();
-
         return response()->json(['success' => true], 200);
     }
 
@@ -84,8 +81,6 @@ class OrderVendorController extends Controller
             ->whereDate('startDate', '<=', $to)
             ->get()
             ->map(function ($order) {
-                // $addr = $order->user->defaultAddress;
-
                 return [
                     'id' => $order->orderId,
                     'startDate' => Carbon::parse($order->startDate)->format('Y-m-d'),

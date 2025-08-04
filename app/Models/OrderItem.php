@@ -12,12 +12,12 @@ class OrderItem extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'order_items';
-    protected $primaryKey = 'orderItemId'; // Matches your migration
+    protected $primaryKey = 'orderItemId'; 
 
     protected $fillable = [
-        'orderId', // Matches your migration
-        'packageId', // Matches your migration
-        'packageTimeSlot', // Matches your migration
+        'orderId', 
+        'packageId', 
+        'packageTimeSlot', 
         'price',
         'quantity',
     ];

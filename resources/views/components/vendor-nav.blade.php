@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <title>@yield('title')</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    {{-- @vite(['resources/sass/app.scss', 'resources/js/app.js']) --}}
+    @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 
     <link rel="stylesheet" href="{{ asset('css/footer.css') }}">
 
@@ -73,23 +73,6 @@
                 </div>
             </div>
 
-            {{-- <div style="padding: 0.5rem 1rem; border-radius: 0.25rem; margin-right: 2vw">
-                <a class="login-button p-0" href="#">
-                    <button type="button" class="login_button">Log In</button>
-                </a>
-            </div> --}}
-
-
-            {{-- @auth
-                <a href="/manage-profile">
-                    <div class="imgstyle m-2" style="border-radius:100%; width:50px; height:50px; margin-right:20px;">
-                        <img class="img-fluid"
-                            src="{{ asset(Auth::user()->profilePath) ?? asset('asset/catering/homepage/breakfastPreview.jpg') }}"
-                            alt="Vendor Logo" width="120px" style="border-radius: 100%">
-                    </div>
-                </a>
-            @endauth --}}
-
             <a href="/manage-profile-vendor-account">
                 <div class="imgstyle m-2" style="border-radius:100%; margin-right:20px">
                     <img class="" src="{{ asset( Auth::user()->profilePath) }}"
@@ -109,7 +92,7 @@
         @yield('content')
     </div>
 
-    <footer class="bg-dark text-white py-0">
+    <footer class="container-fluid bg-dark text-white py-0">
         <div class="container text-center footer-page d-flex flex-column align-items-center py-4"
             style="margin-top: 10px">
 

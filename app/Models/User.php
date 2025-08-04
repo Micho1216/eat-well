@@ -17,9 +17,9 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
 {
     use HasFactory, Notifiable, SoftDeletes, PasswordsCanResetPassword;
 
-    protected $table = 'users'; // Matches your migration
+    protected $table = 'users'; 
 
-    protected $primaryKey = 'userId'; // Matches your migration
+    protected $primaryKey = 'userId'; 
 
     /**
      * The attributes that are mass assignable.
@@ -73,9 +73,9 @@ class User extends Authenticatable implements HasLocalePreference, MustVerifyEma
 
     protected $casts = [
         'email_verified_at' => 'datetime',
-        'enabled2FA' => 'boolean', // Matches your migration
-        'dateOfBirth' => 'datetime', // Matches your migration
-        'genderMale' => 'boolean', // Matches your migration
+        'enabled2FA' => 'boolean', 
+        'dateOfBirth' => 'datetime', 
+        'genderMale' => 'boolean', 
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'role' => UserRole::class,

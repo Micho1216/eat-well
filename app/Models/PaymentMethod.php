@@ -11,7 +11,7 @@ class PaymentMethod extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'payment_methods';
-    protected $primaryKey = 'methodId'; // Matches your migration
+    protected $primaryKey = 'methodId';
 
     protected $fillable = [
         'name',

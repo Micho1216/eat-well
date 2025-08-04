@@ -11,10 +11,10 @@ class CuisineType extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'cuisine_types';
-    protected $primaryKey = 'cuisineId'; // Matches your migration
+    protected $primaryKey = 'cuisineId';
 
     protected $fillable = [
-        'cuisineName', // Matches your migration
+        'cuisineName',
     ];
 
     protected $casts = [
@@ -24,9 +24,6 @@ class CuisineType extends Model
 
     public function packages()
     {
-        // This is a many-to-many relationship with Package through 'package_cuisine'
         return $this->belongsToMany(Package::class, 'package_cuisine', 'cuisineId', 'packageId');
-        // atau:
-        // return $this->hasMany(Package::class, 'cuisineId', 'cuisineId');
     }
 }

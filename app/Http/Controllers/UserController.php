@@ -66,7 +66,6 @@ class UserController extends Controller
 
     public function showProfile()
     {
-        // Mengambil user yang sedang login
         $user = Auth::user();
 
         logActivity('Successfully', 'Visited', 'Manage Profile Page');
@@ -87,7 +86,6 @@ class UserController extends Controller
         $updated_user->name = $request->nameInput;
 
         if($user->name != $request->nameInput) {
-            // logActivity('Successfully', 'Updated', "Profile to {$updated_user->name}");
             logActivity('Successfully', 'Updated', "Profile to :  {$updated_user->name}");
         }
 

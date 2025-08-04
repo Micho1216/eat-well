@@ -19,8 +19,6 @@ class FavoriteController extends Controller
         $user = Auth::user();
         $vendors = $user->favoriteVendors()->paginate(21);
 
-        // logActivity('Successfully', 'Visited', 'Favorite Page');
-
         return view('favoritePage', compact('vendors'));
     }
     public function favorite(String $id)
@@ -29,7 +27,6 @@ class FavoriteController extends Controller
          * @var User | Authenticatable $user
          */
         $user = Auth::user();
-        // Ensure relation exists and not duplicated
         if (!$user->favoriteVendors()->where('vendors.vendorId', '=', $id)->exists()) {
             $user->favoriteVendors()->attach($id);
         }

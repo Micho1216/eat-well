@@ -26,7 +26,6 @@ class AdminController extends Controller
             ->groupBy('vendorId')
             ->pluck('totalSales', 'vendorId');
 
-        // logActivity('Successfully', 'Visited', 'View All Vendor Page');
         return view('viewAllVendor', compact('vendors', 'sales'));
     }
 
@@ -63,8 +62,6 @@ class AdminController extends Controller
 
     public function view_all_transactions()
     {
-
-        // $payments = Payment::all()->paginate(10);
         $payments = Payment::orderBy('paid_at', 'asc')->paginate(25);
 
         logActivity('Successfully', 'Visited', 'View all transaction');

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory; // Opsional tapi sangat direkomendasikan
+use Illuminate\Database\Eloquent\Factories\HasFactory; 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -11,18 +11,18 @@ class VendorReview extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'vendor_reviews';
-    protected $primaryKey = 'reviewId'; // Matches your migration
+    protected $primaryKey = 'reviewId';
 
     protected $fillable = [
-        'vendorId', // Matches your migration
-        'userId', // Matches your migration
-        'orderId', // Matches your migration
+        'vendorId',
+        'userId',
+        'orderId',
         'rating',
-        'review', // Matches your migration
+        'review',
     ];
 
     protected $casts = [
-        'rating' => 'decimal:1', // Matches your migration
+        'rating' => 'decimal:1',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

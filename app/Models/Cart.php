@@ -9,13 +9,13 @@ class Cart extends Model
 {
     use HasFactory;
 
-    protected $table = 'cart'; // Matches your migration
-    protected $primaryKey = 'cartId'; // Matches your migration
+    protected $table = 'cart'; 
+    protected $primaryKey = 'cartId'; 
 
     protected $fillable = [
         'userId',
-        'vendorId', // Added based on your migration
-        'totalPrice', // Matches your migration
+        'vendorId', 
+        'totalPrice',
     ];
 
     protected $casts = [

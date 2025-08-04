@@ -12,32 +12,31 @@ class Order extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'orders';
-    protected $primaryKey = 'orderId'; // Matches your migration
+    protected $primaryKey = 'orderId'; 
 
     protected $fillable = [
         'userId',
         'vendorId',
-        'totalPrice', // Matches your migration
-        'startDate', // Matches your migration
-        'endDate', // Matches your migration
-        'isCancelled', // Matches your migration
-        'provinsi', // Added based on your migration
+        'totalPrice', 
+        'startDate', 
+        'endDate', 
+        'isCancelled', 
+        'provinsi', 
         'kota',
-        'kabupaten', // Added based on your migration
         'kecamatan',
         'kelurahan',
         'kode_pos',
         'jalan',
-        'recipient_name', // Matches your migration
-        'recipient_phone', // Matches your migration
+        'recipient_name', 
+        'recipient_phone', 
         'notes',
     ];
 
     protected $casts = [
-        'totalPrice' => 'decimal:2', // Matches your migration
-        'startDate' => 'datetime', // Matches your migration
-        'endDate' => 'datetime', // Matches your migration
-        'isCancelled' => 'boolean', // Matches your migration
+        'totalPrice' => 'decimal:2', 
+        'startDate' => 'datetime', 
+        'endDate' => 'datetime', 
+        'isCancelled' => 'boolean', 
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

@@ -38,15 +38,6 @@ class HomeController extends Controller
         else{
             $hasPassword = false;
         }
-        
-        // if($request->session()->has('pressedTopup'))
-        // {
-        //     $pressedTopup = true;
-        // }
-        // else{
-        //     $pressedTopup = false;
-        // }
-
         return view('customer.home', compact('vendors', 'favVendors', 'order', 'slotMap', 'wellpay', 'hasPassword'));
     }
 
@@ -66,16 +57,6 @@ class HomeController extends Controller
                 ->get();
 
             $countNear = $nearVendors->count();
-
-            // if ($countNear < 12) {
-            //     $extraVendors = Vendor::where('provinsi', '!=', $address->provinsi)
-            //         ->orderBy('rating')
-            //         ->take(12 - $countNear)
-            //         ->get();
-
-            //     return $nearVendors->concat($extraVendors);
-            // }
-
             return $nearVendors;
         }
 

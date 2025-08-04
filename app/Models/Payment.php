@@ -11,16 +11,16 @@ class Payment extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'payments';
-    protected $primaryKey = 'paymentId'; // Matches your migration
+    protected $primaryKey = 'paymentId';
 
     protected $fillable = [
-        'methodId', // Matches your migration
-        'orderId', // Matches your migration
-        'paid_at', // Matches your migration
+        'methodId',
+        'orderId',
+        'paid_at',
     ];
 
     protected $casts = [
-        'paid_at' => 'datetime', // Matches your migration
+        'paid_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];

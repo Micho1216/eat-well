@@ -16,20 +16,17 @@ class SearchCateringController extends Controller
     {
         $user = Auth::user();
 
-        // Get address from session if available
         $mainAddress = null;
         $addressId = session('address_id');
 
         if ($addressId && $user) {
             $mainAddress = Address::find($addressId);
 
-            // Validate that the address belongs to the user
             if (!$mainAddress || $mainAddress->userId !== $user->userId) {
                 $mainAddress = null;
             }
         }
 
-        // Fallback: use user's default address if session address is missing or invalid
         if (!$mainAddress && $user) {
             if (method_exists($user, 'defaultAddress')) {
                 $mainAddress = $user->defaultAddress;
@@ -39,7 +36,6 @@ class SearchCateringController extends Controller
                     ->first();
             }
 
-            // Store it in session if found
             if ($mainAddress) {
                 session(['address_id' => $mainAddress->id]);
             }
@@ -47,7 +43,6 @@ class SearchCateringController extends Controller
 
         $validated = $request->validated();
 
-        // Use validated input data
         $query = $validated['query'] ?? null;
         $minPrice = $validated['min_price'] ?? 0;
         $maxPrice = $validated['max_price'] ?? 999999999;
@@ -59,7 +54,6 @@ class SearchCateringController extends Controller
         $province = $mainAddress?->provinsi;
 
         $vendors = Vendor::query()
-            // Add a province match priority column
             ->selectRaw("vendors.*, 
             CASE WHEN vendors.provinsi = ? THEN 1 ELSE 0 END AS province_priority", [$province])
 
@@ -106,7 +100,6 @@ class SearchCateringController extends Controller
                 });
             })
 
-            // Sort by province priority first, then by name or any other logic
             ->orderByDesc('province_priority')
             ->orderBy('name')
 
@@ -116,7 +109,6 @@ class SearchCateringController extends Controller
             ->paginate(9)
             ->appends($request->query());
 
-        // Pass paginated vendors to the view
         logActivity('Successfully', 'Visited', "Vendor Search Page and Searched for: {$query}");
         return view('customer.search', compact('vendors', 'all_categories', 'user', 'mainAddress'));
     }

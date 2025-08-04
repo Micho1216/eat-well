@@ -79,9 +79,6 @@ class VendorPreviewController extends Controller
     public function update($id, UpdateVendorPreviewRequest $request)
     {
         $preview = VendorPreview::findOrFail($id);
-
-
-        // Hapus file lama kalau ada
         if ($preview->previewPicturePath && file_exists(public_path($preview->previewPicturePath))) {
             unlink(public_path($preview->previewPicturePath));
         }

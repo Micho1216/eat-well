@@ -37,35 +37,25 @@ class PackageController extends Controller
         $venAcc = Auth::user();
         $validated['vendorId'] = $venAcc->vendor->vendorId;
 
-            // Upload file PDF
-            if ($request->hasFile('menuPDFPath')) {
-                $menuFile = $request->file('menuPDFPath');
-                $menuFileName = 'menu_' . time() . '.' . $menuFile->getClientOriginalExtension();
-                $menuFile->move(public_path('asset/menus'), $menuFileName);
-                $validated['menuPDFPath'] = $menuFileName;
-            }
+        // Upload file PDF
+        if ($request->hasFile('menuPDFPath')) {
+            $menuFile = $request->file('menuPDFPath');
+            $menuFileName = 'menu_' . time() . '.' . $menuFile->getClientOriginalExtension();
+            $menuFile->move(public_path('asset/menus'), $menuFileName);
+            $validated['menuPDFPath'] = $menuFileName;
+        }
 
-            // Upload gambar
-            if ($request->hasFile('imgPath')) {
-                $imgFile = $request->file('imgPath');
-                $imgFileName = 'img_' . time() . '.' . $imgFile->getClientOriginalExtension();
-                $imgFile->move(public_path('asset/menus'), $imgFileName);
-                $validated['imgPath'] = $imgFileName;
-            }
-
-            // // Ambil cuisine_types terpisah
-        // $cuisineTypes = $validated['cuisine_types'] ?? [];
-
-        // // Hapus dari validated array
-        // unset($validated['cuisine_types']);
+        // Upload gambar
+        if ($request->hasFile('imgPath')) {
+            $imgFile = $request->file('imgPath');
+            $imgFileName = 'img_' . time() . '.' . $imgFile->getClientOriginalExtension();
+            $imgFile->move(public_path('asset/menus'), $imgFileName);
+            $validated['imgPath'] = $imgFileName;
+        }
 
         // Simpan ke database (tanpa cuisine_types)
         logActivity('Successfully', 'Added', 'Catering Package with Name : ' . $validated['name']);
         $newpackage = Package::create($validated);
-
-        // if (!empty($cuisineTypes)) {
-        //     $newpackage->cuisineTypes()->sync($cuisineTypes);
-        // }
 
         return redirect(route('manageCateringPackage'));
     }

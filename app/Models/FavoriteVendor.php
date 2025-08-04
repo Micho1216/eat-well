@@ -10,9 +10,8 @@ class FavoriteVendor extends Model
     use HasFactory;
 
     protected $table = 'favorite_vendors';
-    // No primary key, as it's a composite primary key in migration
-    public $incrementing = false; // Disable auto-incrementing for composite primary key
-    protected $primaryKey = ['userId', 'vendorId']; // Define composite primary key
+    public $incrementing = false;
+    protected $primaryKey = ['userId', 'vendorId'];
 
     protected $fillable = [
         'userId',

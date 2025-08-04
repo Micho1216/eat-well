@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory; // Opsional tapi sangat direkomendasikan
+use Illuminate\Database\Eloquent\Factories\HasFactory; 
 use Illuminate\Database\Eloquent\Model;
 
 class RelationCustomerAddress extends Model
@@ -10,16 +10,15 @@ class RelationCustomerAddress extends Model
     use HasFactory;
 
     protected $table = 'relation_customer_addresses';
-    // No primary key, as it's a composite primary key in migration
-    public $incrementing = false; // Disable auto-incrementing for composite primary key
-    protected $primaryKey = ['customerId', 'addressId']; // Define composite primary key
+    public $incrementing = false; 
+    protected $primaryKey = ['customerId', 'addressId']; 
 
     protected $fillable = [
-        'customerId', // Matches your migration
-        'addressId', // Matches your migration
-        'recepient_name', // Matches your migration
-        'recepient_phone', // Matches your migration
-        'is_default', // Matches your migration
+        'customerId',
+        'addressId',
+        'recepient_name',
+        'recepient_phone',
+        'is_default',
         'notes',
     ];
 
